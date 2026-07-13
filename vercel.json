@@ -1,0 +1,10 @@
+vercel.json
+{
+    "outputDirectory": "dist",
+    "rewrites": [
+      {
+        "source": "/(.*)",
+        "destination": "/server/index.js"
+      }
+    ]
+  }

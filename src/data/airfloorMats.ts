@@ -1,0 +1,143 @@
+import type { Product, ProductFeature, ProductSpec } from "@/data/products";
+
+export const AIRFLOOR_MAT_CATEGORY = "\u05de\u05d6\u05e8\u05e0\u05d9 \u05d0\u05d9\u05d9\u05e8\u05e4\u05dc\u05d5\u05e8";
+export const AIRFLOOR_MAT_CATEGORY_SLUG = "airfloor-mats";
+export const AIRFLOOR_MAT_BRAND = "LEVITATE\u00ae";
+
+export type AirfloorMatVariant = {
+  id: string;
+  lengthM: number;
+  widthM: number;
+  thicknessM: number;
+  price: number;
+  showSafetyNotice: boolean;
+};
+
+export const AIRFLOOR_MAT_VARIANTS: AirfloorMatVariant[] = [
+  { id: "airfloor-3x2x0.2", lengthM: 3, widthM: 2, thicknessM: 0.2, price: 1920, showSafetyNotice: true },
+  { id: "airfloor-4x2x0.2", lengthM: 4, widthM: 2, thicknessM: 0.2, price: 2560, showSafetyNotice: true },
+  { id: "airfloor-6x2x0.2", lengthM: 6, widthM: 2, thicknessM: 0.2, price: 3840, showSafetyNotice: false },
+  { id: "airfloor-8x2x0.2", lengthM: 8, widthM: 2, thicknessM: 0.2, price: 5120, showSafetyNotice: false },
+  { id: "airfloor-10x2x0.2", lengthM: 10, widthM: 2, thicknessM: 0.2, price: 6400, showSafetyNotice: false },
+];
+
+export const AIRFLOOR_SAFETY_NOTICE =
+  "\u05e9\u05d9\u05de\u05d5 \u05dc\u05d1: \u05de\u05d6\u05e8\u05df \u05d6\u05d4 \u05de\u05d2\u05d9\u05e2 \u05d1\u05e8\u05d5\u05d7\u05d1 \u05e8\u05d7\u05d1 \u05e9\u05dc 2 \u05de\u05d8\u05e8\u05d9\u05dd. \u05d0\u05e0\u05d5 \u05de\u05ea\u05e2\u05e7\u05e9\u05d9\u05dd \u05e2\u05dc \u05e8\u05d5\u05d7\u05d1 \u05d6\u05d4 \u05d2\u05dd \u05d1\u05de\u05d6\u05e8\u05e0\u05d9\u05dd \u05d4\u05e7\u05e6\u05e8\u05d9\u05dd \u05d9\u05d5\u05ea\u05e8 \u05e9\u05dc\u05e0\u05d5, \u05db\u05d3\u05d9 \u05dc\u05d4\u05e2\u05e0\u05d9\u05e7 \u05dc\u05db\u05dd \u05de\u05e9\u05d8\u05d7 \u05e0\u05d7\u05d9\u05ea\u05d4 \u05d1\u05d8\u05d5\u05d7, \u05de\u05e8\u05d5\u05d5\u05d7 \u05d5\u05d9\u05e6\u05d9\u05d1 \u05d9\u05d5\u05ea\u05e8 \u05e9\u05de\u05d5\u05e0\u05e2 \u05e0\u05e4\u05d9\u05dc\u05d5\u05ea \u05de\u05d7\u05d5\u05e5 \u05dc\u05de\u05e9\u05d8\u05d7 \u05d5\u05e9\u05d5\u05de\u05e8 \u05e2\u05dc \u05d4\u05de\u05e9\u05ea\u05de\u05e9\u05d9\u05dd \u05dc\u05d0\u05d5\u05e8\u05da \u05db\u05dc \u05d4\u05d0\u05d9\u05de\u05d5\u05df.";
+
+export function formatAirfloorSizeSlash(v: Pick<AirfloorMatVariant, "lengthM" | "widthM" | "thicknessM">) {
+  return `${v.lengthM}/${v.widthM}/${v.thicknessM}`;
+}
+
+export function formatAirfloorDimensionsSpec(v: Pick<AirfloorMatVariant, "lengthM" | "widthM" | "thicknessM">) {
+  const thicknessCm = Math.round(v.thicknessM * 100);
+  return `\u05d0\u05d5\u05e8\u05da ${v.lengthM} \u05de', \u05e8\u05d5\u05d7\u05d1 ${v.widthM} \u05de', \u05e2\u05d5\u05d1\u05d9 ${thicknessCm} \u05e1"\u05de`;
+}
+
+export function getAirfloorMatTitle(v: AirfloorMatVariant) {
+  return `\u05de\u05d6\u05e8\u05df \u05d0\u05d9\u05d9\u05e8\u05e4\u05dc\u05d5\u05e8 (AirFloor) \u05de\u05e7\u05e6\u05d5\u05e2\u05d9 - ${formatAirfloorSizeSlash(v)} \u05de\u05d8\u05e8`;
+}
+
+export function getAirfloorMatSeoTitle(v: AirfloorMatVariant) {
+  return `\u05de\u05d6\u05e8\u05df \u05d0\u05d9\u05d9\u05e8\u05e4\u05dc\u05d5\u05e8 ${formatAirfloorSizeSlash(v)} \u05de\u05d8\u05e8`;
+}
+
+export function getAirfloorMatSeoDescription(v: AirfloorMatVariant) {
+  return (
+    `\u05de\u05d6\u05e8\u05df \u05d0\u05d9\u05d9\u05e8\u05e4\u05dc\u05d5\u05e8 \u05de\u05e7\u05e6\u05d5\u05e2\u05d9 ${formatAirfloorSizeSlash(v)} \u05de\u05d8\u05e8 \u05de-LEVITATE. ` +
+    `\u05db\u05d5\u05dc\u05dc \u05de\u05e9\u05d0\u05d1\u05d4, \u05e2\u05e8\u05db\u05ea \u05ea\u05d9\u05e7\u05d5\u05e0\u05d9\u05dd \u05d5\u05e4\u05e1 \u05d7\u05d9\u05d1\u05d5\u05e8. \u05e8\u05d5\u05d7\u05d1 2 \u05de\u05d8\u05e8 \u05dc\u05d1\u05d8\u05d9\u05d7\u05d5\u05ea \u05de\u05e8\u05d1\u05d9\u05ea. \u05de\u05d7\u05d9\u05e8: ${v.price.toLocaleString("he-IL")} \u20aa.`
+  );
+}
+
+export function isAirfloorMatProduct(product: Pick<Product, "id" | "cat">) {
+  return product.cat === AIRFLOOR_MAT_CATEGORY;
+}
+
+export function getAirfloorMatVariantById(id: string): AirfloorMatVariant | undefined {
+  return AIRFLOOR_MAT_VARIANTS.find((v) => v.id === id);
+}
+
+export function shouldShowAirfloorSafetyNotice(productId: string) {
+  const variant = getAirfloorMatVariantById(productId);
+  return Boolean(variant?.showSafetyNotice);
+}
+
+const AIRFLOOR_INTRO =
+  "\u05d4\u05db\u05d9\u05e8\u05d5 \u05d0\u05ea \u05d4\u05d3\u05d5\u05e8 \u05d4\u05d1\u05d0 \u05e9\u05dc \u05de\u05e9\u05d8\u05d7\u05d9 \u05d4\u05d0\u05d9\u05de\u05d5\u05df. \u05de\u05d6\u05e8\u05df \u05d4\u05d0\u05d9\u05d9\u05e8\u05e4\u05dc\u05d5\u05e8 \u05e9\u05dc LV \u05de\u05e6\u05d9\u05e2 \u05e9\u05d9\u05dc\u05d5\u05d1 \u05de\u05d5\u05e9\u05dc\u05dd \u05d1\u05d9\u05df \u05d2\u05de\u05d9\u05e9\u05d5\u05ea, \u05d1\u05dc\u05d9\u05de\u05ea \u05d6\u05e2\u05d6\u05d5\u05e2\u05d9\u05dd \u05d5\u05e2\u05de\u05d9\u05d3\u05d5\u05ea \u05d2\u05d1\u05d5\u05d4\u05d4, \u05d4\u05de\u05d5\u05ea\u05d0\u05dd \u05dc\u05de\u05ea\u05e2\u05de\u05dc\u05d9\u05dd, \u05d0\u05e7\u05e8\u05d5\u05d1\u05d8\u05d9\u05dd \u05d5\u05d0\u05d5\u05d4\u05d1\u05d9 \u05e0\u05d9\u05e0\u05d2'\u05d4. \u05d4\u05de\u05d6\u05e8\u05df \u05de\u05d2\u05d9\u05e2 \u05db\u05e2\u05e8\u05db\u05d4 \u05de\u05dc\u05d0\u05d4 \u05d4\u05db\u05d5\u05dc\u05dc\u05ea \u05de\u05e9\u05d0\u05d1\u05d4, \u05e2\u05e8\u05db\u05ea \u05ea\u05d9\u05e7\u05d5\u05e0\u05d9\u05dd \u05d5\u05e4\u05e1 \u05d7\u05d9\u05d1\u05d5\u05e8 \u05d9\u05d9\u05e2\u05d5\u05d3\u05d9.";
+
+const AIRFLOOR_FEATURES: ProductFeature[] = [
+  { title: "\u05de\u05d9\u05d3\u05d5\u05ea", description: "" },
+  {
+    title: "\u05d1\u05d8\u05d9\u05d7\u05d5\u05ea",
+    description: "\u05e8\u05d5\u05d7\u05d1 2 \u05de\u05d8\u05e8\u05d9\u05dd \u05dc\u05d4\u05d2\u05e0\u05d4 \u05de\u05e7\u05e1\u05d9\u05de\u05dc\u05d9\u05ea (\u05d9\u05d9\u05d7\u05d5\u05d3\u05d9 \u05dc\u05de\u05d6\u05e8\u05e0\u05d9\u05dd \u05e9\u05dc\u05e0\u05d5).",
+  },
+  {
+    title: "\u05e2\u05e8\u05db\u05d4 \u05de\u05dc\u05d0\u05d4",
+    description:
+      "\u05db\u05d5\u05dc\u05dc \u05de\u05e9\u05d0\u05d1\u05d4 \u05d7\u05d6\u05e7\u05d4 \u05dc\u05e0\u05d9\u05e4\u05d5\u05d7 \u05de\u05d4\u05d9\u05e8, \u05e2\u05e8\u05db\u05ea \u05ea\u05d9\u05e7\u05d5\u05e0\u05d9\u05dd \u05de\u05e7\u05e6\u05d5\u05e2\u05d9\u05ea \u05d5\u05e4\u05e1 \u05d7\u05d9\u05d1\u05d5\u05e8 \u05dc\u05d4\u05e6\u05de\u05d3\u05ea \u05de\u05e1\u05e4\u05e8 \u05de\u05d6\u05e8\u05e0\u05d9\u05dd.",
+  },
+  {
+    title: "\u05d7\u05d5\u05de\u05e8\u05d9\u05dd",
+    description: "\u05d8\u05db\u05e0\u05d5\u05dc\u05d5\u05d2\u05d9\u05d9\u05ea \u05e2\u05de\u05d9\u05d3\u05d5\u05ea \u05d2\u05d1\u05d5\u05d4\u05d4 \u05e0\u05d2\u05d3 \u05e9\u05d7\u05d9\u05e7\u05d4 \u05d5\u05e7\u05e8\u05d9\u05e2\u05d4.",
+  },
+  {
+    title: "\u05d0\u05d7\u05e8\u05d9\u05d5\u05ea",
+    description: "12 \u05d7\u05d5\u05d3\u05e9\u05d9 \u05d0\u05d7\u05e8\u05d9\u05d5\u05ea \u05e2\u05dc \u05e4\u05d2\u05de\u05d9 \u05d9\u05d9\u05e6\u05d5\u05e8.",
+  },
+];
+
+const AIRFLOOR_AUDIENCE: ProductFeature[] = [
+  {
+    title: "\u05de\u05ea\u05e2\u05de\u05dc\u05d9\u05dd \u05d5\u05d0\u05e7\u05e8\u05d5\u05d1\u05d8\u05d9\u05dd",
+    description: "\u05de\u05e9\u05d8\u05d7 \u05d0\u05d9\u05de\u05d5\u05df \u05de\u05e7\u05e6\u05d5\u05e2\u05d9 \u05dc\u05ea\u05e8\u05d2\u05d9\u05dc\u05d9 \u05d2\u05d9\u05dc, \u05e7\u05e4\u05d9\u05e6\u05d5\u05ea \u05d5\u05e8\u05d5\u05d8\u05d9\u05e0\u05d5\u05ea.",
+  },
+  {
+    title: "\u05d7\u05d5\u05d2\u05d9 \u05e0\u05d9\u05e0\u05d2'\u05d4 \u05d5\u05d2\u05f3\u05d9\u05de\u05d1\u05d5\u05e8\u05d9",
+    description: "\u05de\u05e9\u05d8\u05d7 \u05d1\u05d8\u05d5\u05d7 \u05d5\u05d2\u05de\u05d9\u05e9 \u05dc\u05d0\u05d9\u05de\u05d5\u05e0\u05d9 \u05ea\u05e0\u05d5\u05e2\u05d4, \u05e7\u05e4\u05d9\u05e6\u05d4 \u05d5\u05d2\u05dc\u05d2\u05d5\u05dc\u05d9\u05dd \u05d1\u05de\u05d2\u05d5\u05d5\u05df \u05e8\u05de\u05d5\u05ea.",
+  },
+  {
+    title: "\u05de\u05ea\u05e0\"\u05e1\u05d9\u05dd \u05d5\u05d0\u05d5\u05dc\u05de\u05d5\u05ea \u05d0\u05d9\u05de\u05d5\u05df",
+    description: "\u05e4\u05ea\u05e8\u05d5\u05df \u05de\u05e7\u05e6\u05d5\u05e2\u05d9 \u05dc\u05d7\u05d5\u05d2\u05d9\u05dd \u05e2\u05dd \u05e2\u05de\u05d9\u05d3\u05d5\u05ea \u05d2\u05d1\u05d5\u05d4\u05d4 \u05dc\u05e9\u05d9\u05de\u05d5\u05e9 \u05d9\u05d5\u05de\u05d9\u05d5\u05de\u05d9.",
+  },
+];
+
+export function buildAirfloorMatProductExtra(
+  variant: AirfloorMatVariant,
+  allIds: string[],
+): Partial<Product> {
+  const sizeSlash = formatAirfloorSizeSlash(variant);
+  const dimsSpec = formatAirfloorDimensionsSpec(variant);
+  const thicknessCm = Math.round(variant.thicknessM * 100);
+
+  const features: ProductFeature[] = AIRFLOOR_FEATURES.map((f) =>
+    f.title === "\u05de\u05d9\u05d3\u05d5\u05ea" ? { ...f, description: dimsSpec } : f,
+  );
+
+  const specs: ProductSpec[] = [
+    { label: "\u05de\u05d9\u05d3\u05d5\u05ea", value: dimsSpec },
+    { label: "\u05d0\u05d5\u05e8\u05da", value: `${variant.lengthM} \u05de'` },
+    { label: "\u05e8\u05d5\u05d7\u05d1", value: `${variant.widthM} \u05de'` },
+    { label: "\u05e2\u05d5\u05d1\u05d9", value: `${thicknessCm} \u05e1"\u05de` },
+    { label: "\u05d1\u05d8\u05d9\u05d7\u05d5\u05ea", value: "\u05e8\u05d5\u05d7\u05d1 2 \u05de\u05d8\u05e8 \u05dc\u05d4\u05d2\u05e0\u05d4 \u05de\u05e7\u05e1\u05d9\u05de\u05dc\u05d9\u05ea" },
+    { label: "\u05e2\u05e8\u05db\u05ea \u05de\u05dc\u05d0\u05d4", value: "\u05de\u05e9\u05d0\u05d1\u05d4, \u05e2\u05e8\u05db\u05ea \u05ea\u05d9\u05e7\u05d5\u05e0\u05d9\u05dd, \u05e4\u05e1 \u05d7\u05d9\u05d1\u05d5\u05e8" },
+    { label: "\u05de\u05d5\u05ea\u05d2", value: "LEVITATE" },
+    { label: "\u05e7\u05d8\u05d2\u05d5\u05e8\u05d9\u05d4", value: AIRFLOOR_MAT_CATEGORY },
+    { label: "\u05de\u05e7\"\u05d8", value: variant.id },
+    { label: "\u05d0\u05d7\u05e8\u05d9\u05d5\u05ea", value: "12 \u05d7\u05d5\u05d3\u05e9\u05d9 \u05d0\u05d7\u05e8\u05d9\u05d5\u05ea \u05e2\u05dc \u05e4\u05d2\u05de\u05d9 \u05d9\u05d9\u05e6\u05d5\u05e8" },
+  ];
+
+  return {
+    introTitle: getAirfloorMatTitle(variant),
+    introParagraphs: [AIRFLOOR_INTRO],
+    featuresTitle: "\u05de\u05e4\u05e8\u05d8 \u05d8\u05db\u05e0\u05d9 \u05d5\u05de\u05d4 \u05d1\u05d7\u05d1\u05d9\u05dc\u05d4?",
+    features,
+    specsTitle: "\u05de\u05e4\u05e8\u05d8 \u05de\u05dc\u05d0",
+    specs,
+    warrantyTitle: "\u05d0\u05d7\u05e8\u05d9\u05d5\u05ea",
+    warrantyText: "12 \u05d7\u05d5\u05d3\u05e9\u05d9 \u05d0\u05d7\u05e8\u05d9\u05d5\u05ea \u05e2\u05dc \u05e4\u05d2\u05de\u05d9 \u05d9\u05d9\u05e6\u05d5\u05e8.",
+    audienceTitle: "\u05dc\u05de\u05d9 \u05d4\u05de\u05d6\u05e8\u05df \u05de\u05ea\u05d0\u05d9\u05dd?",
+    audience: AIRFLOOR_AUDIENCE,
+    ctaText: `\u05d4\u05d6\u05de\u05d9\u05e0\u05d5 \u05de\u05d6\u05e8\u05df \u05d0\u05d9\u05d9\u05e8\u05e4\u05dc\u05d5\u05e8 ${sizeSlash} \u05de\u05d8\u05e8 \u2014 \u05d0\u05d9\u05de\u05d5\u05df \u05de\u05e7\u05e6\u05d5\u05e2\u05d9 \u05d1\u05de\u05d7\u05d9\u05e8 \u05de\u05e2\u05d5\u05dc\u05d4!`,
+    badge: "AirFloor",
+    relatedIds: [...allIds.filter((id) => id !== variant.id), "landing-mat-250x200x30"],
+  };
+}

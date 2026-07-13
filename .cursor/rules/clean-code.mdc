@@ -1,0 +1,56 @@
+---
+description: Clean Code principles — modularity, reusability, consistency, maintenance
+alwaysApply: true
+---
+
+# Clean Code (CHOLE sport)
+
+Prioritize long-term maintainability over quick-and-dirty fixes.
+
+## Modularity
+- Keep logic and UI separated.
+- Extract complex functions into `src/lib/`, `src/hooks/`, or `src/services/` — not inside components.
+- Components should orchestrate; utilities should compute.
+
+## Reusability
+- Avoid hardcoding URLs, copy, thresholds, and config in JSX.
+- Use props, constants (e.g. `src/data/`, `src/lib/`), and shared types.
+- Prefer composable, configurable components.
+
+## Consistency
+- Follow existing project structure:
+  - `src/components/site/` — page/section UI
+  - `src/lib/` — pure utilities
+  - `src/context/` — shared state
+  - `src/data/` — static data and types
+  - `src/routes/` — route shells only
+- If logic is reused in 2+ places, move it to a shared module.
+
+## Maintenance
+- Before changing code, ask: does this add technical debt?
+- If a file exceeds ~200 lines or mixes concerns, refactor into smaller pieces.
+- Suggest refactoring when touching messy areas — don't only patch symptoms.
+
+## Documentation
+- Add brief comments only for non-obvious business rules or tricky logic.
+- Don't comment what the code already says clearly.
+
+## Examples
+
+```tsx
+// ❌ BAD — business logic in component
+function CartPage() {
+  const shipping = subtotal >= 350 ? 0 : 35;
+}
+
+// ✅ GOOD — utility + constant
+import { getShippingCost, FREE_SHIPPING_THRESHOLD } from "@/lib/checkout";
+```
+
+```tsx
+// ❌ BAD — hardcoded URL in JSX
+<a href="https://wa.me/972542366279">
+
+// ✅ GOOD — shared constant
+import { WHATSAPP_URL } from "@/lib/contact";
+```

@@ -1,5 +1,5 @@
 import type { LucideIcon } from "lucide-react";
-import { Heart } from "lucide-react";
+import { Dumbbell, Heart } from "lucide-react";
 import tableTennisPaddle from "@/assets/table-tennis-paddle.png";
 import proGameTablesIcon from "@/assets/pro-game-tables-icon.png";
 import airfloorMatsIcon from "@/assets/airfloor-mats-icon.png";
@@ -8,6 +8,16 @@ import showRoomIcon from "@/assets/show-room-icon.png";
 import { LANDING_MAT_VARIANTS } from "@/data/landingMats";
 import { AIRFLOOR_MAT_VARIANTS } from "@/data/airfloorMats";
 import { SHOWROOM_ACTIVITIES } from "@/data/showroom";
+import {
+  getGymboreeProductIds,
+  getGymboreeSubcategoryLabels,
+  GYMBOREE_CATEGORY,
+} from "@/data/gymboree";
+import {
+  getTrainingAccessoryProductIds,
+  getTrainingAccessorySubcategoryLabels,
+  TRAINING_ACCESSORIES_CATEGORY,
+} from "@/data/trainingAccessories";
 
 /** Maps product.cat values in products.ts to each storefront category. */
 export type CategoryDefinition = {
@@ -26,6 +36,13 @@ export type CategoryDefinition = {
   /** Optional product IDs aligned with subcategories (same order). */
   subcategoryProductIds?: string[];
 };
+
+export const CATEGORIES_PAGE_TITLE = "קולקציית המוצרים";
+export const CATEGORIES_PAGE_SUBTITLE =
+  "כל הקטגוריות במקום אחד — בחרו תחום והמשיכו למוצרים שמתאימים לכם.";
+export const CATEGORIES_PAGE_SEO_DESCRIPTION =
+  "קולקציית המוצרים של CHOLE sport — אביזרי אימון, ציוד ג׳ימבורי, מזרני איירפלור ונחיתה, שולחנות משחק וציוד טניס שולחן.";
+
 
 export const CATEGORIES: CategoryDefinition[] = [
   {
@@ -49,10 +66,22 @@ export const CATEGORIES: CategoryDefinition[] = [
   {
     slug: "gymboree",
     name: "ציוד ג׳ימבורי",
-    description: "",
-    subcategories: ["מזרני יוגה", "בלוקים ורצועות", "ריפורמרים", "גלילי קצף"],
-    productCats: [],
+    description:
+      "ציוד רך מקצועי לג׳ימבורי ולהתעמלות קרקע — ערכות טיפוס וגלישה, משולשים רכים ושיפועתי לתרגול בטוח.",
+    subcategories: getGymboreeSubcategoryLabels(),
+    subcategoryProductIds: getGymboreeProductIds(),
+    productCats: [GYMBOREE_CATEGORY],
     icon: Heart,
+  },
+  {
+    slug: "training-accessories",
+    name: "אביזרי אימון",
+    description:
+      "אביזרי אימון מקצועיים — מזרני פאזל, קוביות פליאומטריות, כדור בוסו, סטפרים ופיתות לשיווי משקל.",
+    subcategories: getTrainingAccessorySubcategoryLabels(),
+    subcategoryProductIds: getTrainingAccessoryProductIds(),
+    productCats: [TRAINING_ACCESSORIES_CATEGORY],
+    icon: Dumbbell,
   },
   {
     slug: "airfloor-mats",

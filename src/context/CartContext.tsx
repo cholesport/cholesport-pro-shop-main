@@ -5,6 +5,7 @@ import {
   loadCart,
   productToCartItem,
   saveCart,
+  withUpdatedCartQuantity,
   type CartItem,
 } from "@/lib/cart";
 import type { Product } from "@/data/products";
@@ -35,16 +36,17 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, [items, hydrated]);
 
   const addItem = useCallback((product: Product, quantity = 1) => {
+    const addQty = Math.max(1, Math.floor(quantity));
     setItems((prev) => {
       const existing = prev.find((item) => item.productId === product.id);
       if (existing) {
         return prev.map((item) =>
           item.productId === product.id
-            ? { ...item, quantity: item.quantity + quantity }
+            ? withUpdatedCartQuantity(item, item.quantity + addQty)
             : item,
         );
       }
-      return [...prev, productToCartItem(product, quantity)];
+      return [...prev, productToCartItem(product, addQty)];
     });
   }, []);
 
@@ -58,7 +60,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
       return;
     }
     setItems((prev) =>
-      prev.map((item) => (item.productId === productId ? { ...item, quantity } : item)),
+      prev.map((item) =>
+        item.productId === productId ? withUpdatedCartQuantity(item, quantity) : item,
+      ),
     );
   }, []);
 

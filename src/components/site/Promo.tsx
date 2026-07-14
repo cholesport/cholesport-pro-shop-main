@@ -1,5 +1,5 @@
-import { PAYMENT_INSTALLMENTS_LABEL } from "@/data/payment";
-import { CONTACT_PHONE_DISPLAY, getShippingWhatsAppUrl } from "@/lib/contact";
+import { PAYMENT_SUMMARY } from "@/data/payment";
+import { CONTACT_PHONE_DISPLAY, getShippingWhatsAppUrl, WHATSAPP_URL } from "@/lib/contact";
 import { COMPANY } from "@/data/legal";
 
 const ITEMS = [
@@ -13,8 +13,9 @@ const ITEMS = [
     href: getShippingWhatsAppUrl(),
   },
   {
-    title: "תשלומים",
-    desc: PAYMENT_INSTALLMENTS_LABEL,
+    title: "רכישה ותשלום",
+    desc: PAYMENT_SUMMARY,
+    href: WHATSAPP_URL,
   },
   {
     title: "SHOW ROOM",

@@ -1,4 +1,5 @@
 import { ArrowLeft } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import { HeroCarousel } from "@/components/site/HeroCarousel";
 import { useHeroCarousel } from "@/hooks/useHeroCarousel";
 import {
@@ -62,13 +63,13 @@ export function Hero() {
 
             {/* 5. CTA */}
             <div className="mt-8 sm:mt-10">
-              <a
-                href="#products"
+              <Link
+                to="/categories"
                 className="inline-flex items-center justify-center gap-2 bg-accent px-8 py-3.5 text-sm font-bold tracking-wide text-accent-foreground transition hover:opacity-90 sm:text-base"
               >
                 {BRAND_HERO_CTA}
                 <ArrowLeft size={18} aria-hidden />
-              </a>
+              </Link>
             </div>
           </div>
         </div>

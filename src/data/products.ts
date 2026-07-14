@@ -23,6 +23,18 @@ import {
   AIRFLOOR_MAT_VARIANTS,
   AIRFLOOR_MAT_BRAND,
 } from "@/data/airfloorMats";
+import {
+  buildGymboreeProductExtra,
+  GYMBOREE_BRAND,
+  GYMBOREE_CATEGORY,
+  GYMBOREE_PRODUCTS,
+} from "@/data/gymboree";
+import {
+  buildTrainingAccessoryProductExtra,
+  TRAINING_ACCESSORIES_BRAND,
+  TRAINING_ACCESSORIES_CATEGORY,
+  TRAINING_ACCESSORIES_PRODUCTS,
+} from "@/data/trainingAccessories";
 
 export type ProductFeature = { title: string; description: string };
 export type ProductSpec = { label: string; value: string };
@@ -38,7 +50,8 @@ export type ProductFeatureHighlight = {
 
 export type Product = {
   id: string;
-  img: string;
+  /** Optional until a product photo is available — UI shows a text placeholder. */
+  img?: string;
   images: string[];
   brand: string;
   title: string;
@@ -90,12 +103,13 @@ const DEFAULT_ACCORDION: ProductAccordion[] = [
 function makeProduct(
   base: Pick<
     Product,
-    "id" | "img" | "brand" | "title" | "sku" | "cat" | "price" | "was" | "rating" | "reviews" | "badge"
-  >,
+    "id" | "brand" | "title" | "sku" | "cat" | "price" | "was" | "rating" | "reviews" | "badge"
+  > & { img?: string },
   extra?: Partial<Product>,
 ): Product {
   return {
-    images: [base.img],
+    img: base.img,
+    images: base.img ? [base.img] : [],
     stockNote: "נותרו יחידות אחרונות",
     introTitle: base.title,
     introParagraphs: [
@@ -494,6 +508,46 @@ export const PRODUCTS: Product[] = [
       ),
     ),
   ),
+  ...GYMBOREE_PRODUCTS.map((definition) =>
+    makeProduct(
+      {
+        id: definition.id,
+        img: definition.img,
+        brand: GYMBOREE_BRAND,
+        title: definition.title,
+        sku: definition.id,
+        cat: GYMBOREE_CATEGORY,
+        price: definition.price,
+        was: definition.price,
+        rating: 0,
+        reviews: 0,
+      },
+      buildGymboreeProductExtra(
+        definition,
+        GYMBOREE_PRODUCTS.map((p) => p.id),
+      ),
+    ),
+  ),
+  ...TRAINING_ACCESSORIES_PRODUCTS.map((definition) =>
+    makeProduct(
+      {
+        id: definition.id,
+        brand: TRAINING_ACCESSORIES_BRAND,
+        title: definition.title,
+        sku: definition.id,
+        cat: TRAINING_ACCESSORIES_CATEGORY,
+        price: definition.price,
+        was: definition.price,
+        rating: 0,
+        reviews: 0,
+        badge: definition.badge,
+      },
+      buildTrainingAccessoryProductExtra(
+        definition,
+        TRAINING_ACCESSORIES_PRODUCTS.map((p) => p.id),
+      ),
+    ),
+  ),
 ];
 
 export function getProductById(id: string): Product | undefined {
@@ -508,6 +562,30 @@ export function getRelatedProducts(product: Product): Product[] {
 
 export const TABLE_TENNIS_EQUIPMENT_CATEGORY_SLUG = "table-tennis-equipment";
 
+/** Curated mix across categories for the homepage "נבחרת CHOLE" carousel. */
+export const HOMEPAGE_FEATURED_PRODUCT_IDS = [
+  "chole-pro-25",
+  "gymboree-climb-slide-3pc",
+  "training-plyo-boxes-4pc",
+  "airfloor-6x2x0.2",
+  "landing-mat-250x150x30",
+  "chole-navy6",
+  "training-bosu-ball",
+  "gymboree-soft-triangles-4pc",
+  PONG_BOT_NOVA_S_PRO_ID,
+  "training-hurdle-23",
+  "gymboree-incline-mat",
+  "chole-outdoor-18",
+  "training-puzzle-mat-blue-red",
+  "airfloor-4x2x0.2",
+  "landing-mat-250x200x30",
+] as const;
+
+/** Products shown on the homepage featured carousel. */
+export const HOMEPAGE_PRODUCTS: Product[] = HOMEPAGE_FEATURED_PRODUCT_IDS.map((id) =>
+  getProductByIdOrThrow(id),
+);
+
 /** All products in the "טניס שולחן" category — accessories & training gear. */
 export function getTableTennisEquipmentProducts(): Product[] {
   return PRODUCTS.filter((p) => p.cat === "טניס שולחן");
@@ -518,11 +596,3 @@ export function getProductByIdOrThrow(id: string): Product {
   if (!product) throw new Error(`Product not found: ${id}`);
   return product;
 }
-
-/** Products shown on the homepage grid (excludes related-only items). */
-export const HOMEPAGE_PRODUCTS = PRODUCTS.filter(
-  (p) =>
-    p.id !== PONG_BOT_NOVA_S_PRO_ID &&
-    p.cat !== LANDING_MAT_CATEGORY &&
-    p.cat !== AIRFLOOR_MAT_CATEGORY,
-);

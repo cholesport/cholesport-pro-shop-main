@@ -144,8 +144,18 @@ export function HeaderSearchBar({ id }: HeaderSearchBarProps) {
                         isActive ? "bg-accent/10 text-foreground" : "hover:bg-secondary/80"
                       }`}
                     >
-                      <div className="size-12 shrink-0 overflow-hidden rounded-lg border border-border bg-secondary">
-                        <img src={product.img} alt="" className="size-full object-cover" />
+                      <div className="size-12 shrink-0 overflow-hidden rounded-lg border border-border bg-secondary flex items-center justify-center px-1">
+                        {product.img || product.images[0] ? (
+                          <img
+                            src={product.img ?? product.images[0]}
+                            alt=""
+                            className="size-full object-cover"
+                          />
+                        ) : (
+                          <span className="text-[9px] font-semibold leading-tight text-center text-foreground/70 line-clamp-3">
+                            {product.title}
+                          </span>
+                        )}
                       </div>
                       <div className="min-w-0 flex-1 text-start">
                         <p className="text-sm font-semibold leading-snug line-clamp-2">{product.title}</p>

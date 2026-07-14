@@ -1,4 +1,8 @@
 import type { Product } from "@/data/products";
+import {
+  getPuzzleMatUnitPrice,
+  isPuzzleMatProductId,
+} from "@/data/trainingAccessories";
 
 export type CartItem = {
   productId: string;
@@ -17,7 +21,7 @@ export function loadCart(): CartItem[] {
     const raw = localStorage.getItem(CART_STORAGE_KEY);
     if (!raw) return [];
     const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed : [];
+    return Array.isArray(parsed) ? parsed.map(normalizeCartItem) : [];
   } catch {
     return [];
   }
@@ -27,14 +31,41 @@ export function saveCart(items: CartItem[]) {
   localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
 }
 
+/** Resolve unit price for a cart line (quantity deals for puzzle mats). */
+export function getCartUnitPrice(productId: string, quantity: number, fallbackPrice: number) {
+  if (isPuzzleMatProductId(productId)) {
+    return getPuzzleMatUnitPrice(quantity);
+  }
+  return fallbackPrice;
+}
+
+function normalizeCartItem(item: CartItem): CartItem {
+  const quantity = Math.max(1, Math.floor(Number(item.quantity) || 1));
+  return {
+    ...item,
+    quantity,
+    price: getCartUnitPrice(item.productId, quantity, item.price),
+  };
+}
+
 export function productToCartItem(product: Product, quantity: number): CartItem {
+  const qty = Math.max(1, Math.floor(quantity));
   return {
     productId: product.id,
     title: product.title,
     brand: product.brand,
-    price: product.price,
-    image: product.img,
-    quantity,
+    price: getCartUnitPrice(product.id, qty, product.price),
+    image: product.img ?? product.images[0] ?? "",
+    quantity: qty,
+  };
+}
+
+export function withUpdatedCartQuantity(item: CartItem, quantity: number): CartItem {
+  const qty = Math.max(1, Math.floor(quantity));
+  return {
+    ...item,
+    quantity: qty,
+    price: getCartUnitPrice(item.productId, qty, item.price),
   };
 }
 

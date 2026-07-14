@@ -9,6 +9,10 @@ export const BRAND_HERO_SUBHEADLINE =
 
 export const BRAND_HERO_CTA = "לצפייה בקולקציית המוצרים";
 
+export const HOMEPAGE_FEATURED_TITLE = "נבחרת מוצרי CHOLE";
+export const HOMEPAGE_FEATURED_SUBTITLE =
+  "מבחר מוצרים מתחומים שונים — שולחנות משחק, אביזרי אימון, ג׳ימבורי, איירפלור ומזרני נחיתה. גללו או גררו בין המוצרים.";
+
 export const BRAND_CORPORATE_TAGLINE = "Engineered for Excellence";
 
 export const BRAND_SHORT =

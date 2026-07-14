@@ -9,7 +9,8 @@ import {
   TABLE_TENNIS_EQUIPMENT_CATEGORY_SLUG,
   type Product,
 } from "@/data/products";
-import { PAYMENT_INSTALLMENTS_LABEL } from "@/data/payment";
+import { PAYMENT_SUMMARY } from "@/data/payment";
+import { ProductMedia } from "@/components/site/ProductMedia";
 
 const SECTION_TITLE = "ציוד משלים למקצוענים: רובוט אימון NOVA S PRO";
 
@@ -58,11 +59,11 @@ export function ComplementaryEquipmentSection({
           params={{ productId: product.id }}
           className="relative bg-white aspect-[4/3] md:aspect-auto md:min-h-[320px] overflow-hidden block"
         >
-          <img
-            src={product.img}
+          <ProductMedia
+            product={product}
             alt={product.title}
-            className="w-full h-full object-contain p-6 md:p-10 group-hover:scale-[1.02] transition duration-500"
-            loading="lazy"
+            fit="contain"
+            imgClassName="p-6 md:p-10 group-hover:scale-[1.02] transition duration-500"
           />
           {product.badge && (
             <span className="absolute top-4 start-4 bg-accent text-accent-foreground text-xs font-bold uppercase tracking-wide px-3 py-1 rounded">
@@ -84,7 +85,7 @@ export function ComplementaryEquipmentSection({
           <div className="mt-6 flex items-baseline gap-2">
             <span className="text-2xl font-black text-foreground">{formatPrice(product.price)} ₪</span>
           </div>
-          <p className="mt-1 text-xs text-muted-foreground">{PAYMENT_INSTALLMENTS_LABEL}</p>
+          <p className="mt-1 text-xs text-muted-foreground">{PAYMENT_SUMMARY}</p>
 
           <div className="mt-6 flex flex-wrap gap-3">
             <Button

@@ -15,6 +15,18 @@ import {
   getAirfloorMatVariantById,
   isAirfloorMatProduct,
 } from "@/data/airfloorMats";
+import {
+  getGymboreeProductById,
+  getGymboreeSeoDescription,
+  getGymboreeSeoTitle,
+  isGymboreeProduct,
+} from "@/data/gymboree";
+import {
+  getTrainingAccessoryById,
+  getTrainingAccessorySeoDescription,
+  getTrainingAccessorySeoTitle,
+  isTrainingAccessoryProduct,
+} from "@/data/trainingAccessories";
 
 export const Route = createFileRoute("/products/$productId")({
   loader: ({ params }) => {
@@ -25,26 +37,37 @@ export const Route = createFileRoute("/products/$productId")({
   head: ({ loaderData }) => {
     const landingVariant = getLandingMatVariantById(loaderData.id);
     const airfloorVariant = getAirfloorMatVariantById(loaderData.id);
+    const gymboreeProduct = getGymboreeProductById(loaderData.id);
+    const trainingAccessory = getTrainingAccessoryById(loaderData.id);
     const isLandingMat = isLandingMatProduct(loaderData) && landingVariant;
     const isAirfloorMat = isAirfloorMatProduct(loaderData) && airfloorVariant;
+    const isGymboree = isGymboreeProduct(loaderData) && gymboreeProduct;
+    const isTrainingAccessory = isTrainingAccessoryProduct(loaderData) && trainingAccessory;
+
+    const title = isLandingMat
+      ? getLandingMatSeoTitle(landingVariant)
+      : isAirfloorMat
+        ? getAirfloorMatSeoTitle(airfloorVariant)
+        : isGymboree
+          ? getGymboreeSeoTitle(gymboreeProduct)
+          : isTrainingAccessory
+            ? getTrainingAccessorySeoTitle(trainingAccessory)
+            : loaderData.title;
+
+    const description = isLandingMat
+      ? getLandingMatSeoDescription(landingVariant)
+      : isAirfloorMat
+        ? getAirfloorMatSeoDescription(airfloorVariant)
+        : isGymboree
+          ? getGymboreeSeoDescription(gymboreeProduct)
+          : isTrainingAccessory
+            ? getTrainingAccessorySeoDescription(trainingAccessory)
+            : (loaderData.introParagraphs[0] ?? loaderData.title);
 
     return {
       meta: [
-        {
-          title: isLandingMat
-            ? `${getLandingMatSeoTitle(landingVariant)} — CHOLE sport`
-            : isAirfloorMat
-              ? `${getAirfloorMatSeoTitle(airfloorVariant)} — CHOLE sport`
-              : `${loaderData.title} — CHOLE sport`,
-        },
-        {
-          name: "description",
-          content: isLandingMat
-            ? getLandingMatSeoDescription(landingVariant)
-            : isAirfloorMat
-              ? getAirfloorMatSeoDescription(airfloorVariant)
-              : (loaderData.introParagraphs[0] ?? loaderData.title),
-        },
+        { title: `${title} — CHOLE sport` },
+        { name: "description", content: description },
       ],
     };
   },

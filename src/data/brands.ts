@@ -28,7 +28,7 @@ export const STORE_BRANDS: StoreBrand[] = [
     name: "CHOLE",
     logo: choleLogo,
     productBrands: ["CHOLE®", "CHOLE"],
-    categorySlugs: ["pro-game-tables", "table-tennis-equipment"],
+    categorySlugs: ["pro-game-tables", "table-tennis-equipment", "training-accessories"],
     href: "/#products",
   },
   {
@@ -37,7 +37,7 @@ export const STORE_BRANDS: StoreBrand[] = [
     logo: levitateLogo,
     logoOnDark: levitateLogoOnDark,
     productBrands: ["LEVITATE®", "LEVITATE"],
-    categorySlugs: ["airfloor-mats", "landing-mats"],
+    categorySlugs: ["airfloor-mats", "landing-mats", "gymboree"],
     href: "/categories/airfloor-mats",
   },
 ];

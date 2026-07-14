@@ -1,8 +1,9 @@
 import { Link } from "@tanstack/react-router";
 import { Star } from "lucide-react";
 import type { Product } from "@/data/products";
-import { PAYMENT_INSTALLMENTS_LABEL } from "@/data/payment";
+import { PAYMENT_SUMMARY } from "@/data/payment";
 import { BrandMark } from "@/components/site/BrandLogos";
+import { ProductMedia } from "@/components/site/ProductMedia";
 import { getStoreBrandByProductBrand } from "@/data/brands";
 
 type ProductCardProps = {
@@ -17,13 +18,10 @@ export function ProductCard({ product: p }: ProductCardProps) {
     <article className="group flex flex-col">
       <Link to="/products/$productId" params={{ productId: p.id }} className="block">
         <div className="relative aspect-[4/5] bg-secondary overflow-hidden border border-border">
-          <img
-            src={p.img}
+          <ProductMedia
+            product={p}
             alt={p.title}
-            loading="lazy"
-            width={800}
-            height={1000}
-            className="w-full h-full object-cover group-hover:scale-[1.03] transition duration-500"
+            imgClassName="group-hover:scale-[1.03] transition duration-500"
           />
           {p.badge && (
             <span className="absolute top-3 start-3 bg-accent text-accent-foreground text-[11px] font-bold tracking-wide px-2 py-1">
@@ -67,7 +65,7 @@ export function ProductCard({ product: p }: ProductCardProps) {
             </span>
           )}
         </div>
-        <p className="mt-1 text-xs text-muted-foreground">{PAYMENT_INSTALLMENTS_LABEL}</p>
+        <p className="mt-1 text-xs text-muted-foreground">{PAYMENT_SUMMARY}</p>
         {p.stockNote && p.stockNote !== "נותרו יחידות אחרונות" && (
           <p className="mt-2 text-xs font-medium text-amber-700 leading-snug">{p.stockNote}</p>
         )}

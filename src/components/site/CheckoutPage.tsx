@@ -1,22 +1,22 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { ChevronLeft, CreditCard, MapPin, MessageCircle, Plus, Smartphone } from "lucide-react";
+import { ChevronLeft, MapPin, MessageCircle, Plus, Smartphone } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { ProductMedia } from "@/components/site/ProductMedia";
 import { useCart } from "@/context/CartContext";
 import { formatPrice } from "@/lib/cart";
 import { getCheckoutSuggestions } from "@/lib/checkout";
 import {
   CONTACT_PHONE_DISPLAY,
-  getShippingWhatsAppUrl,
+  getOrderWhatsAppUrl,
 } from "@/lib/contact";
 import { COMPANY } from "@/data/legal";
 import {
-  PAYMENT_CARD_BRANDS,
   PAYMENT_INSTALLMENTS_LABEL,
-  formatInstallmentAmount,
+  PAYMENT_WHATSAPP_NOTICE,
 } from "@/data/payment";
 import type { Product } from "@/data/products";
 
@@ -56,21 +56,13 @@ function OrderSummary({
           <span>משלוח</span>
           <span>{isPickup ? "איסוף עצמי" : "תיאום בוואטסאפ"}</span>
         </div>
-        {isPickup ? (
-          <>
-            <div className="flex justify-between text-base font-bold text-foreground pt-2">
-              <span>סה״כ</span>
-              <span>₪{formatPrice(subtotal)}</span>
-            </div>
-            <p className="text-xs text-muted-foreground pt-1">
-              {PAYMENT_INSTALLMENTS_LABEL} · {formatInstallmentAmount(subtotal)} לתשלום
-            </p>
-          </>
-        ) : (
-          <p className="text-xs text-muted-foreground pt-2 leading-relaxed">
-            עלויות משלוח נקבעות בתיאום אישי. צרו קשר בוואטסאפ לתיאום והבנת מחיר.
-          </p>
-        )}
+        <div className="flex justify-between text-base font-bold text-foreground pt-2">
+          <span>סה״כ מוצרים</span>
+          <span>₪{formatPrice(subtotal)}</span>
+        </div>
+        <p className="text-xs text-muted-foreground pt-2 leading-relaxed">
+          {PAYMENT_WHATSAPP_NOTICE} {PAYMENT_INSTALLMENTS_LABEL}.
+        </p>
       </div>
     </div>
   );
@@ -89,7 +81,7 @@ function LastMinuteProduct({ product }: { product: Product }) {
     <article className="shrink-0 w-40 sm:w-44 bg-card border border-border rounded-xl overflow-hidden hover:border-accent/40 transition">
       <Link to="/products/$productId" params={{ productId: product.id }}>
         <div className="aspect-square bg-secondary overflow-hidden">
-          <img src={product.img} alt={product.title} className="w-full h-full object-cover" />
+          <ProductMedia product={product} alt={product.title} />
         </div>
       </Link>
       <div className="p-3">
@@ -113,19 +105,25 @@ function LastMinuteProduct({ product }: { product: Product }) {
   );
 }
 
-function CheckoutSuccess({ orderId, total }: { orderId: string; total: number }) {
+function CheckoutSuccess() {
   return (
     <div className="max-w-lg mx-auto px-4 py-16 text-center">
       <div className="w-16 h-16 rounded-full bg-accent/10 flex items-center justify-center mx-auto mb-6">
-        <span className="text-3xl">✓</span>
+        <MessageCircle className="text-accent" size={28} />
       </div>
-      <h1 className="text-2xl md:text-3xl font-black text-foreground">ההזמנה התקבלה!</h1>
-      <p className="text-muted-foreground mt-3">
-        מספר הזמנה: <strong className="text-foreground">{orderId}</strong>
+      <h1 className="text-2xl md:text-3xl font-black text-foreground">ההזמנה נשלחה לוואטסאפ</h1>
+      <p className="text-muted-foreground mt-3 leading-relaxed">
+        המשיכו בשיחה בוואטסאפ כדי לתאם תשלום, אספקה ופרטים נוספים. נחזור אליכם בהקדם.
       </p>
-      <p className="text-muted-foreground mt-1">סה״כ ששולם: ₪{formatPrice(total)}</p>
       <p className="text-sm text-muted-foreground mt-4">
-        שלחנו אליכם אישור למייל. ניתן לאסוף את ההזמנה מהחנות בכתובת {COMPANY.address}.
+        מספר:{" "}
+        <a
+          href={`tel:${CONTACT_PHONE_DISPLAY.replace(/-/g, "")}`}
+          className="font-semibold text-accent hover:underline"
+          dir="ltr"
+        >
+          {CONTACT_PHONE_DISPLAY}
+        </a>
       </p>
       <Button asChild className="mt-8 font-semibold">
         <Link to="/">חזרה לחנות</Link>
@@ -134,62 +132,33 @@ function CheckoutSuccess({ orderId, total }: { orderId: string; total: number })
   );
 }
 
-function ShippingWhatsAppPanel() {
-  const shippingUrl = getShippingWhatsAppUrl();
-
-  return (
-    <div className="rounded-xl border border-accent/40 bg-accent/5 p-5 space-y-4">
-      <div className="flex items-start gap-3">
-        <div className="w-10 h-10 rounded-full bg-accent/15 flex items-center justify-center shrink-0">
-          <MessageCircle className="text-accent" size={20} />
-        </div>
-        <div>
-          <h3 className="font-bold text-foreground">תיאום משלוח בוואטסאפ</h3>
-          <p className="text-sm text-muted-foreground mt-1 leading-relaxed">
-            משלוח לכתובת מתואם ישירות מולנו — כולל עלויות וזמני אספקה. לחצו על הקישור או שלחו הודעה למספר:
-          </p>
-          <a
-            href={shippingUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block mt-2 text-base font-bold text-accent hover:underline"
-            dir="ltr"
-          >
-            {CONTACT_PHONE_DISPLAY}
-          </a>
-        </div>
-      </div>
-      <Button asChild className="w-full h-12 text-base font-bold">
-        <a href={shippingUrl} target="_blank" rel="noopener noreferrer">
-          <MessageCircle size={18} />
-          לתאם משלוח בוואטסאפ
-        </a>
-      </Button>
-      <p className="text-xs text-muted-foreground text-center">
-        רוצים לרכוש באתר בלי משלוח? בחרו{" "}
-        <span className="font-semibold text-foreground">איסוף עצמי מהחנות</span> והמשיכו לתשלום כרגיל.
-      </p>
-    </div>
-  );
-}
-
 export function CheckoutPage() {
   const navigate = useNavigate();
   const { items, subtotal, totalQuantity, clearCart } = useCart();
   const [submitted, setSubmitted] = useState(false);
-  const [orderId, setOrderId] = useState("");
-  const [completedTotal, setCompletedTotal] = useState(0);
   const [delivery, setDelivery] = useState<DeliveryMethod>("pickup");
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
     phone: "",
-    email: "",
     notes: "",
   });
 
-  const isPickup = delivery === "pickup";
   const suggestions = getCheckoutSuggestions(items.map((i) => i.productId));
+
+  const whatsappUrl = useMemo(
+    () =>
+      getOrderWhatsAppUrl({
+        items,
+        subtotal,
+        delivery,
+        firstName: form.firstName,
+        lastName: form.lastName,
+        phone: form.phone,
+        notes: form.notes,
+      }),
+    [items, subtotal, delivery, form],
+  );
 
   useEffect(() => {
     if (items.length === 0 && !submitted) {
@@ -197,19 +166,15 @@ export function CheckoutPage() {
     }
   }, [items.length, submitted, navigate]);
 
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (!isPickup) return;
-    const id = `CH-${Date.now().toString().slice(-8)}`;
-    setOrderId(id);
-    setCompletedTotal(subtotal);
-    setSubmitted(true);
+  function handleWhatsAppOrder() {
+    window.open(whatsappUrl, "_blank", "noopener,noreferrer");
     clearCart();
+    setSubmitted(true);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   if (submitted) {
-    return <CheckoutSuccess orderId={orderId} total={completedTotal} />;
+    return <CheckoutSuccess />;
   }
 
   if (items.length === 0) return null;
@@ -224,12 +189,21 @@ export function CheckoutPage() {
         חזרה לעגלה
       </Link>
 
-      <h1 className="text-2xl md:text-3xl font-black text-foreground mb-2">השלמת רכישה</h1>
-      <p className="text-muted-foreground mb-8">{totalQuantity} פריטים · כמעט סיימנו!</p>
+      <h1 className="text-2xl md:text-3xl font-black text-foreground mb-2">השלמת הזמנה בוואטסאפ</h1>
+      <p className="text-muted-foreground mb-6">{totalQuantity} פריטים · ללא תשלום באתר</p>
+
+      <div className="mb-8 rounded-xl border border-accent/40 bg-accent/5 p-4 md:p-5 flex gap-3">
+        <MessageCircle className="text-accent shrink-0 mt-0.5" size={22} aria-hidden />
+        <div>
+          <p className="font-bold text-foreground">{PAYMENT_WHATSAPP_NOTICE}</p>
+          <p className="text-sm text-muted-foreground mt-1 leading-relaxed">
+            בחרו אספקה, מלאו פרטים בקצרה ושלחו את ההזמנה בוואטסאפ — שם נשלים תשלום ותיאום.
+          </p>
+        </div>
+      </div>
 
       <div className="grid lg:grid-cols-[1fr_320px] gap-8 items-start">
-        <form id="checkout-form" onSubmit={handleSubmit} className="space-y-8">
-          {/* Delivery first — drives whether online checkout is available */}
+        <div className="space-y-8">
           <section className="bg-card border border-border rounded-xl p-5 md:p-6">
             <h2 className="font-bold text-foreground mb-4 flex items-center gap-2">
               <MapPin size={18} className="text-accent" />
@@ -263,120 +237,90 @@ export function CheckoutPage() {
               ))}
             </div>
 
-            {isPickup ? (
+            {delivery === "pickup" ? (
               <p className="text-sm text-muted-foreground">
                 כתובת החנות: {COMPANY.address} · {COMPANY.phone}
               </p>
             ) : (
-              <ShippingWhatsAppPanel />
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                עלויות משלוח וזמני אספקה נקבעים בתיאום בוואטסאפ אחרי שליחת ההזמנה.
+              </p>
             )}
           </section>
 
-          {isPickup && (
-            <>
-              {/* Contact */}
-              <section className="bg-card border border-border rounded-xl p-5 md:p-6">
-                <h2 className="font-bold text-foreground mb-4 flex items-center gap-2">
-                  <Smartphone size={18} className="text-accent" />
-                  פרטי התקשרות
-                </h2>
-                <div className="grid sm:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="firstName">שם פרטי *</Label>
-                    <Input
-                      id="firstName"
-                      required
-                      value={form.firstName}
-                      onChange={(e) => setForm({ ...form, firstName: e.target.value })}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="lastName">שם משפחה *</Label>
-                    <Input
-                      id="lastName"
-                      required
-                      value={form.lastName}
-                      onChange={(e) => setForm({ ...form, lastName: e.target.value })}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="phone">טלפון *</Label>
-                    <Input
-                      id="phone"
-                      type="tel"
-                      required
-                      dir="ltr"
-                      className="text-start"
-                      value={form.phone}
-                      onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="email">אימייל *</Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      required
-                      dir="ltr"
-                      className="text-start"
-                      value={form.email}
-                      onChange={(e) => setForm({ ...form, email: e.target.value })}
-                    />
-                  </div>
-                </div>
-              </section>
-
-              {/* Payment */}
-              <section className="bg-card border border-border rounded-xl p-5 md:p-6">
-                <h2 className="font-bold text-foreground mb-4 flex items-center gap-2">
-                  <CreditCard size={18} className="text-accent" />
-                  אמצעי תשלום
-                </h2>
-                <div className="flex items-center gap-3 p-4 rounded-lg border border-accent bg-accent/5">
-                  <CreditCard size={22} className="text-accent shrink-0" />
-                  <div>
-                    <p className="text-sm font-semibold text-foreground">כרטיס אשראי</p>
-                    <p className="text-xs text-muted-foreground mt-0.5">
-                      {PAYMENT_CARD_BRANDS} · {PAYMENT_INSTALLMENTS_LABEL}
-                    </p>
-                  </div>
-                </div>
-              </section>
-
-              {/* Notes */}
-              <section className="bg-card border border-border rounded-xl p-5 md:p-6">
-                <Label htmlFor="notes">הערות להזמנה (אופציונלי)</Label>
-                <textarea
-                  id="notes"
-                  rows={3}
-                  value={form.notes}
-                  onChange={(e) => setForm({ ...form, notes: e.target.value })}
-                  className="mt-2 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-                  placeholder="למשל: אגיע בשעות הערב, התקשרו לפני…"
+          <section className="bg-card border border-border rounded-xl p-5 md:p-6">
+            <h2 className="font-bold text-foreground mb-4 flex items-center gap-2">
+              <Smartphone size={18} className="text-accent" />
+              פרטי קשר (מומלץ)
+            </h2>
+            <div className="grid sm:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="firstName">שם פרטי</Label>
+                <Input
+                  id="firstName"
+                  value={form.firstName}
+                  onChange={(e) => setForm({ ...form, firstName: e.target.value })}
                 />
-              </section>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="lastName">שם משפחה</Label>
+                <Input
+                  id="lastName"
+                  value={form.lastName}
+                  onChange={(e) => setForm({ ...form, lastName: e.target.value })}
+                />
+              </div>
+              <div className="space-y-2 sm:col-span-2">
+                <Label htmlFor="phone">טלפון</Label>
+                <Input
+                  id="phone"
+                  type="tel"
+                  dir="ltr"
+                  className="text-start"
+                  value={form.phone}
+                  onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                />
+              </div>
+            </div>
+            <div className="mt-4 space-y-2">
+              <Label htmlFor="notes">הערות להזמנה (אופציונלי)</Label>
+              <textarea
+                id="notes"
+                rows={3}
+                value={form.notes}
+                onChange={(e) => setForm({ ...form, notes: e.target.value })}
+                className="w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                placeholder="למשל: אגיע בשעות הערב…"
+              />
+            </div>
+          </section>
 
-              <Button type="submit" className="w-full h-12 text-base font-bold lg:hidden">
-                שליחת הזמנה · ₪{formatPrice(subtotal)}
-              </Button>
-            </>
-          )}
-        </form>
+          <Button
+            type="button"
+            onClick={handleWhatsAppOrder}
+            className="w-full h-12 text-base font-bold lg:hidden"
+          >
+            <MessageCircle size={18} />
+            שליחת הזמנה בוואטסאפ · ₪{formatPrice(subtotal)}
+          </Button>
+        </div>
 
         <div className="hidden lg:block">
           <OrderSummary subtotal={subtotal} delivery={delivery} />
-          {isPickup && (
-            <Button type="submit" form="checkout-form" className="w-full h-12 text-base font-bold mt-4">
-              שליחת הזמנה · ₪{formatPrice(subtotal)}
-            </Button>
-          )}
+          <Button
+            type="button"
+            onClick={handleWhatsAppOrder}
+            className="w-full h-12 text-base font-bold mt-4"
+          >
+            <MessageCircle size={18} />
+            שליחת הזמנה בוואטסאפ · ₪{formatPrice(subtotal)}
+          </Button>
         </div>
       </div>
 
-      {/* Last-minute upsells */}
       {suggestions.length > 0 && (
         <section className="mt-14 pt-10 border-t border-border">
-          <h2 className="text-xl font-bold text-foreground mb-1">רגע לפני שמשלמים…</h2>
+          <h2 className="text-xl font-bold text-foreground mb-1">רגע לפני ששולחים…</h2>
           <p className="text-sm text-muted-foreground mb-6">
             מוצרים פופולריים שאולי שכחתם — הוסיפו בלחיצה אחת
           </p>
@@ -390,17 +334,13 @@ export function CheckoutPage() {
         </section>
       )}
 
-      {/* Mobile sticky pay bar — pickup only */}
-      {isPickup && (
-        <>
-          <div className="lg:hidden fixed bottom-0 inset-x-0 z-40 p-4 bg-background/95 backdrop-blur border-t border-border">
-            <Button type="submit" form="checkout-form" className="w-full h-12 text-base font-bold">
-              שליחת הזמנה · ₪{formatPrice(subtotal)}
-            </Button>
-          </div>
-          <div className="lg:hidden h-20" aria-hidden />
-        </>
-      )}
+      <div className="lg:hidden fixed bottom-0 inset-x-0 z-40 p-4 bg-background/95 backdrop-blur border-t border-border">
+        <Button type="button" onClick={handleWhatsAppOrder} className="w-full h-12 text-base font-bold">
+          <MessageCircle size={18} />
+          שליחת הזמנה בוואטסאפ · ₪{formatPrice(subtotal)}
+        </Button>
+      </div>
+      <div className="lg:hidden h-20" aria-hidden />
     </div>
   );
 }

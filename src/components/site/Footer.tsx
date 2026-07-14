@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { PAYMENT_CARD_BRANDS, PAYMENT_INSTALLMENTS_LABEL } from "@/data/payment";
+import { PAYMENT_SUMMARY } from "@/data/payment";
 import { Facebook } from "lucide-react";
 import logo from "@/assets/chole-sport-logo.png";
 import instagramIcon from "@/assets/instagram.png";
@@ -7,13 +7,13 @@ import { COMPANY } from "@/data/legal";
 import { CONTACT_PHONE_DISPLAY, WHATSAPP_URL } from "@/lib/contact";
 import { BrandLogoRow } from "@/components/site/BrandLogos";
 
-type FooterLink = { label: string; href?: string; to?: "/privacy" | "/terms" | "/account" };
+type FooterLink = { label: string; href?: string; to?: "/privacy" | "/terms" | "/account" | "/categories" };
 
 const COLS: Record<string, FooterLink[]> = {
   חנות: [
-    { label: "נבחרת CHOLE", href: "/#products" },
+    { label: "נבחרת מוצרי CHOLE", href: "/#products" },
     { label: "המותגים שלנו", href: "/#brands" },
-    { label: "קטגוריות", href: "/#categories" },
+    { label: "קטגוריות", to: "/categories" },
     { label: "SHOW ROOM", href: "/categories/show-room" },
   ],
   שירות: [
@@ -115,7 +115,7 @@ export function Footer() {
         <div className="max-w-7xl mx-auto px-4 py-5 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-muted-foreground">
           <p>© {new Date().getFullYear()} CHOLE sport</p>
           <p>
-            {PAYMENT_CARD_BRANDS} · {PAYMENT_INSTALLMENTS_LABEL}
+            {PAYMENT_SUMMARY}
           </p>
         </div>
       </div>

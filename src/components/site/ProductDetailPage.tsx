@@ -1,15 +1,11 @@
 import { useState, Fragment } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { Minus, Plus, Star, Store } from "lucide-react";
+import { Star, Store } from "lucide-react";
 import { toast } from "sonner";
 import type { Product } from "@/data/products";
 import { getRelatedProducts } from "@/data/products";
 import { useCart } from "@/context/CartContext";
-import {
-  PAYMENT_INSTALLMENTS_COUNT,
-  PAYMENT_INSTALLMENTS_LABEL,
-  formatInstallmentAmount,
-} from "@/data/payment";
+import { PAYMENT_SUMMARY, PAYMENT_WHATSAPP_NOTICE } from "@/data/payment";
 import { SHOWROOM_SHORT, SHOWROOM_TITLE } from "@/data/showroom";
 import { COMPANY } from "@/data/legal";
 import { ComplementaryEquipmentSection } from "@/components/site/ComplementaryEquipmentSection";
@@ -18,9 +14,15 @@ import { LandingMatAirfloorSection } from "@/components/site/LandingMatAirfloorS
 import { LandingMatWarrantySection } from "@/components/site/LandingMatWarrantySection";
 import { LandingMatSizeBar } from "@/components/site/LandingMatSizeBar";
 import { AirfloorSizeBar } from "@/components/site/AirfloorSizeBar";
+import { GymboreeProductBar } from "@/components/site/GymboreeProductBar";
+import { TrainingAccessoriesProductBar } from "@/components/site/TrainingAccessoriesProductBar";
+import { TrainingHurdleHeightBar } from "@/components/site/TrainingHurdleHeightBar";
+import { BalancePitaColorOptions } from "@/components/site/BalancePitaColorOptions";
+import { QuantityInput } from "@/components/site/QuantityInput";
 import { LandingMatSizesTable } from "@/components/site/LandingMatSizesTable";
 import { AirfloorSafetyNotice } from "@/components/site/AirfloorSafetyNotice";
 import { AirfloorSizesTable } from "@/components/site/AirfloorSizesTable";
+import { ProductMedia } from "@/components/site/ProductMedia";
 import { PONG_BOT_NOVA_S_PRO_ID } from "@/data/products";
 import {
   getLandingMatVariantById,
@@ -34,6 +36,16 @@ import {
   shouldShowAirfloorSafetyNotice,
 } from "@/data/airfloorMats";
 import { getAirfloorMatImageScale } from "@/lib/airfloorMatVisual";
+import { isGymboreeProduct } from "@/data/gymboree";
+import {
+  getPuzzleMatDealLabel,
+  getPuzzleMatUnitPrice,
+  isHurdleProduct,
+  isPuzzleMatProductId,
+  isTrainingAccessoryProduct,
+  PUZZLE_MAT_UNIT_PRICE,
+} from "@/data/trainingAccessories";
+import { hasProductImage } from "@/lib/productMedia";
 import {
   Accordion,
   AccordionContent,
@@ -73,10 +85,10 @@ function RelatedCard({ product }: { product: Product }) {
       className="group block text-center"
     >
       <div className="aspect-square bg-secondary rounded-lg overflow-hidden mb-3">
-        <img
-          src={product.img}
+        <ProductMedia
+          product={product}
           alt={product.title}
-          className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+          imgClassName="group-hover:scale-105 transition duration-300"
         />
       </div>
       <p className="text-sm font-medium text-foreground leading-snug line-clamp-2 min-h-[2.5rem]">
@@ -139,6 +151,13 @@ export function ProductDetailPage({ product }: { product: Product }) {
   const showLandingMatAirfloor = isLandingMatAirfloorProduct(product.id);
   const showAirfloorSizes = isAirfloorMatProduct(product);
   const showAirfloorSafety = shouldShowAirfloorSafetyNotice(product.id);
+  const showGymboreeProducts = isGymboreeProduct(product);
+  const showTrainingAccessories = isTrainingAccessoryProduct(product);
+  const showHurdleHeights = isHurdleProduct(product.id);
+  const showBalancePitaColors = product.id === "training-balance-pita";
+  const isPuzzleMat = isPuzzleMatProductId(product.id);
+  const unitPrice = isPuzzleMat ? getPuzzleMatUnitPrice(quantity) : product.price;
+  const puzzleDealLabel = isPuzzleMat ? getPuzzleMatDealLabel(quantity) : null;
   const landingMatVariant = showLandingMatSizes ? getLandingMatVariantById(product.id) : undefined;
   const airfloorMatVariant = showAirfloorSizes ? getAirfloorMatVariantById(product.id) : undefined;
   const matImageScale = landingMatVariant
@@ -147,6 +166,7 @@ export function ProductDetailPage({ product }: { product: Product }) {
       ? getAirfloorMatImageScale(airfloorMatVariant)
       : 1;
   const hasDiscount = product.was > product.price;
+  const showGallery = hasProductImage(product);
   const primaryImage = product.images[activeImage] ?? product.img;
   const hoverSwapImage = product.images.length > 1 ? product.images[1] : undefined;
   const showHoverSwap = Boolean(isGalleryHovered && activeImage === 0 && hoverSwapImage);
@@ -167,43 +187,57 @@ export function ProductDetailPage({ product }: { product: Product }) {
     <div className="max-w-7xl mx-auto px-4 py-8 md:py-12">
       {showLandingMatSizes && <LandingMatSizeBar currentProductId={product.id} />}
       {showAirfloorSizes && <AirfloorSizeBar currentProductId={product.id} />}
+      {showGymboreeProducts && <GymboreeProductBar currentProductId={product.id} />}
+      {showTrainingAccessories && (
+        <TrainingAccessoriesProductBar currentProductId={product.id} />
+      )}
+      {showHurdleHeights && <TrainingHurdleHeightBar currentProductId={product.id} />}
 
       {/* Top: gallery + buy box */}
       <div className="grid lg:grid-cols-2 gap-10 lg:gap-16">
         {/* Gallery */}
         <div className="flex gap-4">
           <div
-            className="relative flex-1 bg-white rounded-xl overflow-hidden aspect-square border border-border flex items-center justify-center"
+            className="relative flex-1 bg-secondary rounded-xl overflow-hidden aspect-square border border-border flex items-center justify-center"
             onMouseEnter={() => setIsGalleryHovered(true)}
             onMouseLeave={() => setIsGalleryHovered(false)}
           >
-            <div
-              className="relative w-full h-full flex items-center justify-center transition-transform duration-300"
-              style={
-                matImageScale < 1
-                  ? { transform: `scale(${matImageScale})` }
-                  : undefined
-              }
-            >
-              <img
-                src={primaryImage}
-                alt={product.title}
-                className={`w-full h-full object-contain transition-opacity duration-300 ${
-                  showHoverSwap ? "opacity-0" : "opacity-100"
-                }`}
-              />
-              {hoverSwapImage && activeImage === 0 && (
+            {showGallery && primaryImage ? (
+              <div
+                className="relative w-full h-full flex items-center justify-center bg-white transition-transform duration-300"
+                style={
+                  matImageScale < 1
+                    ? { transform: `scale(${matImageScale})` }
+                    : undefined
+                }
+              >
                 <img
-                  src={hoverSwapImage}
-                  alt={`${product.title} — מצב קיפול`}
-                  className={`absolute inset-0 w-full h-full object-contain transition-opacity duration-300 ${
-                    showHoverSwap ? "opacity-100" : "opacity-0"
+                  src={primaryImage}
+                  alt={product.title}
+                  className={`w-full h-full object-contain transition-opacity duration-300 ${
+                    showHoverSwap ? "opacity-0" : "opacity-100"
                   }`}
                 />
-              )}
-            </div>
+                {hoverSwapImage && activeImage === 0 && (
+                  <img
+                    src={hoverSwapImage}
+                    alt={`${product.title} — מצב קיפול`}
+                    className={`absolute inset-0 w-full h-full object-contain transition-opacity duration-300 ${
+                      showHoverSwap ? "opacity-100" : "opacity-0"
+                    }`}
+                  />
+                )}
+              </div>
+            ) : (
+              <div className="px-8 text-center">
+                <p className="text-xl md:text-2xl font-bold text-foreground leading-snug">
+                  {product.title}
+                </p>
+                <p className="mt-3 text-sm text-muted-foreground">תמונת מוצר תתווסף בקרוב</p>
+              </div>
+            )}
           </div>
-          {product.images.length > 1 && (
+          {showGallery && product.images.length > 1 && (
             <div className="flex flex-col gap-2 w-20 shrink-0">
               {product.images.map((img, i) => (
                 <button
@@ -239,18 +273,38 @@ export function ProductDetailPage({ product }: { product: Product }) {
           <p className="text-sm text-muted-foreground mt-2">מק״ט {product.sku}</p>
 
           <div className="mt-6 flex items-baseline gap-3 flex-wrap">
-            <span className={`text-3xl font-bold ${hasDiscount ? "text-destructive" : "text-foreground"}`}>
-              ₪ {formatPrice(product.price)}
+            <span
+              className={`text-3xl font-bold ${
+                isPuzzleMat && unitPrice < PUZZLE_MAT_UNIT_PRICE
+                  ? "text-destructive"
+                  : hasDiscount
+                    ? "text-destructive"
+                    : "text-foreground"
+              }`}
+            >
+              ₪ {formatPrice(unitPrice)}
             </span>
-            {hasDiscount && (
-              <span className="text-lg text-muted-foreground line-through">₪ {formatPrice(product.was)}</span>
+            {isPuzzleMat && unitPrice < PUZZLE_MAT_UNIT_PRICE ? (
+              <span className="text-lg text-muted-foreground line-through">
+                ₪ {formatPrice(PUZZLE_MAT_UNIT_PRICE)}
+              </span>
+            ) : (
+              hasDiscount && (
+                <span className="text-lg text-muted-foreground line-through">
+                  ₪ {formatPrice(product.was)}
+                </span>
+              )
+            )}
+            {isPuzzleMat && (
+              <span className="text-sm text-muted-foreground">ליחידה</span>
             )}
           </div>
 
-          <p className="mt-2 text-sm text-muted-foreground">
-            או {PAYMENT_INSTALLMENTS_COUNT} תשלומים של {formatInstallmentAmount(product.price)} —{" "}
-            {PAYMENT_INSTALLMENTS_LABEL}
-          </p>
+          {puzzleDealLabel && (
+            <p className="mt-2 text-sm font-medium text-accent">{puzzleDealLabel}</p>
+          )}
+
+          <p className="mt-2 text-sm text-muted-foreground">{PAYMENT_WHATSAPP_NOTICE}</p>
 
           {product.reviews > 0 && (
             <div className="mt-3">
@@ -259,26 +313,20 @@ export function ProductDetailPage({ product }: { product: Product }) {
           )}
 
           <div className="mt-8">
-            <label className="text-sm font-semibold text-foreground block mb-2">כמות</label>
-            <div className="inline-flex items-center border border-border rounded-lg">
-              <button
-                type="button"
-                onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                className="p-3 hover:bg-secondary transition"
-                aria-label="הפחת כמות"
-              >
-                <Minus size={16} />
-              </button>
-              <span className="px-5 py-2 min-w-[3rem] text-center font-semibold">{quantity}</span>
-              <button
-                type="button"
-                onClick={() => setQuantity((q) => q + 1)}
-                className="p-3 hover:bg-secondary transition"
-                aria-label="הוסף כמות"
-              >
-                <Plus size={16} />
-              </button>
-            </div>
+            <label htmlFor="product-quantity" className="text-sm font-semibold text-foreground block mb-2">
+              כמות
+            </label>
+            <QuantityInput
+              id="product-quantity"
+              value={quantity}
+              onChange={setQuantity}
+              size="md"
+            />
+            {isPuzzleMat && (
+              <p className="mt-2 text-xs text-muted-foreground leading-relaxed">
+                מ-20 יח׳ המחיר יורד ל-100 ₪ ליחידה · מעל 40 יח׳ — 80 ₪ ליחידה
+              </p>
+            )}
           </div>
 
           {product.stockNote && (
@@ -288,7 +336,9 @@ export function ProductDetailPage({ product }: { product: Product }) {
             </p>
           )}
 
-          <p className="mt-4 text-xs text-muted-foreground">{PAYMENT_INSTALLMENTS_LABEL} · תשלום בכרטיס אשראי</p>
+          <p className="mt-4 text-xs text-muted-foreground">{PAYMENT_SUMMARY}</p>
+
+          {showBalancePitaColors && <BalancePitaColorOptions />}
 
           <Button
             onClick={handleAddToCart}

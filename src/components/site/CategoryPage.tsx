@@ -51,8 +51,7 @@ export function CategoryPage({ category, products }: CategoryPageProps) {
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 md:py-12">
       <Link
-        to="/"
-        hash="categories"
+        to="/categories"
         className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-accent transition mb-8"
       >
         <ChevronLeft size={16} />

@@ -532,6 +532,7 @@ export const PRODUCTS: Product[] = [
     makeProduct(
       {
         id: definition.id,
+        img: definition.img,
         brand: TRAINING_ACCESSORIES_BRAND,
         title: definition.title,
         sku: definition.id,

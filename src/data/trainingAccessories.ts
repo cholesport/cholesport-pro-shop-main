@@ -1,4 +1,8 @@
 import type { Product, ProductFeature, ProductSpec } from "@/data/products";
+import puzzleGreyBlackImg from "@/assets/p-puzzle-mat-grey-black.png";
+import puzzleGreyBlackAltImg from "@/assets/p-puzzle-mat-grey-black-alt.png";
+import balancePitaImg from "@/assets/p-balance-pita.png";
+import hurdlesOrangeImg from "@/assets/p-hurdles-orange.png";
 
 export const TRAINING_ACCESSORIES_CATEGORY = "אביזרי אימון";
 export const TRAINING_ACCESSORIES_CATEGORY_SLUG = "training-accessories";
@@ -66,6 +70,8 @@ export type TrainingAccessoryDefinition = {
   title: string;
   subcategoryLabel: string;
   price: number;
+  img?: string;
+  images?: string[];
   badge?: string;
   introTitle: string;
   introParagraphs: string[];
@@ -102,6 +108,8 @@ function buildHurdleDefinition(variant: HurdleHeightVariant): TrainingAccessoryD
     title: `${HURDLE_PRODUCT_TITLE} — ${heightLabel}`,
     subcategoryLabel: `משוכה ${heightLabel}`,
     price: variant.price,
+    img: hurdlesOrangeImg,
+    images: [hurdlesOrangeImg],
     introTitle: `${HURDLE_PRODUCT_TITLE} בגובה ${heightLabel}`,
     introParagraphs: [
       `${HURDLE_PRODUCT_TITLE} לאימוני זריזות, קואורדינציה ומסלולי ריצה — צבע ${HURDLE_COLOR}.`,
@@ -176,6 +184,8 @@ export const TRAINING_ACCESSORIES_PRODUCTS: TrainingAccessoryDefinition[] = [
     title: "מזרן פאזל 4 ס״מ — אפור שחור",
     subcategoryLabel: "מזרן פאזל אפור שחור",
     price: PUZZLE_MAT_UNIT_PRICE,
+    img: puzzleGreyBlackImg,
+    images: [puzzleGreyBlackImg, puzzleGreyBlackAltImg],
     badge: "דיל כמות",
     introTitle: "מזרן פאזל מקצועי בעובי 4 ס״מ — אפור ושחור",
     introParagraphs: [
@@ -325,6 +335,8 @@ export const TRAINING_ACCESSORIES_PRODUCTS: TrainingAccessoryDefinition[] = [
     title: "פיתה לשיווי משקל",
     subcategoryLabel: "פיתה לשיווי משקל",
     price: 50,
+    img: balancePitaImg,
+    images: [balancePitaImg],
     introTitle: "פיתה לשיווי משקל — בחירת צבע",
     introParagraphs: [
       `פיתה (דיסקית) לשיווי משקל — אפשרות בחירה בין ארבעה צבעים: ${BALANCE_PITA_COLORS.join(", ")}.`,
@@ -428,7 +440,16 @@ export function buildTrainingAccessoryProductExtra(
   definition: TrainingAccessoryDefinition,
   allIds: string[],
 ): Partial<Product> {
+  const images =
+    definition.images && definition.images.length > 0
+      ? definition.images
+      : definition.img
+        ? [definition.img]
+        : [];
+
   return {
+    img: definition.img,
+    images,
     introTitle: definition.introTitle,
     introParagraphs: definition.introParagraphs,
     featuresTitle: definition.featuresTitle,

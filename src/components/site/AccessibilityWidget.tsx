@@ -118,7 +118,7 @@ export function AccessibilityWidget() {
           role="dialog"
           aria-modal="true"
           aria-labelledby={titleId}
-          className="absolute bottom-full mb-3 right-0 w-[min(calc(100vw-2rem),320px)] bg-card border border-border rounded-xl shadow-2xl overflow-hidden"
+          className="absolute bottom-full mb-2 left-0 w-[min(calc(100vw-2rem),320px)] bg-card border border-border rounded-xl shadow-2xl overflow-hidden"
         >
           <div className="flex items-center justify-between px-4 py-3 bg-primary text-primary-foreground">
             <h2 id={titleId} className="font-bold text-sm">
@@ -222,17 +222,17 @@ export function AccessibilityWidget() {
         aria-controls={open ? panelId : undefined}
         aria-label="תפריט נגישות"
         title="כפתור נגישות"
-        className="group relative flex items-center justify-center size-14 rounded-full bg-[#0066CC] shadow-lg hover:bg-[#0052A3] hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0066CC] focus-visible:ring-offset-2 transition-colors duration-200"
+        className="group relative flex items-center justify-center size-10 rounded-full bg-[#0066CC] shadow-md hover:bg-[#0052A3] hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0066CC] focus-visible:ring-offset-2 transition-colors duration-200"
       >
         <span
           aria-hidden="true"
-          className="absolute top-1/2 -translate-y-1/2 right-full me-2 px-3 py-2 rounded-full bg-[#0052A3] text-white text-sm font-semibold whitespace-nowrap shadow-md opacity-0 invisible group-hover:opacity-100 group-hover:visible group-focus-visible:opacity-100 group-focus-visible:visible transition-opacity duration-200 pointer-events-none"
+          className="absolute top-1/2 -translate-y-1/2 left-full ms-2 px-2.5 py-1.5 rounded-full bg-[#0052A3] text-white text-xs font-semibold whitespace-nowrap shadow-md opacity-0 invisible group-hover:opacity-100 group-hover:visible group-focus-visible:opacity-100 group-focus-visible:visible transition-opacity duration-200 pointer-events-none"
         >
           כפתור נגישות
         </span>
         <span
           aria-hidden="true"
-          className="inline-block size-8 bg-white [mask-size:contain] [mask-repeat:no-repeat] [mask-position:center] [-webkit-mask-size:contain] [-webkit-mask-repeat:no-repeat] [-webkit-mask-position:center]"
+          className="inline-block size-5 bg-white [mask-size:contain] [mask-repeat:no-repeat] [mask-position:center] [-webkit-mask-size:contain] [-webkit-mask-repeat:no-repeat] [-webkit-mask-position:center]"
           style={{ maskImage: `url(${wheelchairIcon})`, WebkitMaskImage: `url(${wheelchairIcon})` }}
         />
       </button>

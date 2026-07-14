@@ -9,11 +9,14 @@ import {
 } from "@/data/brand";
 
 /**
- * Subtle dark overlay — keeps product photos bright while white text stays readable.
- * Stronger on the copy side, lighter across the rest of the frame.
+ * Soft black veil over the full frame + stronger panel behind the copy,
+ * so white text pops without crushing product photos.
  */
 const HERO_OVERLAY =
-  "linear-gradient(270deg, oklch(0.14 0.02 165 / 0.62) 0%, oklch(0.16 0.02 165 / 0.4) 45%, oklch(0.18 0.02 165 / 0.22) 100%)";
+  "linear-gradient(270deg, oklch(0.12 0.01 60 / 0.55) 0%, oklch(0.14 0.01 60 / 0.28) 42%, oklch(0.16 0.01 60 / 0.12) 100%)";
+
+const HERO_COPY_SCRIM =
+  "linear-gradient(180deg, oklch(0.08 0.01 60 / 0.55) 0%, oklch(0.1 0.01 60 / 0.42) 55%, oklch(0.12 0.01 60 / 0.22) 100%)";
 
 export function Hero() {
   const { activeIndex, goToSlide, pause, resume } = useHeroCarousel();
@@ -30,15 +33,11 @@ export function Hero() {
 
         <div className="absolute inset-0 pointer-events-none" style={{ background: HERO_OVERLAY }} />
 
-        <div className="relative z-10 mx-auto flex min-h-[78vh] md:min-h-[85vh] max-w-7xl items-center px-4 py-16 md:py-20">
-          <div className="w-full max-w-3xl text-white lg:max-w-4xl">
-            {/* 1. Small top branding */}
-            <p className="mb-4 text-xs font-bold uppercase tracking-[0.28em] text-white md:text-sm">
-              <span className="text-accent">CHOLE</span>
-              <span className="text-white/70"> sport</span>
-            </p>
-
-            {/* 2. Secondary tag */}
+        <div className="relative z-10 mx-auto flex min-h-[78vh] md:min-h-[85vh] max-w-7xl items-start px-4 pt-10 pb-24 sm:pt-14 md:pt-16 md:pb-28">
+          <div
+            className="w-full max-w-3xl rounded-xl px-5 py-6 text-white sm:px-7 sm:py-7 lg:max-w-4xl"
+            style={{ background: HERO_COPY_SCRIM }}
+          >
             <div className="mb-5 inline-flex items-center gap-3 md:mb-6">
               <span className="h-px w-8 bg-accent/80" aria-hidden />
               <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-accent sm:text-xs">
@@ -47,7 +46,6 @@ export function Hero() {
               <span className="h-px w-8 bg-accent/80" aria-hidden />
             </div>
 
-            {/* 3. Main H1 */}
             <h1
               id="hero-heading"
               className="text-balance text-3xl font-extrabold leading-[1.15] tracking-tight sm:text-4xl md:text-5xl lg:text-6xl"
@@ -56,12 +54,10 @@ export function Hero() {
               <span> ציוד ספורט שמתוכנן על ידי ספורטאים.</span>
             </h1>
 
-            {/* 4. Subheadline */}
-            <p className="mt-5 max-w-2xl text-base font-medium leading-relaxed text-white/92 sm:text-lg md:mt-6 md:text-xl md:leading-relaxed">
+            <p className="mt-5 max-w-2xl text-base font-medium leading-relaxed text-white/95 sm:text-lg md:mt-6 md:text-xl md:leading-relaxed">
               {BRAND_HERO_SUBHEADLINE}
             </p>
 
-            {/* 5. CTA */}
             <div className="mt-8 sm:mt-10">
               <Link
                 to="/categories"

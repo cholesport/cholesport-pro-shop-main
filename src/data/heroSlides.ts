@@ -14,8 +14,8 @@ export type HeroSlide = {
   alt: string;
 };
 
-export const HERO_SLIDE_INTERVAL_MS = 3000;
-export const HERO_SLIDE_TRANSITION_MS = 700;
+export const HERO_SLIDE_INTERVAL_MS = 5500;
+export const HERO_SLIDE_TRANSITION_MS = 1100;
 
 export const HERO_SLIDES: HeroSlide[] = [
   { src: slide01, alt: "מזרן איירפלור כחול LEVITATE" },

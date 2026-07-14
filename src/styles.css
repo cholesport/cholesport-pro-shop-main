@@ -62,7 +62,7 @@
 }
 
 :root {
-  /* CHOLE sport — charcoal + electric teal (distinct from navy/orange catalog shops) */
+  /* CHOLE sport — charcoal + vivid orange #df8927 */
   --radius: 0.25rem;
   --background: oklch(0.975 0.008 145);
   --foreground: oklch(0.2 0.02 160);
@@ -76,35 +76,35 @@
   --secondary-foreground: oklch(0.22 0.025 165);
   --muted: oklch(0.94 0.012 155);
   --muted-foreground: oklch(0.48 0.02 160);
-  --accent: oklch(0.62 0.14 185);
-  --accent-foreground: oklch(0.99 0.01 185);
+  --accent: oklch(0.706 0.147 63.4);
+  --accent-foreground: oklch(0.99 0.01 70);
   --destructive: oklch(0.55 0.2 25);
   --destructive-foreground: oklch(0.99 0 0);
   --border: oklch(0.88 0.015 155);
   --input: oklch(0.88 0.015 155);
-  --ring: oklch(0.62 0.14 185);
+  --ring: oklch(0.706 0.147 63.4);
   --brand-ink: oklch(0.22 0.025 165);
-  --brand-teal: oklch(0.62 0.14 185);
+  --brand-teal: oklch(0.706 0.147 63.4);
   --gradient-hero: linear-gradient(
     115deg,
-    oklch(0.16 0.03 165 / 0.94) 0%,
-    oklch(0.22 0.04 170 / 0.72) 48%,
-    oklch(0.55 0.12 185 / 0.35) 100%
+    oklch(0.16 0.03 60 / 0.94) 0%,
+    oklch(0.22 0.04 55 / 0.72) 48%,
+    oklch(0.55 0.12 63 / 0.35) 100%
   );
   --shadow-card: 0 12px 32px -16px oklch(0.22 0.025 165 / 0.28);
-  --chart-1: oklch(0.62 0.14 185);
+  --chart-1: oklch(0.706 0.147 63.4);
   --chart-2: oklch(0.7 0.12 155);
   --chart-3: oklch(0.45 0.06 165);
   --chart-4: oklch(0.78 0.1 100);
   --chart-5: oklch(0.65 0.08 220);
   --sidebar: oklch(0.97 0.01 155);
   --sidebar-foreground: oklch(0.22 0.025 165);
-  --sidebar-primary: oklch(0.62 0.14 185);
-  --sidebar-primary-foreground: oklch(0.99 0.01 185);
+  --sidebar-primary: oklch(0.706 0.147 63.4);
+  --sidebar-primary-foreground: oklch(0.99 0.01 70);
   --sidebar-accent: oklch(0.94 0.015 155);
   --sidebar-accent-foreground: oklch(0.22 0.025 165);
   --sidebar-border: oklch(0.88 0.015 155);
-  --sidebar-ring: oklch(0.62 0.14 185);
+  --sidebar-ring: oklch(0.706 0.147 63.4);
 }
 
 .dark {
@@ -179,7 +179,7 @@
     --border: oklch(0 0 0);
     --primary: oklch(0 0 0);
     --primary-foreground: oklch(1 0 0);
-    --accent: oklch(0.35 0.1 185);
+    --accent: oklch(0.55 0.14 63.4);
     --card: oklch(1 0 0);
     --secondary: oklch(0.95 0 0);
   }

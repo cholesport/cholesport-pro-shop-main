@@ -5,10 +5,13 @@ import { WHATSAPP_URL } from "@/lib/contact";
 
 const INSTAGRAM_URL = "https://www.instagram.com/cholesport";
 
+const FLOAT_BTN =
+  "pointer-events-auto flex items-center justify-center size-10 rounded-full shadow-md hover:scale-105 transition-transform focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 overflow-hidden";
+
 export function SiteFloatingActions() {
   return (
     <aside
-      className="fixed right-4 bottom-4 z-[100] flex flex-col items-end gap-3 pointer-events-none"
+      className="fixed left-3 bottom-3 z-[100] flex flex-col items-start gap-2 pointer-events-none sm:left-4 sm:bottom-4"
       aria-label="קיצורי דרך צף"
     >
       <a
@@ -16,15 +19,15 @@ export function SiteFloatingActions() {
         target="_blank"
         rel="noopener noreferrer"
         aria-label="CHOLE sport באינסטגרם"
-        className="pointer-events-auto flex items-center justify-center size-14 rounded-full shadow-lg hover:scale-105 transition-transform focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E1306C] focus-visible:ring-offset-2 overflow-hidden"
+        className={`${FLOAT_BTN} focus-visible:ring-[#E1306C]`}
       >
         <img
           src={instagramIcon}
           alt=""
           aria-hidden="true"
-          width={56}
-          height={56}
-          className="size-14 rounded-full object-cover"
+          width={40}
+          height={40}
+          className="size-10 rounded-full object-cover"
           draggable={false}
         />
       </a>
@@ -36,15 +39,15 @@ export function SiteFloatingActions() {
         target="_blank"
         rel="noopener noreferrer"
         aria-label="שליחת הודעת WhatsApp ל-CHOLE sport"
-        className="pointer-events-auto flex items-center justify-center size-14 rounded-full shadow-lg hover:scale-105 transition-transform focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#25D366] focus-visible:ring-offset-2"
+        className={`${FLOAT_BTN} focus-visible:ring-[#25D366]`}
       >
         <img
           src={whatsappIcon}
           alt=""
           aria-hidden="true"
-          width={56}
-          height={56}
-          className="size-14 rounded-full object-cover"
+          width={40}
+          height={40}
+          className="size-10 rounded-full object-cover"
           draggable={false}
         />
       </a>

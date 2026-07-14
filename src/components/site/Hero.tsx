@@ -9,14 +9,17 @@ import {
 } from "@/data/brand";
 
 /**
- * Soft black veil over the full frame + stronger panel behind the copy,
- * so white text pops without crushing product photos.
+ * Full-bleed dark veil graded top → bottom across the entire upper hero,
+ * so copy stays readable while product photos remain visible lower down.
  */
-const HERO_OVERLAY =
-  "linear-gradient(270deg, oklch(0.12 0.01 60 / 0.55) 0%, oklch(0.14 0.01 60 / 0.28) 42%, oklch(0.16 0.01 60 / 0.12) 100%)";
-
-const HERO_COPY_SCRIM =
-  "linear-gradient(180deg, oklch(0.08 0.01 60 / 0.55) 0%, oklch(0.1 0.01 60 / 0.42) 55%, oklch(0.12 0.01 60 / 0.22) 100%)";
+const HERO_OVERLAY = [
+  "linear-gradient(180deg,",
+  "oklch(0.07 0.01 60 / 0.78) 0%,",
+  "oklch(0.09 0.01 60 / 0.62) 28%,",
+  "oklch(0.12 0.01 60 / 0.38) 58%,",
+  "oklch(0.16 0.01 60 / 0.16) 82%,",
+  "oklch(0.18 0.01 60 / 0.04) 100%)",
+].join(" ");
 
 export function Hero() {
   const { activeIndex, goToSlide, pause, resume } = useHeroCarousel();
@@ -31,13 +34,14 @@ export function Hero() {
       <div className="relative min-h-[78vh] md:min-h-[85vh]">
         <HeroCarousel activeIndex={activeIndex} goToSlide={goToSlide} />
 
-        <div className="absolute inset-0 pointer-events-none" style={{ background: HERO_OVERLAY }} />
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{ background: HERO_OVERLAY }}
+          aria-hidden
+        />
 
         <div className="relative z-10 mx-auto flex min-h-[78vh] md:min-h-[85vh] max-w-7xl items-start px-4 pt-10 pb-24 sm:pt-14 md:pt-16 md:pb-28">
-          <div
-            className="w-full max-w-3xl rounded-xl px-5 py-6 text-white sm:px-7 sm:py-7 lg:max-w-4xl"
-            style={{ background: HERO_COPY_SCRIM }}
-          >
+          <div className="w-full max-w-3xl text-white lg:max-w-4xl">
             <div className="mb-5 inline-flex items-center gap-3 md:mb-6">
               <span className="h-px w-8 bg-accent/80" aria-hidden />
               <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-accent sm:text-xs">

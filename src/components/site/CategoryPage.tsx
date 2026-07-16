@@ -8,6 +8,9 @@ import { SHOWROOM_PAGE_PARAGRAPHS } from "@/data/showroom";
 import { ShowroomActivitiesSection } from "@/components/site/ShowroomActivitiesSection";
 import { BrandMark } from "@/components/site/BrandLogos";
 import { getStoreBrandByCategorySlug } from "@/data/brands";
+import { CustomMatSizeNotice } from "@/components/site/CustomMatSizeNotice";
+import { AirfloorSaleBanner } from "@/components/site/AirfloorSaleBanner";
+import { FadeIn } from "@/components/site/FadeIn";
 import type { LucideIcon } from "lucide-react";
 
 type CategoryPageProps = {
@@ -47,6 +50,12 @@ export function CategoryPage({ category, products }: CategoryPageProps) {
   const isShowRoom = category.slug === "show-room";
   const introParagraphs = isShowRoom ? SHOWROOM_PAGE_PARAGRAPHS : category.description ? [category.description] : [];
   const storeBrand = getStoreBrandByCategorySlug(category.slug);
+  const customMatKind =
+    category.slug === "landing-mats"
+      ? "landing"
+      : category.slug === "airfloor-mats"
+        ? "airfloor"
+        : null;
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 md:py-12">
@@ -58,7 +67,12 @@ export function CategoryPage({ category, products }: CategoryPageProps) {
         חזרה לקטגוריות
       </Link>
 
-      <header className="flex flex-col md:flex-row md:items-center gap-6 mb-10 pb-8 border-b border-border">
+      <FadeIn
+        preset="section"
+        immediate
+        as="header"
+        className="flex flex-col md:flex-row md:items-center gap-6 mb-10 pb-8 border-b border-border"
+      >
         <div className="w-16 h-16 border border-border bg-secondary flex items-center justify-center shrink-0">
           <CategoryIcon icon={category.icon} image={category.image} imageDisplay={category.imageDisplay} />
         </div>
@@ -97,17 +111,25 @@ export function CategoryPage({ category, products }: CategoryPageProps) {
             </div>
           )}
         </div>
-      </header>
+      </FadeIn>
+
+      {category.slug === "airfloor-mats" && (
+        <FadeIn preset="section" immediate delay={40} className="mb-6">
+          <AirfloorSaleBanner />
+        </FadeIn>
+      )}
 
       {isShowRoom ? (
-        <ShowroomActivitiesSection />
+        <FadeIn preset="section" delay={60}>
+          <ShowroomActivitiesSection />
+        </FadeIn>
       ) : (
         category.subcategories.length > 0 && (
-          <section className="mb-10">
+          <FadeIn preset="section" delay={40} as="section" className="mb-10">
             <h2 className="text-sm font-bold uppercase tracking-wider text-muted-foreground mb-3">
               מידות זמינות
             </h2>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               {category.subcategories.map((sub, index) => {
                 const productId = category.subcategoryProductIds?.[index];
                 const chipClass =
@@ -132,33 +154,39 @@ export function CategoryPage({ category, products }: CategoryPageProps) {
                   </span>
                 );
               })}
+              {customMatKind && <CustomMatSizeNotice kind={customMatKind} compact />}
             </div>
-          </section>
+            {customMatKind && <CustomMatSizeNotice kind={customMatKind} />}
+          </FadeIn>
         )
       )}
 
       {!isShowRoom && (
         <section>
-          <div className="flex items-end justify-between gap-4 mb-6">
+          <FadeIn preset="section" className="flex items-end justify-between gap-4 mb-6">
             <h2 className="text-xl font-bold text-foreground">מוצרים</h2>
             {products.length > 0 && (
               <span className="text-sm text-muted-foreground">{products.length} מוצרים</span>
             )}
-          </div>
+          </FadeIn>
 
           {products.length > 0 ? (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-              {products.map((product) => (
-                <ProductCard key={product.id} product={product} />
+              {products.map((product, index) => (
+                <FadeIn key={product.id} preset="card" index={index}>
+                  <ProductCard product={product} />
+                </FadeIn>
               ))}
             </div>
           ) : (
-            <div className="text-center py-16 bg-card border border-border rounded-xl">
-              <p className="text-muted-foreground">מוצרים בקטגוריה זו יתווספו בקרוב.</p>
-              <Link to="/" className="inline-block mt-4 text-sm font-semibold text-accent hover:underline">
-                חזרה לדף הבית
-              </Link>
-            </div>
+            <FadeIn preset="section">
+              <div className="text-center py-16 bg-card border border-border rounded-xl">
+                <p className="text-muted-foreground">מוצרים בקטגוריה זו יתווספו בקרוב.</p>
+                <Link to="/" className="inline-block mt-4 text-sm font-semibold text-accent hover:underline">
+                  חזרה לדף הבית
+                </Link>
+              </div>
+            </FadeIn>
           )}
         </section>
       )}

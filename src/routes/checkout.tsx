@@ -2,14 +2,18 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { CheckoutPage } from "@/components/site/CheckoutPage";
+import { buildPageSeoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/checkout")({
-  head: () => ({
-    meta: [
-      { title: "השלמת רכישה — CHOLE sport" },
-      { name: "description", content: "השלימו את הרכישה שלכם ב-CHOLE sport." },
-    ],
-  }),
+  head: () => {
+    const seo = buildPageSeoHead({
+      title: "השלמת רכישה — CHOLE sport",
+      description: "השלימו את הרכישה שלכם ב-CHOLE sport.",
+      path: "/checkout",
+      noIndex: true,
+    });
+    return { meta: seo.meta, links: seo.links };
+  },
   component: CheckoutRoute,
 });
 

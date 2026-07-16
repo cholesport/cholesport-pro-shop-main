@@ -3,6 +3,8 @@ import puzzleGreyBlackImg from "@/assets/p-puzzle-mat-grey-black.png";
 import puzzleGreyBlackAltImg from "@/assets/p-puzzle-mat-grey-black-alt.png";
 import balancePitaImg from "@/assets/p-balance-pita.png";
 import hurdlesOrangeImg from "@/assets/p-hurdles-orange.png";
+import plyoBoxes4pcImg from "@/assets/p-plyo-boxes-4pc.png";
+import plyoSoftBoxImg from "@/assets/p-plyo-soft-box.png";
 
 export const TRAINING_ACCESSORIES_CATEGORY = "אביזרי אימון";
 export const TRAINING_ACCESSORIES_CATEGORY_SLUG = "training-accessories";
@@ -221,6 +223,8 @@ export const TRAINING_ACCESSORIES_PRODUCTS: TrainingAccessoryDefinition[] = [
     subcategoryLabel: "קוביה פליאומטרית רכה",
     price: 750,
     badge: "3-in-1",
+    img: plyoSoftBoxImg,
+    images: [plyoSoftBoxImg],
     introTitle: "קוביה פליאומטרית רכה — 3 גבהים בקוביה אחת",
     introParagraphs: [
       "קוביה פליאומטרית רכה מונעת החלקה לאימוני קפיצה, כוח וזריזות — עם סימון גבהים מובנה לשימוש בטוח ומגוון.",
@@ -259,6 +263,8 @@ export const TRAINING_ACCESSORIES_PRODUCTS: TrainingAccessoryDefinition[] = [
     subcategoryLabel: "סט 4 קוביות פליאומטריות",
     price: 2250,
     badge: "סט 4",
+    img: plyoBoxes4pcImg,
+    images: [plyoBoxes4pcImg],
     introTitle: "סט 4 קוביות פליאומטריות — מגוון גבהים לאימון מתקדם",
     introParagraphs: [
       "סט של 4 קוביות פליאומטריות בצבעים וגבהים שונים — ירוק, תכלת, אדום ושחור — למגוון רחב של תרגילי קפיצה, מדרגות וכוח.",

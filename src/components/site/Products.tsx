@@ -17,6 +17,7 @@ import {
 } from "@/data/brand";
 import { useEmblaWheelScroll } from "@/hooks/useEmblaWheelScroll";
 import { CAROUSEL_SETTLE_DURATION } from "@/lib/carouselMotion";
+import { FadeIn } from "@/components/site/FadeIn";
 
 export function Products() {
   const products = HOMEPAGE_PRODUCTS;
@@ -25,7 +26,7 @@ export function Products() {
 
   return (
     <section id="products" className="max-w-7xl mx-auto px-4 py-16 md:py-20">
-      <div className="flex flex-wrap items-end justify-between gap-4 mb-10">
+      <FadeIn preset="section" className="flex flex-wrap items-end justify-between gap-4 mb-10">
         <div className="max-w-lg">
           <h2 className="text-3xl md:text-4xl font-extrabold text-foreground">
             {HOMEPAGE_FEATURED_TITLE}
@@ -39,8 +40,9 @@ export function Products() {
           לכל הקטגוריות
           <ArrowLeft size={16} aria-hidden />
         </Link>
-      </div>
+      </FadeIn>
 
+      <FadeIn preset="sectionSlow" delay={80}>
       <Carousel
         setApi={setApi}
         opts={{
@@ -70,6 +72,7 @@ export function Products() {
           </>
         )}
       </Carousel>
+      </FadeIn>
     </section>
   );
 }

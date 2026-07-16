@@ -4,6 +4,7 @@ import { Footer } from "@/components/site/Footer";
 import { CategoryPage } from "@/components/site/CategoryPage";
 import { getCategoryBySlug } from "@/data/categories";
 import { getProductsForCategory } from "@/lib/categories";
+import { buildPageSeoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/categories/$categorySlug")({
   loader: ({ params }) => {
@@ -11,15 +12,16 @@ export const Route = createFileRoute("/categories/$categorySlug")({
     if (!category) throw notFound();
     return { category, products: getProductsForCategory(category) };
   },
-  head: ({ loaderData }) => ({
-    meta: [
-      { title: `${loaderData.category.name} — CHOLE sport` },
-      {
-        name: "description",
-        content: loaderData.category.description || `קנו ${loaderData.category.name} ב-CHOLE sport.`,
-      },
-    ],
-  }),
+  head: ({ loaderData }) => {
+    const seo = buildPageSeoHead({
+      title: `${loaderData.category.name} — CHOLE sport | cholesport.co.il`,
+      description:
+        loaderData.category.description ||
+        `קנו ${loaderData.category.name} ב-CHOLE sport (cholesport.co.il).`,
+      path: `/categories/${loaderData.category.slug}`,
+    });
+    return { meta: seo.meta, links: seo.links };
+  },
   component: CategoryRoute,
 });
 

@@ -6,14 +6,17 @@ import {
   CATEGORIES_PAGE_SEO_DESCRIPTION,
   CATEGORIES_PAGE_TITLE,
 } from "@/data/categories";
+import { buildPageSeoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/categories/")({
-  head: () => ({
-    meta: [
-      { title: `${CATEGORIES_PAGE_TITLE} — CHOLE sport` },
-      { name: "description", content: CATEGORIES_PAGE_SEO_DESCRIPTION },
-    ],
-  }),
+  head: () => {
+    const seo = buildPageSeoHead({
+      title: `${CATEGORIES_PAGE_TITLE} — CHOLE sport | cholesport.co.il`,
+      description: CATEGORIES_PAGE_SEO_DESCRIPTION,
+      path: "/categories",
+    });
+    return { meta: seo.meta, links: seo.links };
+  },
   component: CategoriesIndexRoute,
 });
 

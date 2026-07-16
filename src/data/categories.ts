@@ -87,7 +87,7 @@ export const CATEGORIES: CategoryDefinition[] = [
     slug: "airfloor-mats",
     name: "מזרני איירפלור",
     description:
-      "מזרני איירפלור מקצועיים מ-LEVITATE — 5 גדלים, רוחב 2 מטר לבטיחות מרבית. כולל משאבה, ערכת תיקונים ופס חיבור.",
+      "מבצע מיוחד עכשיו על מזרני איירפלור — חיסכון של כ־16% ממחיר הקטלוג. 5 גדלים במלאי מ-LEVITATE, רוחב 2 מטר לבטיחות מרבית. כולל משאבה, ערכת תיקונים ופס חיבור. ניתן להזמין גם בגודל מיוחד.",
     subcategories: AIRFLOOR_MAT_VARIANTS.map((v) => `${v.lengthM}/${v.widthM}/${v.thicknessM} מטר`),
     subcategoryProductIds: AIRFLOOR_MAT_VARIANTS.map((v) => v.id),
     productCats: ["מזרני איירפלור"],
@@ -97,7 +97,7 @@ export const CATEGORIES: CategoryDefinition[] = [
     slug: "landing-mats",
     name: "מזרני נחיתה במידות שונות",
     description:
-      "מזרני נחיתה מחומר שמשונית עבה — 5 גדלים שונים לפי הצורך. ספיגת זעזועים מקצועית, בטיחות ועמידות לאורך זמן.",
+      "מזרני נחיתה מחומר שמשונית עבה — פתחי אוורור אדומים לשינוע, ידיות חזקות מלפנים ומאחור, ו-5 גדלים במלאי. ניתן להזמין גם בגודל מיוחד.",
     subcategories: [
       "250×120×20 ס\"מ",
       "250×120×30 ס\"מ",

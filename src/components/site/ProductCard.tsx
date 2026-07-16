@@ -5,6 +5,7 @@ import { PAYMENT_SUMMARY } from "@/data/payment";
 import { BrandMark } from "@/components/site/BrandLogos";
 import { ProductMedia } from "@/components/site/ProductMedia";
 import { getStoreBrandByProductBrand } from "@/data/brands";
+import { shouldContainProductImage } from "@/lib/productMedia";
 
 type ProductCardProps = {
   product: Product;
@@ -13,15 +14,25 @@ type ProductCardProps = {
 export function ProductCard({ product: p }: ProductCardProps) {
   const off = p.was > p.price ? Math.round(((p.was - p.price) / p.was) * 100) : 0;
   const storeBrand = getStoreBrandByProductBrand(p.brand);
+  const containImage = shouldContainProductImage(p);
 
   return (
     <article className="group flex flex-col">
       <Link to="/products/$productId" params={{ productId: p.id }} className="block">
-        <div className="relative aspect-[4/5] bg-secondary overflow-hidden border border-border">
+        <div
+          className={`relative aspect-[4/5] overflow-hidden border border-border ${
+            containImage ? "bg-white" : "bg-secondary"
+          }`}
+        >
           <ProductMedia
             product={p}
             alt={p.title}
-            imgClassName="group-hover:scale-[1.03] transition duration-500"
+            fit={containImage ? "contain" : "cover"}
+            imgClassName={
+              containImage
+                ? "p-2 transition duration-500 group-hover:scale-[1.02]"
+                : "group-hover:scale-[1.03] transition duration-500"
+            }
           />
           {p.badge && (
             <span className="absolute top-3 start-3 bg-accent text-accent-foreground text-[11px] font-bold tracking-wide px-2 py-1">

@@ -3,17 +3,18 @@ import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { LegalDocument } from "@/components/site/LegalDocument";
 import { TERMS_SECTIONS, COMPANY } from "@/data/legal";
+import { buildPageSeoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/terms")({
-  head: () => ({
-    meta: [
-      { title: `תנאי שימוש — ${COMPANY.name}` },
-      {
-        name: "description",
-        content: "תנאי השימוש של CHOLE sport — רכישות מקוונות, משלוחים, החזרות, אחריות ודין ישראלי.",
-      },
-    ],
-  }),
+  head: () => {
+    const seo = buildPageSeoHead({
+      title: `תנאי שימוש — ${COMPANY.name}`,
+      description:
+        "תנאי השימוש של CHOLE sport — רכישות מקוונות, משלוחים, החזרות, אחריות ודין ישראלי.",
+      path: "/terms",
+    });
+    return { meta: seo.meta, links: seo.links };
+  },
   component: TermsRoute,
 });
 

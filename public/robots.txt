@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /cart
+Disallow: /checkout
+Disallow: /account
+
+Sitemap: https://cholesport.co.il/sitemap.xml

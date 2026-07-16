@@ -4,6 +4,7 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useRouterState,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
@@ -12,9 +13,16 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { SiteFloatingActions, SkipToContent } from "@/components/site/SiteFloatingActions";
+import { PageFade } from "@/components/site/FadeIn";
 import { applyA11ySettings, loadA11ySettings } from "@/lib/accessibility";
 import { CartProvider } from "@/context/CartContext";
 import { Toaster } from "@/components/ui/sonner";
+import {
+  buildOrganizationJsonLd,
+  buildPageSeoHead,
+  buildWebsiteJsonLd,
+  jsonLdScript,
+} from "@/lib/seo";
 
 function NotFoundComponent() {
   return (
@@ -77,31 +85,33 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 }
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
-  head: () => ({
-    meta: [
-      { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "CHOLE sport — ציוד ספורט וכושר מקצועי" },
-      { name: "description", content: "חנות מובילה לציוד ספורט: הליכונים, משקולות, יוגה, אומנויות לחימה, טניס שולחן ועוד. איסוף עצמי מהחנות או משלוח בתיאום בוואטסאפ." },
-      { property: "og:title", content: "CHOLE sport — ציוד ספורט מקצועי" },
-      { property: "og:description", content: "ציוד ספורט באיכות מקצועית לאתלטים, מאמנים ומשפחות." },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
-    ],
-    links: [
-      {
-        rel: "stylesheet",
-        href: appCss,
-      },
-      { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      {
-        rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap",
-      },
-    ],
-  }),
+  head: () => {
+    const seo = buildPageSeoHead({ path: "/" });
+    return {
+      meta: [
+        { charSet: "utf-8" },
+        { name: "viewport", content: "width=device-width, initial-scale=1" },
+        { name: "theme-color", content: "#df8927" },
+        ...seo.meta,
+      ],
+      links: [
+        {
+          rel: "stylesheet",
+          href: appCss,
+        },
+        { rel: "icon", type: "image/png", href: "/favicon.png" },
+        { rel: "apple-touch-icon", href: "/favicon.png" },
+        { rel: "preconnect", href: "https://fonts.googleapis.com" },
+        { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+        {
+          rel: "stylesheet",
+          href: "https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap",
+        },
+        ...seo.links,
+      ],
+      scripts: [jsonLdScript(buildOrganizationJsonLd()), jsonLdScript(buildWebsiteJsonLd())],
+    };
+  },
   shellComponent: RootShell,
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
@@ -129,6 +139,7 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   useEffect(() => {
     applyA11ySettings(loadA11ySettings());
@@ -139,7 +150,9 @@ function RootComponent() {
       <CartProvider>
         <SkipToContent />
         {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-        <Outlet />
+        <PageFade pageKey={pathname}>
+          <Outlet />
+        </PageFade>
         <SiteFloatingActions />
         <Toaster position="top-center" dir="rtl" richColors closeButton />
       </CartProvider>

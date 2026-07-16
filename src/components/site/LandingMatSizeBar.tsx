@@ -3,6 +3,7 @@ import {
   formatLandingMatDimensions,
   LANDING_MAT_VARIANTS,
 } from "@/data/landingMats";
+import { CustomMatSizeNotice } from "@/components/site/CustomMatSizeNotice";
 
 type LandingMatSizeBarProps = {
   currentProductId: string;
@@ -21,7 +22,7 @@ export function LandingMatSizeBar({ currentProductId }: LandingMatSizeBarProps) 
       >
         מידות זמינות
       </h2>
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap items-center gap-2">
         {LANDING_MAT_VARIANTS.map((variant) => {
           const isCurrent = variant.id === currentProductId;
           const label = formatLandingMatDimensions(variant);
@@ -44,7 +45,9 @@ export function LandingMatSizeBar({ currentProductId }: LandingMatSizeBarProps) 
             </Link>
           );
         })}
+        <CustomMatSizeNotice kind="landing" compact />
       </div>
+      <CustomMatSizeNotice kind="landing" />
     </nav>
   );
 }

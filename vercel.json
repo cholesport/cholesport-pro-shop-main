@@ -1,7 +1,20 @@
 {
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.cholesport.co.il"
+        }
+      ],
+      "destination": "https://cholesport.co.il/:path*",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     {
-      "source": "/(.*)",
+      "source": "/((?!robots\\.txt$|sitemap\\.xml$|favicon\\.png$|og-image\\.png$).*)",
       "destination": "/server/server.js"
     }
   ]

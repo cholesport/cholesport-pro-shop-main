@@ -1,5 +1,9 @@
 import type { CartItem } from "@/lib/cart";
 import { formatPrice } from "@/lib/cart";
+import {
+  CUSTOM_MAT_SIZE_COPY,
+  type CustomMatSizeKind,
+} from "@/data/customMatSize";
 
 /** Display phone (local format). */
 export const CONTACT_PHONE_DISPLAY = "054-2366279";
@@ -62,4 +66,9 @@ export function buildOrderWhatsAppMessage(details: OrderWhatsAppDetails) {
 
 export function getOrderWhatsAppUrl(details: OrderWhatsAppDetails) {
   return `${WHATSAPP_URL}?text=${encodeURIComponent(buildOrderWhatsAppMessage(details))}`;
+}
+
+/** Prefill WhatsApp for custom-size landing / airfloor mat quotes. */
+export function getCustomMatSizeWhatsAppUrl(kind: CustomMatSizeKind) {
+  return `${WHATSAPP_URL}?text=${encodeURIComponent(CUSTOM_MAT_SIZE_COPY[kind].whatsappMessage)}`;
 }

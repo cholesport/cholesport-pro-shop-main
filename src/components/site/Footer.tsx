@@ -1,11 +1,10 @@
 import { Link } from "@tanstack/react-router";
 import { PAYMENT_SUMMARY } from "@/data/payment";
-import { Facebook } from "lucide-react";
 import logo from "@/assets/chole-sport-logo.png";
-import instagramIcon from "@/assets/instagram.png";
 import { COMPANY } from "@/data/legal";
 import { CONTACT_PHONE_DISPLAY, WHATSAPP_URL } from "@/lib/contact";
 import { BrandLogoRow } from "@/components/site/BrandLogos";
+import { FadeIn } from "@/components/site/FadeIn";
 
 type FooterLink = { label: string; href?: string; to?: "/privacy" | "/terms" | "/account" | "/categories" };
 
@@ -27,9 +26,6 @@ const COLS: Record<string, FooterLink[]> = {
     { label: "תנאי שימוש", to: "/terms" },
   ],
 };
-
-const INSTAGRAM_URL = "https://www.instagram.com/cholesport";
-const FACEBOOK_URL = "https://www.facebook.com/cholesport";
 
 function FooterLinkItem({ link }: { link: FooterLink }) {
   const className = "text-sm text-muted-foreground hover:text-accent transition";
@@ -54,7 +50,7 @@ export function Footer() {
     <footer className="mt-20 border-t border-border bg-card">
       <div className="max-w-7xl mx-auto px-4 py-14">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10">
-          <div className="md:col-span-5">
+          <FadeIn preset="footer" className="md:col-span-5">
             <img src={logo} alt="CHOLE sport" className="h-14 w-auto mb-5" />
             <p className="text-sm text-muted-foreground max-w-sm leading-relaxed">
               CHOLE sport — ציוד ספורט מקצועי מהיבואן לצרכן. {COMPANY.address}.
@@ -68,35 +64,10 @@ export function Footer() {
             <p className="mt-5 text-sm font-medium text-foreground" dir="ltr">
               {CONTACT_PHONE_DISPLAY}
             </p>
-            <div className="flex items-center gap-3 mt-5">
-              <a
-                href={FACEBOOK_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-accent transition"
-                aria-label="CHOLE sport בפייסבוק"
-              >
-                <Facebook size={16} strokeWidth={2} aria-hidden />
-              </a>
-              <a
-                href={INSTAGRAM_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:opacity-80 transition"
-                aria-label="CHOLE sport באינסטגרם"
-              >
-                <img
-                  src={instagramIcon}
-                  alt=""
-                  className="size-4 rounded-full object-cover"
-                  aria-hidden
-                />
-              </a>
-            </div>
-          </div>
+          </FadeIn>
 
-          {Object.entries(COLS).map(([title, links]) => (
-            <div key={title} className="md:col-span-2">
+          {Object.entries(COLS).map(([title, links], index) => (
+            <FadeIn key={title} preset="footer" index={index + 1} className="md:col-span-2">
               <h4 className="text-xs font-bold tracking-[0.16em] uppercase text-foreground mb-4">
                 {title}
               </h4>
@@ -107,18 +78,18 @@ export function Footer() {
                   </li>
                 ))}
               </ul>
-            </div>
+            </FadeIn>
           ))}
         </div>
       </div>
-      <div className="border-t border-border">
+      <FadeIn preset="footer" delay={120} className="border-t border-border">
         <div className="max-w-7xl mx-auto px-4 py-5 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-muted-foreground">
           <p>© {new Date().getFullYear()} CHOLE sport</p>
           <p>
             {PAYMENT_SUMMARY}
           </p>
         </div>
-      </div>
+      </FadeIn>
     </footer>
   );
 }

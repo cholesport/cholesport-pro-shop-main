@@ -26,10 +26,10 @@ export function AirfloorSizesTable({ currentProductId }: AirfloorSizesTableProps
   return (
     <section dir="rtl" className="mt-12 max-w-3xl" aria-labelledby="airfloor-sizes-heading">
       <h2 id="airfloor-sizes-heading" className="text-xl font-bold text-foreground mb-2">
-        טבלת מידות — מזרני איירפלור
+        טבלת מידות ומחירי מבצע — מזרני איירפלור
       </h2>
       <p className="text-sm text-muted-foreground mb-5">
-        5 גדלים שונים. לחצו על שורה כדי לעבור למידה אחרת.
+        כל המידות במחיר מבצע (כ־16% הנחה). לחצו על שורה כדי לעבור למידה אחרת. צריכים מידה שלא מופיעה כאן? אפשר להזמין איירפלור בגודל מיוחד בוואטסאפ.
       </p>
 
       <div className="hidden sm:block overflow-x-auto rounded-xl border border-border">
@@ -40,7 +40,7 @@ export function AirfloorSizesTable({ currentProductId }: AirfloorSizesTableProps
                 מידות (אורך / רוחב / עובי)
               </th>
               <th scope="col" className="text-start font-bold px-4 py-3">
-                מחיר
+                מחיר מבצע
               </th>
               <th scope="col" className="text-start font-bold px-4 py-3 sr-only">
                 פעולה
@@ -102,11 +102,18 @@ function SizeRow({
             <SizeLabel variant={variant} />
           </p>
           <div className="text-end shrink-0">
-            <p className="text-lg font-black text-foreground">
+            <p className="text-lg font-black text-destructive">
               <span dir="ltr" className="unicode-bidi-plaintext inline-block">
                 {formatPrice(variant.price)} ₪
               </span>
             </p>
+            {variant.was > variant.price && (
+              <p className="text-sm text-muted-foreground line-through">
+                <span dir="ltr" className="unicode-bidi-plaintext inline-block">
+                  {formatPrice(variant.was)} ₪
+                </span>
+              </p>
+            )}
             {isCurrent && <span className="text-xs font-bold text-accent">המידה הנוכחית</span>}
           </div>
         </div>
@@ -133,10 +140,15 @@ function SizeRow({
           {isCurrent && <span className="ms-2 text-xs font-bold text-accent">(נבחר)</span>}
         </Link>
       </td>
-      <td className="px-4 py-3 font-bold text-foreground whitespace-nowrap">
-        <span dir="ltr" className="unicode-bidi-plaintext inline-block">
+      <td className="px-4 py-3 whitespace-nowrap">
+        <span className="font-bold text-destructive" dir="ltr">
           {formatPrice(variant.price)} ₪
         </span>
+        {variant.was > variant.price && (
+          <span className="ms-2 text-sm text-muted-foreground line-through" dir="ltr">
+            {formatPrice(variant.was)} ₪
+          </span>
+        )}
       </td>
       <td className="px-4 py-3">
         {!isCurrent && (

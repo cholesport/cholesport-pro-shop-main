@@ -29,7 +29,7 @@ export function LandingMatSizesTable({ currentProductId }: LandingMatSizesTableP
         טבלת מידות — מזרני נחיתה
       </h2>
       <p className="text-sm text-muted-foreground mb-5">
-        5 גדלים שונים לפי הצורך. לחצו על שורה כדי לעבור למידה אחרת.
+        5 גדלים במלאי — ולחצו על שורה כדי לעבור למידה אחרת. צריכים מידה שלא מופיעה כאן? אפשר להזמין בגודל מיוחד.
       </p>
 
       {/* Desktop table */}

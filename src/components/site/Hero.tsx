@@ -1,6 +1,7 @@
 import { ArrowLeft } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { HeroCarousel } from "@/components/site/HeroCarousel";
+import { FadeIn } from "@/components/site/FadeIn";
 import { useHeroCarousel } from "@/hooks/useHeroCarousel";
 import {
   BRAND_CORPORATE_TAGLINE,
@@ -42,27 +43,24 @@ export function Hero() {
 
         <div className="relative z-10 mx-auto flex min-h-[78vh] md:min-h-[85vh] max-w-7xl items-start px-4 pt-10 pb-24 sm:pt-14 md:pt-16 md:pb-28">
           <div className="w-full max-w-3xl text-white lg:max-w-4xl">
-            <div className="mb-5 inline-flex items-center gap-3 md:mb-6">
+            <FadeIn preset="hero" immediate index={0} className="mb-5 inline-flex items-center gap-3 md:mb-6">
               <span className="h-px w-8 bg-accent/80" aria-hidden />
               <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-accent sm:text-xs">
                 {BRAND_CORPORATE_TAGLINE}
               </span>
               <span className="h-px w-8 bg-accent/80" aria-hidden />
-            </div>
+            </FadeIn>
 
-            <h1
-              id="hero-heading"
-              className="text-balance text-3xl font-extrabold leading-[1.15] tracking-tight sm:text-4xl md:text-5xl lg:text-6xl"
-            >
+            <FadeIn preset="hero" immediate index={1} as="h1" id="hero-heading" className="text-balance text-3xl font-extrabold leading-[1.15] tracking-tight sm:text-4xl md:text-5xl lg:text-6xl">
               <span className="text-accent">CHOLE</span>
               <span> ציוד ספורט שמתוכנן על ידי ספורטאים.</span>
-            </h1>
+            </FadeIn>
 
-            <p className="mt-5 max-w-2xl text-base font-medium leading-relaxed text-white/95 sm:text-lg md:mt-6 md:text-xl md:leading-relaxed">
+            <FadeIn preset="hero" immediate index={2} as="p" className="mt-5 max-w-2xl text-base font-medium leading-relaxed text-white/95 sm:text-lg md:mt-6 md:text-xl md:leading-relaxed">
               {BRAND_HERO_SUBHEADLINE}
-            </p>
+            </FadeIn>
 
-            <div className="mt-8 sm:mt-10">
+            <FadeIn preset="hero" immediate index={3} className="mt-8 sm:mt-10">
               <Link
                 to="/categories"
                 className="inline-flex items-center justify-center gap-2 bg-accent px-8 py-3.5 text-sm font-bold tracking-wide text-accent-foreground transition hover:opacity-90 sm:text-base"
@@ -70,7 +68,7 @@ export function Hero() {
                 {BRAND_HERO_CTA}
                 <ArrowLeft size={18} aria-hidden />
               </Link>
-            </div>
+            </FadeIn>
           </div>
         </div>
       </div>

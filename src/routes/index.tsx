@@ -6,17 +6,23 @@ import { Promo } from "@/components/site/Promo";
 import { Products } from "@/components/site/Products";
 import { BrandsSection } from "@/components/site/BrandLogos";
 import { Footer } from "@/components/site/Footer";
-import { BRAND_HERO_HEADLINE, BRAND_NAME, BRAND_SEO_DESCRIPTION } from "@/data/brand";
+import { BRAND_HERO_HEADLINE, BRAND_NAME } from "@/data/brand";
+import { SITE_HOST, SITE_SEO_DESCRIPTION } from "@/data/site";
+import { buildPageSeoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title: `${BRAND_NAME} — ${BRAND_HERO_HEADLINE}` },
-      { name: "description", content: BRAND_SEO_DESCRIPTION },
-      { property: "og:title", content: `${BRAND_NAME} — ${BRAND_HERO_HEADLINE}` },
-      { property: "og:description", content: BRAND_SEO_DESCRIPTION },
-    ],
-  }),
+  head: () => {
+    const title = `${BRAND_NAME} | ${SITE_HOST} — ${BRAND_HERO_HEADLINE}`;
+    const seo = buildPageSeoHead({
+      title,
+      description: SITE_SEO_DESCRIPTION,
+      path: "/",
+    });
+    return {
+      meta: seo.meta,
+      links: seo.links,
+    };
+  },
   component: Index,
 });
 

@@ -497,10 +497,10 @@ export const PRODUCTS: Product[] = [
         sku: variant.id,
         cat: AIRFLOOR_MAT_CATEGORY,
         price: variant.price,
-        was: variant.price,
+        was: variant.was,
         rating: 0,
         reviews: 0,
-        badge: "AirFloor",
+        badge: "מבצע",
       },
       buildAirfloorMatProductExtra(
         variant,

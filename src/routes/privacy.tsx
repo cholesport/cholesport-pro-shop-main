@@ -3,17 +3,18 @@ import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { LegalDocument } from "@/components/site/LegalDocument";
 import { PRIVACY_SECTIONS, COMPANY } from "@/data/legal";
+import { buildPageSeoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/privacy")({
-  head: () => ({
-    meta: [
-      { title: `מדיניות פרטיות — ${COMPANY.name}` },
-      {
-        name: "description",
-        content: "מדיניות הפרטיות של CHOLE sport — איסוף מידע, שימוש, עוגיות וזכויות המשתמש בהתאם לחוק הגנת הפרטיות.",
-      },
-    ],
-  }),
+  head: () => {
+    const seo = buildPageSeoHead({
+      title: `מדיניות פרטיות — ${COMPANY.name}`,
+      description:
+        "מדיניות הפרטיות של CHOLE sport — איסוף מידע, שימוש, עוגיות וזכויות המשתמש בהתאם לחוק הגנת הפרטיות.",
+      path: "/privacy",
+    });
+    return { meta: seo.meta, links: seo.links };
+  },
   component: PrivacyRoute,
 });
 

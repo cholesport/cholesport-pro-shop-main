@@ -201,4 +201,58 @@
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+
+  /* —— Site fade system (timings via CSS vars from FadeIn / motion.ts) —— */
+  .fade-motion {
+    opacity: 0;
+    transform: translate3d(0, var(--fade-y, 16px), 0);
+    transition:
+      opacity var(--fade-duration, 650ms) var(--fade-ease, ease),
+      transform var(--fade-duration, 650ms) var(--fade-ease, ease);
+    transition-delay: var(--fade-delay, 0ms);
+    will-change: opacity, transform;
+  }
+
+  .fade-motion.is-visible {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+
+  .page-fade-motion {
+    animation: page-fade-in var(--fade-duration, 420ms) var(--fade-ease, ease) both;
+    animation-delay: var(--fade-delay, 0ms);
+  }
+
+  @keyframes page-fade-in {
+    from {
+      opacity: 0;
+      transform: translate3d(0, var(--fade-y, 8px), 0);
+    }
+    to {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fade-motion,
+    .fade-motion.is-visible,
+    .page-fade-motion {
+      opacity: 1;
+      transform: none;
+      transition: none;
+      animation: none;
+      will-change: auto;
+    }
+  }
+
+  html.a11y-reduce-motion .fade-motion,
+  html.a11y-reduce-motion .fade-motion.is-visible,
+  html.a11y-reduce-motion .page-fade-motion {
+    opacity: 1;
+    transform: none;
+    transition: none !important;
+    animation: none !important;
+    will-change: auto;
+  }
 }

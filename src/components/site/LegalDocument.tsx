@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { ChevronLeft } from "lucide-react";
 import { COMPANY, type LegalSection } from "@/data/legal";
+import { FadeIn } from "@/components/site/FadeIn";
 
 type LegalDocumentProps = {
   title: string;
@@ -20,15 +21,15 @@ export function LegalDocument({ title, subtitle, sections, relatedLink }: LegalD
         חזרה לחנות
       </Link>
 
-      <header className="mb-10 pb-8 border-b border-border">
+      <FadeIn preset="section" immediate as="header" className="mb-10 pb-8 border-b border-border">
         <h1 className="text-3xl md:text-4xl font-black text-foreground">{title}</h1>
         <p className="text-muted-foreground mt-3 leading-relaxed">{subtitle}</p>
         <p className="text-xs text-muted-foreground mt-4">עודכן לאחרונה: {COMPANY.lastUpdated}</p>
-      </header>
+      </FadeIn>
 
       <article className="space-y-10 text-foreground leading-relaxed">
-        {sections.map((section) => (
-          <section key={section.title}>
+        {sections.map((section, index) => (
+          <FadeIn key={section.title} preset="detail" index={index} as="section">
             <h2 className="text-lg font-bold text-foreground mb-3">{section.title}</h2>
             {section.paragraphs?.map((p, i) => (
               <p key={i} className="text-sm text-muted-foreground mb-3 last:mb-0">
@@ -49,7 +50,7 @@ export function LegalDocument({ title, subtitle, sections, relatedLink }: LegalD
                 {p}
               </p>
             ))}
-          </section>
+          </FadeIn>
         ))}
       </article>
 

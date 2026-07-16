@@ -9,17 +9,31 @@ export type AirfloorMatVariant = {
   lengthM: number;
   widthM: number;
   thicknessM: number;
+  /** Current sale price */
   price: number;
+  /** Regular price before sale */
+  was: number;
   showSafetyNotice: boolean;
 };
 
+/** Sale prices (price) vs regular catalog prices (was). */
 export const AIRFLOOR_MAT_VARIANTS: AirfloorMatVariant[] = [
-  { id: "airfloor-3x2x0.2", lengthM: 3, widthM: 2, thicknessM: 0.2, price: 1920, showSafetyNotice: true },
-  { id: "airfloor-4x2x0.2", lengthM: 4, widthM: 2, thicknessM: 0.2, price: 2560, showSafetyNotice: true },
-  { id: "airfloor-6x2x0.2", lengthM: 6, widthM: 2, thicknessM: 0.2, price: 3840, showSafetyNotice: false },
-  { id: "airfloor-8x2x0.2", lengthM: 8, widthM: 2, thicknessM: 0.2, price: 5120, showSafetyNotice: false },
-  { id: "airfloor-10x2x0.2", lengthM: 10, widthM: 2, thicknessM: 0.2, price: 6400, showSafetyNotice: false },
+  { id: "airfloor-3x2x0.2", lengthM: 3, widthM: 2, thicknessM: 0.2, price: 1890, was: 2250, showSafetyNotice: true },
+  { id: "airfloor-4x2x0.2", lengthM: 4, widthM: 2, thicknessM: 0.2, price: 2520, was: 3000, showSafetyNotice: true },
+  { id: "airfloor-6x2x0.2", lengthM: 6, widthM: 2, thicknessM: 0.2, price: 3780, was: 4500, showSafetyNotice: false },
+  { id: "airfloor-8x2x0.2", lengthM: 8, widthM: 2, thicknessM: 0.2, price: 5040, was: 6000, showSafetyNotice: false },
+  { id: "airfloor-10x2x0.2", lengthM: 10, widthM: 2, thicknessM: 0.2, price: 6300, was: 7500, showSafetyNotice: false },
 ];
+
+export const AIRFLOOR_SALE_BADGE = "מבצע";
+export const AIRFLOOR_SALE_HEADLINE = "מבצע מיוחד עכשיו על מזרני איירפלור";
+export const AIRFLOOR_SALE_COPY =
+  "כל המידות במחיר מבצע — חיסכון של כ־16% ממחיר הקטלוג. הזדמנות מצוינת לשדרג את משטח האימון במחיר שלא חוזר כל יום.";
+
+export function getAirfloorSalePercent(v: Pick<AirfloorMatVariant, "price" | "was">) {
+  if (v.was <= v.price) return 0;
+  return Math.round(((v.was - v.price) / v.was) * 100);
+}
 
 export const AIRFLOOR_SAFETY_NOTICE =
   "\u05e9\u05d9\u05de\u05d5 \u05dc\u05d1: \u05de\u05d6\u05e8\u05df \u05d6\u05d4 \u05de\u05d2\u05d9\u05e2 \u05d1\u05e8\u05d5\u05d7\u05d1 \u05e8\u05d7\u05d1 \u05e9\u05dc 2 \u05de\u05d8\u05e8\u05d9\u05dd. \u05d0\u05e0\u05d5 \u05de\u05ea\u05e2\u05e7\u05e9\u05d9\u05dd \u05e2\u05dc \u05e8\u05d5\u05d7\u05d1 \u05d6\u05d4 \u05d2\u05dd \u05d1\u05de\u05d6\u05e8\u05e0\u05d9\u05dd \u05d4\u05e7\u05e6\u05e8\u05d9\u05dd \u05d9\u05d5\u05ea\u05e8 \u05e9\u05dc\u05e0\u05d5, \u05db\u05d3\u05d9 \u05dc\u05d4\u05e2\u05e0\u05d9\u05e7 \u05dc\u05db\u05dd \u05de\u05e9\u05d8\u05d7 \u05e0\u05d7\u05d9\u05ea\u05d4 \u05d1\u05d8\u05d5\u05d7, \u05de\u05e8\u05d5\u05d5\u05d7 \u05d5\u05d9\u05e6\u05d9\u05d1 \u05d9\u05d5\u05ea\u05e8 \u05e9\u05de\u05d5\u05e0\u05e2 \u05e0\u05e4\u05d9\u05dc\u05d5\u05ea \u05de\u05d7\u05d5\u05e5 \u05dc\u05de\u05e9\u05d8\u05d7 \u05d5\u05e9\u05d5\u05de\u05e8 \u05e2\u05dc \u05d4\u05de\u05e9\u05ea\u05de\u05e9\u05d9\u05dd \u05dc\u05d0\u05d5\u05e8\u05da \u05db\u05dc \u05d4\u05d0\u05d9\u05de\u05d5\u05df.";
@@ -42,9 +56,13 @@ export function getAirfloorMatSeoTitle(v: AirfloorMatVariant) {
 }
 
 export function getAirfloorMatSeoDescription(v: AirfloorMatVariant) {
+  const salePct = getAirfloorSalePercent(v);
   return (
-    `\u05de\u05d6\u05e8\u05df \u05d0\u05d9\u05d9\u05e8\u05e4\u05dc\u05d5\u05e8 \u05de\u05e7\u05e6\u05d5\u05e2\u05d9 ${formatAirfloorSizeSlash(v)} \u05de\u05d8\u05e8 \u05de-LEVITATE. ` +
-    `\u05db\u05d5\u05dc\u05dc \u05de\u05e9\u05d0\u05d1\u05d4, \u05e2\u05e8\u05db\u05ea \u05ea\u05d9\u05e7\u05d5\u05e0\u05d9\u05dd \u05d5\u05e4\u05e1 \u05d7\u05d9\u05d1\u05d5\u05e8. \u05e8\u05d5\u05d7\u05d1 2 \u05de\u05d8\u05e8 \u05dc\u05d1\u05d8\u05d9\u05d7\u05d5\u05ea \u05de\u05e8\u05d1\u05d9\u05ea. \u05de\u05d7\u05d9\u05e8: ${v.price.toLocaleString("he-IL")} \u20aa.`
+    `מבצע איירפלור: מזרן מקצועי ${formatAirfloorSizeSlash(v)} מטר מ-LEVITATE` +
+    (salePct > 0 ? ` — ${salePct}% הנחה` : "") +
+    `. מחיר מבצע ${v.price.toLocaleString("he-IL")} ₪` +
+    (v.was > v.price ? ` במקום ${v.was.toLocaleString("he-IL")} ₪` : "") +
+    `. כולל משאבה, ערכת תיקונים ופס חיבור. ניתן להזמין גם בגודל מיוחד.`
   );
 }
 
@@ -62,26 +80,37 @@ export function shouldShowAirfloorSafetyNotice(productId: string) {
 }
 
 const AIRFLOOR_INTRO =
-  "\u05d4\u05db\u05d9\u05e8\u05d5 \u05d0\u05ea \u05d4\u05d3\u05d5\u05e8 \u05d4\u05d1\u05d0 \u05e9\u05dc \u05de\u05e9\u05d8\u05d7\u05d9 \u05d4\u05d0\u05d9\u05de\u05d5\u05df. \u05de\u05d6\u05e8\u05df \u05d4\u05d0\u05d9\u05d9\u05e8\u05e4\u05dc\u05d5\u05e8 \u05e9\u05dc LV \u05de\u05e6\u05d9\u05e2 \u05e9\u05d9\u05dc\u05d5\u05d1 \u05de\u05d5\u05e9\u05dc\u05dd \u05d1\u05d9\u05df \u05d2\u05de\u05d9\u05e9\u05d5\u05ea, \u05d1\u05dc\u05d9\u05de\u05ea \u05d6\u05e2\u05d6\u05d5\u05e2\u05d9\u05dd \u05d5\u05e2\u05de\u05d9\u05d3\u05d5\u05ea \u05d2\u05d1\u05d5\u05d4\u05d4, \u05d4\u05de\u05d5\u05ea\u05d0\u05dd \u05dc\u05de\u05ea\u05e2\u05de\u05dc\u05d9\u05dd, \u05d0\u05e7\u05e8\u05d5\u05d1\u05d8\u05d9\u05dd \u05d5\u05d0\u05d5\u05d4\u05d1\u05d9 \u05e0\u05d9\u05e0\u05d2'\u05d4. \u05d4\u05de\u05d6\u05e8\u05df \u05de\u05d2\u05d9\u05e2 \u05db\u05e2\u05e8\u05db\u05d4 \u05de\u05dc\u05d0\u05d4 \u05d4\u05db\u05d5\u05dc\u05dc\u05ea \u05de\u05e9\u05d0\u05d1\u05d4, \u05e2\u05e8\u05db\u05ea \u05ea\u05d9\u05e7\u05d5\u05e0\u05d9\u05dd \u05d5\u05e4\u05e1 \u05d7\u05d9\u05d1\u05d5\u05e8 \u05d9\u05d9\u05e2\u05d5\u05d3\u05d9.";
+  "הכירו את הדור הבא של משטחי האימון. מזרן האיירפלור של LV מציע שילוב מושלם בין גמישות, בלימת זעזועים ועמידות גבוהה, המותאם למתעמלים, אקרובטים ואוהבי נינג'ה. המזרן מגיע כערכה מלאה הכוללת משאבה, ערכת תיקונים ופס חיבור ייעודי.";
+
+const AIRFLOOR_INTRO_CUSTOM_SIZE =
+  "מעבר למידות שבקטלוג — ניתן להזמין מזרן איירפלור גם בגודל מיוחד לפי הצורך שלכם. בחרו מידה מהסרגל למעלה, או פנו אלינו בוואטסאפ להצעה על מידה מותאמת.";
+
+const AIRFLOOR_INTRO_SALE =
+  `${AIRFLOOR_SALE_HEADLINE} — המחיר שאתם רואים הוא מחיר מבצע מוזל ממחיר הקטלוג. כדאי לנצל עכשיו: איכות מקצועית של LEVITATE במחיר שלא חוזר כל יום.`;
 
 const AIRFLOOR_FEATURES: ProductFeature[] = [
-  { title: "\u05de\u05d9\u05d3\u05d5\u05ea", description: "" },
+  { title: "מידות", description: "" },
   {
-    title: "\u05d1\u05d8\u05d9\u05d7\u05d5\u05ea",
-    description: "\u05e8\u05d5\u05d7\u05d1 2 \u05de\u05d8\u05e8\u05d9\u05dd \u05dc\u05d4\u05d2\u05e0\u05d4 \u05de\u05e7\u05e1\u05d9\u05de\u05dc\u05d9\u05ea (\u05d9\u05d9\u05d7\u05d5\u05d3\u05d9 \u05dc\u05de\u05d6\u05e8\u05e0\u05d9\u05dd \u05e9\u05dc\u05e0\u05d5).",
-  },
-  {
-    title: "\u05e2\u05e8\u05db\u05d4 \u05de\u05dc\u05d0\u05d4",
+    title: "גודל מיוחד",
     description:
-      "\u05db\u05d5\u05dc\u05dc \u05de\u05e9\u05d0\u05d1\u05d4 \u05d7\u05d6\u05e7\u05d4 \u05dc\u05e0\u05d9\u05e4\u05d5\u05d7 \u05de\u05d4\u05d9\u05e8, \u05e2\u05e8\u05db\u05ea \u05ea\u05d9\u05e7\u05d5\u05e0\u05d9\u05dd \u05de\u05e7\u05e6\u05d5\u05e2\u05d9\u05ea \u05d5\u05e4\u05e1 \u05d7\u05d9\u05d1\u05d5\u05e8 \u05dc\u05d4\u05e6\u05de\u05d3\u05ea \u05de\u05e1\u05e4\u05e8 \u05de\u05d6\u05e8\u05e0\u05d9\u05dd.",
+      "צריכים מידה שלא מופיעה בקטלוג? ניתן להזמין מזרן איירפלור בגודל מיוחד — תאמו איתנו בוואטסאפ ונחזור עם הצעה.",
   },
   {
-    title: "\u05d7\u05d5\u05de\u05e8\u05d9\u05dd",
-    description: "\u05d8\u05db\u05e0\u05d5\u05dc\u05d5\u05d2\u05d9\u05d9\u05ea \u05e2\u05de\u05d9\u05d3\u05d5\u05ea \u05d2\u05d1\u05d5\u05d4\u05d4 \u05e0\u05d2\u05d3 \u05e9\u05d7\u05d9\u05e7\u05d4 \u05d5\u05e7\u05e8\u05d9\u05e2\u05d4.",
+    title: "בטיחות",
+    description: "רוחב 2 מטרים להגנה מקסימלית (ייחודי למזרנים שלנו).",
   },
   {
-    title: "\u05d0\u05d7\u05e8\u05d9\u05d5\u05ea",
-    description: "12 \u05d7\u05d5\u05d3\u05e9\u05d9 \u05d0\u05d7\u05e8\u05d9\u05d5\u05ea \u05e2\u05dc \u05e4\u05d2\u05de\u05d9 \u05d9\u05d9\u05e6\u05d5\u05e8.",
+    title: "ערכה מלאה",
+    description:
+      "כולל משאבה חזקה לניפוח מהיר, ערכת תיקונים מקצועית ופס חיבור להצמדת מספר מזרנים.",
+  },
+  {
+    title: "חומרים",
+    description: "טכנולוגיית עמידות גבוהה נגד שחיקה וקריעה.",
+  },
+  {
+    title: "אחריות",
+    description: "12 חודשי אחריות על פגמי ייצור.",
   },
 ];
 
@@ -109,35 +138,50 @@ export function buildAirfloorMatProductExtra(
   const thicknessCm = Math.round(variant.thicknessM * 100);
 
   const features: ProductFeature[] = AIRFLOOR_FEATURES.map((f) =>
-    f.title === "\u05de\u05d9\u05d3\u05d5\u05ea" ? { ...f, description: dimsSpec } : f,
+    f.title === "מידות" ? { ...f, description: dimsSpec } : f,
   );
 
   const specs: ProductSpec[] = [
-    { label: "\u05de\u05d9\u05d3\u05d5\u05ea", value: dimsSpec },
-    { label: "\u05d0\u05d5\u05e8\u05da", value: `${variant.lengthM} \u05de'` },
-    { label: "\u05e8\u05d5\u05d7\u05d1", value: `${variant.widthM} \u05de'` },
-    { label: "\u05e2\u05d5\u05d1\u05d9", value: `${thicknessCm} \u05e1"\u05de` },
-    { label: "\u05d1\u05d8\u05d9\u05d7\u05d5\u05ea", value: "\u05e8\u05d5\u05d7\u05d1 2 \u05de\u05d8\u05e8 \u05dc\u05d4\u05d2\u05e0\u05d4 \u05de\u05e7\u05e1\u05d9\u05de\u05dc\u05d9\u05ea" },
-    { label: "\u05e2\u05e8\u05db\u05ea \u05de\u05dc\u05d0\u05d4", value: "\u05de\u05e9\u05d0\u05d1\u05d4, \u05e2\u05e8\u05db\u05ea \u05ea\u05d9\u05e7\u05d5\u05e0\u05d9\u05dd, \u05e4\u05e1 \u05d7\u05d9\u05d1\u05d5\u05e8" },
-    { label: "\u05de\u05d5\u05ea\u05d2", value: "LEVITATE" },
-    { label: "\u05e7\u05d8\u05d2\u05d5\u05e8\u05d9\u05d4", value: AIRFLOOR_MAT_CATEGORY },
-    { label: "\u05de\u05e7\"\u05d8", value: variant.id },
-    { label: "\u05d0\u05d7\u05e8\u05d9\u05d5\u05ea", value: "12 \u05d7\u05d5\u05d3\u05e9\u05d9 \u05d0\u05d7\u05e8\u05d9\u05d5\u05ea \u05e2\u05dc \u05e4\u05d2\u05de\u05d9 \u05d9\u05d9\u05e6\u05d5\u05e8" },
+    { label: "מידות", value: dimsSpec },
+    { label: "אורך", value: `${variant.lengthM} מ'` },
+    { label: "רוחב", value: `${variant.widthM} מ'` },
+    { label: "עובי", value: `${thicknessCm} ס"מ` },
+    { label: "בטיחות", value: "רוחב 2 מטר להגנה מקסימלית" },
+    { label: "ערכה מלאה", value: "משאבה, ערכת תיקונים, פס חיבור" },
+    { label: "גודל מיוחד", value: "ניתן להזמנה בוואטסאפ לפי מידות מותאמות" },
+    { label: "מותג", value: "LEVITATE" },
+    { label: "קטגוריה", value: AIRFLOOR_MAT_CATEGORY },
+    { label: "מק\"ט", value: variant.id },
+    { label: "אחריות", value: "12 חודשי אחריות על פגמי ייצור" },
   ];
+
+  const salePct = getAirfloorSalePercent(variant);
+  const salePriceLabel = `${variant.price.toLocaleString("he-IL")} ₪`;
+  const wasPriceLabel = `${variant.was.toLocaleString("he-IL")} ₪`;
 
   return {
     introTitle: getAirfloorMatTitle(variant),
-    introParagraphs: [AIRFLOOR_INTRO],
-    featuresTitle: "\u05de\u05e4\u05e8\u05d8 \u05d8\u05db\u05e0\u05d9 \u05d5\u05de\u05d4 \u05d1\u05d7\u05d1\u05d9\u05dc\u05d4?",
+    introParagraphs: [AIRFLOOR_INTRO_SALE, AIRFLOOR_INTRO, AIRFLOOR_INTRO_CUSTOM_SIZE],
+    featuresTitle: "מפרט טכני ומה בחבילה?",
     features,
-    specsTitle: "\u05de\u05e4\u05e8\u05d8 \u05de\u05dc\u05d0",
-    specs,
-    warrantyTitle: "\u05d0\u05d7\u05e8\u05d9\u05d5\u05ea",
-    warrantyText: "12 \u05d7\u05d5\u05d3\u05e9\u05d9 \u05d0\u05d7\u05e8\u05d9\u05d5\u05ea \u05e2\u05dc \u05e4\u05d2\u05de\u05d9 \u05d9\u05d9\u05e6\u05d5\u05e8.",
-    audienceTitle: "\u05dc\u05de\u05d9 \u05d4\u05de\u05d6\u05e8\u05df \u05de\u05ea\u05d0\u05d9\u05dd?",
+    specsTitle: "מפרט מלא",
+    specs: [
+      ...specs.slice(0, 4),
+      {
+        label: "מחיר מבצע",
+        value:
+          salePct > 0
+            ? `${salePriceLabel} במקום ${wasPriceLabel} (חיסכון ~${salePct}%)`
+            : salePriceLabel,
+      },
+      ...specs.slice(4),
+    ],
+    warrantyTitle: "אחריות",
+    warrantyText: "12 חודשי אחריות על פגמי ייצור.",
+    audienceTitle: "למי המזרן מתאים?",
     audience: AIRFLOOR_AUDIENCE,
-    ctaText: `\u05d4\u05d6\u05de\u05d9\u05e0\u05d5 \u05de\u05d6\u05e8\u05df \u05d0\u05d9\u05d9\u05e8\u05e4\u05dc\u05d5\u05e8 ${sizeSlash} \u05de\u05d8\u05e8 \u2014 \u05d0\u05d9\u05de\u05d5\u05df \u05de\u05e7\u05e6\u05d5\u05e2\u05d9 \u05d1\u05de\u05d7\u05d9\u05e8 \u05de\u05e2\u05d5\u05dc\u05d4!`,
-    badge: "AirFloor",
+    ctaText: `מבצע איירפלור ${sizeSlash} מטר — ${salePriceLabel} במקום ${wasPriceLabel}. הזמינו עכשיו!`,
+    badge: AIRFLOOR_SALE_BADGE,
     relatedIds: [...allIds.filter((id) => id !== variant.id), "landing-mat-250x200x30"],
   };
 }

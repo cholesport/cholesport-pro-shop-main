@@ -7,6 +7,7 @@ import {
   type CategoryDefinition,
 } from "@/data/categories";
 import type { LucideIcon } from "lucide-react";
+import { FadeIn } from "@/components/site/FadeIn";
 
 function CategoryIcon({
   icon: Icon,
@@ -57,14 +58,14 @@ export function CategoriesIndexPage() {
         חזרה לדף הבית
       </Link>
 
-      <header className="mb-10 pb-8 border-b border-border max-w-2xl">
+      <FadeIn preset="section" immediate className="mb-10 pb-8 border-b border-border max-w-2xl">
         <h1 className="text-3xl md:text-4xl font-extrabold text-foreground">{CATEGORIES_PAGE_TITLE}</h1>
         <p className="text-muted-foreground mt-3 leading-relaxed">{CATEGORIES_PAGE_SUBTITLE}</p>
-      </header>
+      </FadeIn>
 
       <ul className="grid grid-cols-1 md:grid-cols-2 gap-px bg-border border border-border">
-        {CATEGORIES.map((category) => (
-          <li key={category.slug}>
+        {CATEGORIES.map((category, index) => (
+          <FadeIn key={category.slug} as="li" preset="card" index={index}>
             <Link
               to="/categories/$categorySlug"
               params={{ categorySlug: category.slug }}
@@ -98,7 +99,7 @@ export function CategoriesIndexPage() {
                 )}
               </div>
             </Link>
-          </li>
+          </FadeIn>
         ))}
       </ul>
     </div>

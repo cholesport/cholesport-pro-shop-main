@@ -27,6 +27,7 @@ import {
   getTrainingAccessorySeoTitle,
   isTrainingAccessoryProduct,
 } from "@/data/trainingAccessories";
+import { buildPageSeoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/products/$productId")({
   loader: ({ params }) => {
@@ -64,12 +65,21 @@ export const Route = createFileRoute("/products/$productId")({
             ? getTrainingAccessorySeoDescription(trainingAccessory)
             : (loaderData.introParagraphs[0] ?? loaderData.title);
 
-    return {
-      meta: [
-        { title: `${title} — CHOLE sport` },
-        { name: "description", content: description },
-      ],
-    };
+    const image =
+      typeof loaderData.image === "string"
+        ? loaderData.image.startsWith("http")
+          ? loaderData.image
+          : undefined
+        : undefined;
+
+    const seo = buildPageSeoHead({
+      title: `${title} — CHOLE sport | cholesport.co.il`,
+      description,
+      path: `/products/${loaderData.id}`,
+      type: "product",
+      image,
+    });
+    return { meta: seo.meta, links: seo.links };
   },
   component: ProductRoute,
 });

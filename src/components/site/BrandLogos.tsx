@@ -5,6 +5,7 @@ import {
   getBrandLogo,
   type StoreBrand,
 } from "@/data/brands";
+import { FadeIn } from "@/components/site/FadeIn";
 
 type BrandMarkProps = {
   brand: StoreBrand;
@@ -71,13 +72,15 @@ export function BrandsSection() {
   return (
     <section id="brands" className="border-y border-border bg-card" aria-labelledby="brands-heading">
       <div className="max-w-7xl mx-auto px-4 py-12 md:py-16">
-        <div className="max-w-xl mb-8 md:mb-10">
+        <FadeIn preset="section" className="max-w-xl mb-8 md:mb-10">
           <h2 id="brands-heading" className="text-2xl md:text-3xl font-extrabold text-foreground">
             {BRANDS_SECTION_TITLE}
           </h2>
           <p className="text-muted-foreground mt-3 leading-relaxed">{BRANDS_SECTION_SUBTITLE}</p>
-        </div>
-        <BrandLogoRow heightClass="h-10 md:h-12" />
+        </FadeIn>
+        <FadeIn preset="section" delay={100}>
+          <BrandLogoRow heightClass="h-10 md:h-12" />
+        </FadeIn>
       </div>
     </section>
   );

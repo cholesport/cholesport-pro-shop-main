@@ -25,17 +25,13 @@ import { AirfloorSizesTable } from "@/components/site/AirfloorSizesTable";
 import { ProductMedia } from "@/components/site/ProductMedia";
 import { PONG_BOT_NOVA_S_PRO_ID } from "@/data/products";
 import {
-  getLandingMatVariantById,
   isLandingMatAirfloorProduct,
   isLandingMatProduct,
 } from "@/data/landingMats";
-import { getLandingMatImageScale } from "@/lib/landingMatVisual";
 import {
-  getAirfloorMatVariantById,
   isAirfloorMatProduct,
   shouldShowAirfloorSafetyNotice,
 } from "@/data/airfloorMats";
-import { getAirfloorMatImageScale } from "@/lib/airfloorMatVisual";
 import { isGymboreeProduct } from "@/data/gymboree";
 import {
   getPuzzleMatDealLabel,
@@ -45,7 +41,7 @@ import {
   isTrainingAccessoryProduct,
   PUZZLE_MAT_UNIT_PRICE,
 } from "@/data/trainingAccessories";
-import { hasProductImage } from "@/lib/productMedia";
+import { hasProductImage, shouldContainProductImage } from "@/lib/productMedia";
 import {
   Accordion,
   AccordionContent,
@@ -54,6 +50,7 @@ import {
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { BrandMark } from "@/components/site/BrandLogos";
+import { FadeIn } from "@/components/site/FadeIn";
 import { getStoreBrandByProductBrand } from "@/data/brands";
 
 function formatPrice(n: number) {
@@ -77,6 +74,7 @@ function Stars({ rating, reviews }: { rating: number; reviews: number }) {
 
 function RelatedCard({ product }: { product: Product }) {
   const storeBrand = getStoreBrandByProductBrand(product.brand);
+  const containImage = shouldContainProductImage(product);
 
   return (
     <Link
@@ -84,11 +82,20 @@ function RelatedCard({ product }: { product: Product }) {
       params={{ productId: product.id }}
       className="group block text-center"
     >
-      <div className="aspect-square bg-secondary rounded-lg overflow-hidden mb-3">
+      <div
+        className={`aspect-square rounded-lg overflow-hidden mb-3 ${
+          containImage ? "bg-white border border-border" : "bg-secondary"
+        }`}
+      >
         <ProductMedia
           product={product}
           alt={product.title}
-          imgClassName="group-hover:scale-105 transition duration-300"
+          fit={containImage ? "contain" : "cover"}
+          imgClassName={
+            containImage
+              ? "p-2 group-hover:scale-[1.02] transition duration-300"
+              : "group-hover:scale-105 transition duration-300"
+          }
         />
       </div>
       <p className="text-sm font-medium text-foreground leading-snug line-clamp-2 min-h-[2.5rem]">
@@ -158,13 +165,6 @@ export function ProductDetailPage({ product }: { product: Product }) {
   const isPuzzleMat = isPuzzleMatProductId(product.id);
   const unitPrice = isPuzzleMat ? getPuzzleMatUnitPrice(quantity) : product.price;
   const puzzleDealLabel = isPuzzleMat ? getPuzzleMatDealLabel(quantity) : null;
-  const landingMatVariant = showLandingMatSizes ? getLandingMatVariantById(product.id) : undefined;
-  const airfloorMatVariant = showAirfloorSizes ? getAirfloorMatVariantById(product.id) : undefined;
-  const matImageScale = landingMatVariant
-    ? getLandingMatImageScale(landingMatVariant)
-    : airfloorMatVariant
-      ? getAirfloorMatImageScale(airfloorMatVariant)
-      : 1;
   const hasDiscount = product.was > product.price;
   const showGallery = hasProductImage(product);
   const primaryImage = product.images[activeImage] ?? product.img;
@@ -193,8 +193,7 @@ export function ProductDetailPage({ product }: { product: Product }) {
       )}
       {showHurdleHeights && <TrainingHurdleHeightBar currentProductId={product.id} />}
 
-      {/* Top: gallery + buy box */}
-      <div className="grid lg:grid-cols-2 gap-10 lg:gap-16">
+      <FadeIn preset="detail" immediate className="grid lg:grid-cols-2 gap-10 lg:gap-16">
         {/* Gallery */}
         <div className="flex gap-4">
           <div
@@ -203,14 +202,7 @@ export function ProductDetailPage({ product }: { product: Product }) {
             onMouseLeave={() => setIsGalleryHovered(false)}
           >
             {showGallery && primaryImage ? (
-              <div
-                className="relative w-full h-full flex items-center justify-center bg-white transition-transform duration-300"
-                style={
-                  matImageScale < 1
-                    ? { transform: `scale(${matImageScale})` }
-                    : undefined
-                }
-              >
+              <div className="relative w-full h-full flex items-center justify-center bg-white p-3 md:p-5">
                 <img
                   src={primaryImage}
                   alt={product.title}
@@ -222,7 +214,7 @@ export function ProductDetailPage({ product }: { product: Product }) {
                   <img
                     src={hoverSwapImage}
                     alt={`${product.title} — מצב קיפול`}
-                    className={`absolute inset-0 w-full h-full object-contain transition-opacity duration-300 ${
+                    className={`absolute inset-3 md:inset-5 w-auto h-auto max-w-[calc(100%-1.5rem)] md:max-w-[calc(100%-2.5rem)] max-h-[calc(100%-1.5rem)] md:max-h-[calc(100%-2.5rem)] object-contain m-auto transition-opacity duration-300 ${
                       showHoverSwap ? "opacity-100" : "opacity-0"
                     }`}
                   />
@@ -378,10 +370,10 @@ export function ProductDetailPage({ product }: { product: Product }) {
             {showAirfloorSafety && <AirfloorSafetyNotice />}
           </div>
         </div>
-      </div>
+      </FadeIn>
 
       {/* Features */}
-      <section className="mt-16 max-w-3xl">
+      <FadeIn preset="detail" as="section" className="mt-16 max-w-3xl">
         <h2 className="text-xl font-bold text-foreground mb-6">{product.featuresTitle}</h2>
         <ul className="space-y-5">
           {product.features.map((f) => (
@@ -399,10 +391,10 @@ export function ProductDetailPage({ product }: { product: Product }) {
             </Fragment>
           ))}
         </ul>
-      </section>
+      </FadeIn>
 
       {/* Specs */}
-      <section className="mt-12 max-w-3xl">
+      <FadeIn preset="detail" as="section" className="mt-12 max-w-3xl">
         <h2 className="text-xl font-bold text-foreground mb-4">{product.specsTitle}</h2>
         <ul className="space-y-2 text-sm">
           {product.specs.map((s) => (
@@ -411,26 +403,40 @@ export function ProductDetailPage({ product }: { product: Product }) {
             </li>
           ))}
         </ul>
-      </section>
+      </FadeIn>
 
-      {showLandingMatAirfloor && <LandingMatAirfloorSection />}
+      {showLandingMatAirfloor && (
+        <FadeIn preset="detail">
+          <LandingMatAirfloorSection />
+        </FadeIn>
+      )}
 
-      {showLandingMatSizes && <LandingMatSizesTable currentProductId={product.id} />}
+      {showLandingMatSizes && (
+        <FadeIn preset="detail">
+          <LandingMatSizesTable currentProductId={product.id} />
+        </FadeIn>
+      )}
 
-      {showAirfloorSizes && <AirfloorSizesTable currentProductId={product.id} />}
+      {showAirfloorSizes && (
+        <FadeIn preset="detail">
+          <AirfloorSizesTable currentProductId={product.id} />
+        </FadeIn>
+      )}
 
       {/* Warranty */}
       {showLandingMatAirfloor ? (
-        <LandingMatWarrantySection />
+        <FadeIn preset="detail">
+          <LandingMatWarrantySection />
+        </FadeIn>
       ) : (
-        <section className="mt-12 max-w-3xl">
+        <FadeIn preset="detail" as="section" className="mt-12 max-w-3xl">
           <h2 className="text-xl font-bold text-foreground mb-3">{product.warrantyTitle}</h2>
           <p className="text-sm leading-relaxed text-muted-foreground">{product.warrantyText}</p>
-        </section>
+        </FadeIn>
       )}
 
       {/* Audience */}
-      <section className="mt-12 max-w-3xl">
+      <FadeIn preset="detail" as="section" className="mt-12 max-w-3xl">
         <h2 className="text-xl font-bold text-foreground mb-6">{product.audienceTitle}</h2>
         <ol className="space-y-4 list-decimal list-inside text-sm">
           {product.audience.map((a) => (
@@ -440,7 +446,7 @@ export function ProductDetailPage({ product }: { product: Product }) {
             </li>
           ))}
         </ol>
-      </section>
+      </FadeIn>
 
       {/* CTA */}
       <section className="mt-12 pt-8 border-t border-border max-w-3xl text-center">

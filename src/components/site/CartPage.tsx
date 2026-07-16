@@ -10,13 +10,14 @@ import {
   isPuzzleMatProductId,
   PUZZLE_MAT_UNIT_PRICE,
 } from "@/data/trainingAccessories";
+import { FadeIn } from "@/components/site/FadeIn";
 
 export function CartPage() {
   const { items, subtotal, totalQuantity, updateQuantity, removeItem, clearCart } = useCart();
 
   if (items.length === 0) {
     return (
-      <div className="max-w-2xl mx-auto px-4 py-16 text-center">
+      <FadeIn preset="section" immediate className="max-w-2xl mx-auto px-4 py-16 text-center">
         <div className="w-20 h-20 rounded-full bg-secondary flex items-center justify-center mx-auto mb-6">
           <ShoppingBag size={36} className="text-muted-foreground" />
         </div>
@@ -25,12 +26,12 @@ export function CartPage() {
         <Button asChild className="mt-8 font-semibold">
           <Link to="/">חזרה לקניות</Link>
         </Button>
-      </div>
+      </FadeIn>
     );
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8 md:py-12">
+    <FadeIn preset="section" immediate className="max-w-4xl mx-auto px-4 py-8 md:py-12">
       <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
         <div>
           <h1 className="text-2xl md:text-3xl font-black text-foreground">עגלת קניות</h1>
@@ -144,6 +145,6 @@ export function CartPage() {
           <Link to="/">המשך בקניות</Link>
         </Button>
       </div>
-    </div>
+    </FadeIn>
   );
 }

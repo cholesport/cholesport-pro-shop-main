@@ -153,7 +153,6 @@ function AuthForm({
                     autoComplete="given-name"
                     value={form.firstName}
                     onChange={(e) => setForm({ ...form, firstName: e.target.value })}
-                    placeholder="ישראל"
                   />
                 </div>
                 <div className="space-y-2">
@@ -164,7 +163,6 @@ function AuthForm({
                     autoComplete="family-name"
                     value={form.lastName}
                     onChange={(e) => setForm({ ...form, lastName: e.target.value })}
-                    placeholder="ישראלי"
                   />
                 </div>
               </div>
@@ -182,13 +180,12 @@ function AuthForm({
                   className="text-start"
                   value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  placeholder="name@example.com"
                 />
               </div>
 
               {mode === "register" && (
                 <div className="space-y-2">
-                  <Label htmlFor="phone">טלפון נייד *</Label>
+                  <Label htmlFor="phone">טלפון *</Label>
                   <Input
                     id="phone"
                     type="tel"
@@ -199,7 +196,6 @@ function AuthForm({
                     className="text-start"
                     value={form.phone}
                     onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                    placeholder="054-0000000"
                   />
                 </div>
               )}
@@ -219,7 +215,6 @@ function AuthForm({
                     className="text-start pe-10"
                     value={form.password}
                     onChange={(e) => setForm({ ...form, password: e.target.value })}
-                    placeholder="••••••••"
                   />
                   <button
                     type="button"

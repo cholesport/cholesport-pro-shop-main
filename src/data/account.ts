@@ -45,17 +45,18 @@ export type RegisterFormInput = {
   password: string;
 };
 
-/** Digits only from a phone string (allows formatting like 054-2366279). */
+/** Digits only from a phone string (allows formatting like spaces / dashes). */
 export function getPhoneDigits(phone: string) {
   return phone.replace(/\D/g, "");
 }
 
-/** Israeli mobile: 05X + 7 digits (10 total), or +9725X... */
-export function isValidIsraeliMobile(phone: string) {
+/**
+ * Accepts Israeli mobiles and international numbers.
+ * Requires enough digits for a real phone (7–15 per E.164).
+ */
+export function isValidAccountPhone(phone: string) {
   const digits = getPhoneDigits(phone);
-  if (/^05\d{8}$/.test(digits)) return true;
-  if (/^9725\d{8}$/.test(digits)) return true;
-  return false;
+  return digits.length >= 7 && digits.length <= 15;
 }
 
 export function validateRegisterForm(input: RegisterFormInput): string | null {
@@ -68,9 +69,9 @@ export function validateRegisterForm(input: RegisterFormInput): string | null {
   if (!firstName) return "נא למלא שם פרטי";
   if (!lastName) return "נא למלא שם משפחה";
   if (!email) return "נא למלא כתובת אימייל";
-  if (!phone) return "נא למלא טלפון נייד";
-  if (!isValidIsraeliMobile(phone)) {
-    return "נא להזין טלפון נייד תקין (למשל 054-1234567)";
+  if (!phone) return "נא למלא מספר טלפון";
+  if (!isValidAccountPhone(phone)) {
+    return "נא להזין מספר טלפון תקין (כולל קידומת מדינה אם מחוץ לישראל)";
   }
   if (password.length < ACCOUNT_PASSWORD_MIN_LENGTH) {
     return `הסיסמה חייבת להכיל לפחות ${ACCOUNT_PASSWORD_MIN_LENGTH} תווים`;

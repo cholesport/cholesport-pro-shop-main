@@ -1,4 +1,5 @@
 import type { Product, ProductFeature, ProductSpec } from "@/data/products";
+import { LAST_UNITS_STOCK_NOTE } from "@/lib/productLabels";
 
 export const LANDING_MAT_CATEGORY = "מזרני נחיתה";
 export const LANDING_MAT_CATEGORY_SLUG = "landing-mats";
@@ -263,6 +264,7 @@ export function buildLandingMatProductExtra(
     ctaText: isAirfloor
       ? "השלימו את מערכת ה-AirFloor שלכם — הזמינו עכשיו!"
       : `הזמינו מזרן נחיתה ${dims} — בטיחות ואיכות מקצועית!`,
+    stockNote: LAST_UNITS_STOCK_NOTE,
     relatedIds: allIds.filter((id) => id !== variant.id),
   };
 

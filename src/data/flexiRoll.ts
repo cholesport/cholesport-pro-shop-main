@@ -1,7 +1,7 @@
 import type { Product, ProductFeature, ProductSpec } from "@/data/products";
 import flexiRollImg from "@/assets/p-flexi-roll.png";
 import flexiRollLargeImg from "@/assets/p-flexi-roll-12x2.png";
-import { QUANTITY_DEAL_BADGE } from "@/lib/productLabels";
+import { LAST_UNITS_STOCK_NOTE, QUANTITY_DEAL_BADGE } from "@/lib/productLabels";
 
 export const FLEXI_ROLL_CATEGORY = "פלקסי רול";
 export const FLEXI_ROLL_CATEGORY_SLUG = "flexi-roll";
@@ -187,6 +187,7 @@ export function buildFlexiRollProductExtra(
     audience: FLEXI_ROLL_AUDIENCE,
     ctaText: `הזמינו פלקסי רול ${sizeSlash} מטר — משטח אימון מקצועי ונוח לשימוש!`,
     badge: QUANTITY_DEAL_BADGE,
+    stockNote: LAST_UNITS_STOCK_NOTE,
     relatedIds: allIds.filter((id) => id !== variant.id),
   };
 }

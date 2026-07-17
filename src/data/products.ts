@@ -42,7 +42,7 @@ import {
   TRAINING_ACCESSORIES_CATEGORY,
   TRAINING_ACCESSORIES_PRODUCTS,
 } from "@/data/trainingAccessories";
-import { LAST_UNITS_STOCK_NOTE, QUANTITY_DEAL_BADGE } from "@/lib/productLabels";
+import { QUANTITY_DEAL_BADGE } from "@/lib/productLabels";
 
 export type ProductFeature = { title: string; description: string };
 export type ProductSpec = { label: string; value: string };
@@ -118,7 +118,6 @@ function makeProduct(
   return {
     img: base.img,
     images: base.img ? [base.img] : [],
-    stockNote: LAST_UNITS_STOCK_NOTE,
     introTitle: base.title,
     introParagraphs: [
       `${base.title} — ציוד מקצועי באיכות גבוהה, מתאים לאימון, לפנאי ולשימוש יומיומי.`,

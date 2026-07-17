@@ -37,7 +37,7 @@ export const STORE_BRANDS: StoreBrand[] = [
     logo: levitateLogo,
     logoOnDark: levitateLogoOnDark,
     productBrands: ["LEVITATE®", "LEVITATE"],
-    categorySlugs: ["airfloor-mats", "landing-mats", "gymboree"],
+    categorySlugs: ["airfloor-mats", "flexi-roll", "landing-mats", "gymboree"],
     href: "/categories/airfloor-mats",
   },
 ];

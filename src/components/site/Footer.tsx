@@ -6,7 +6,11 @@ import { CONTACT_PHONE_DISPLAY, WHATSAPP_URL } from "@/lib/contact";
 import { BrandLogoRow } from "@/components/site/BrandLogos";
 import { FadeIn } from "@/components/site/FadeIn";
 
-type FooterLink = { label: string; href?: string; to?: "/privacy" | "/terms" | "/account" | "/categories" };
+type FooterLink = {
+  label: string;
+  href?: string;
+  to?: "/privacy" | "/terms" | "/account" | "/categories" | "/club";
+};
 
 const COLS: Record<string, FooterLink[]> = {
   חנות: [
@@ -14,6 +18,7 @@ const COLS: Record<string, FooterLink[]> = {
     { label: "המותגים שלנו", href: "/#brands" },
     { label: "קטגוריות", to: "/categories" },
     { label: "SHOW ROOM", href: "/categories/show-room" },
+    { label: "מתחם CHOLE TLV", to: "/club" },
   ],
   שירות: [
     { label: "צור קשר בוואטסאפ", href: WHATSAPP_URL },

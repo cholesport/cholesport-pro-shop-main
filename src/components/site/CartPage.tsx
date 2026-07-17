@@ -3,17 +3,23 @@ import { MessageCircle, ShoppingBag, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { QuantityInput } from "@/components/site/QuantityInput";
 import { useCart } from "@/context/CartContext";
-import { formatPrice } from "@/lib/cart";
+import { formatPrice, getFlexiRollCartQuantity } from "@/lib/cart";
 import { PAYMENT_SUMMARY, PAYMENT_WHATSAPP_NOTICE } from "@/data/payment";
 import {
   getPuzzleMatDealLabel,
   isPuzzleMatProductId,
   PUZZLE_MAT_UNIT_PRICE,
 } from "@/data/trainingAccessories";
+import {
+  getFlexiRollCatalogPrice,
+  getFlexiRollDealLabel,
+  isFlexiRollProductId,
+} from "@/data/flexiRoll";
 import { FadeIn } from "@/components/site/FadeIn";
 
 export function CartPage() {
   const { items, subtotal, totalQuantity, updateQuantity, removeItem, clearCart } = useCart();
+  const flexiRollCartQty = getFlexiRollCartQuantity(items);
 
   if (items.length === 0) {
     return (
@@ -56,9 +62,15 @@ export function CartPage() {
 
       <div className="space-y-4">
         {items.map((item) => {
+          const isFlexiRoll = isFlexiRollProductId(item.productId);
+          const flexiCatalog = isFlexiRoll
+            ? getFlexiRollCatalogPrice(item.productId)
+            : undefined;
           const dealLabel = isPuzzleMatProductId(item.productId)
             ? getPuzzleMatDealLabel(item.quantity)
-            : null;
+            : isFlexiRoll
+              ? getFlexiRollDealLabel(flexiRollCartQty)
+              : null;
 
           return (
             <article
@@ -96,6 +108,13 @@ export function CartPage() {
                       ₪{formatPrice(PUZZLE_MAT_UNIT_PRICE)}
                     </span>
                   )}
+                  {isFlexiRoll &&
+                    flexiCatalog != null &&
+                    item.price < flexiCatalog && (
+                      <span className="text-xs text-muted-foreground line-through">
+                        ₪{formatPrice(flexiCatalog)}
+                      </span>
+                    )}
                 </div>
                 {dealLabel && (
                   <p className="text-xs font-medium text-accent mt-1">{dealLabel}</p>

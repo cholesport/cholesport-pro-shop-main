@@ -1,6 +1,8 @@
+import { Link } from "@tanstack/react-router";
 import { PAYMENT_SUMMARY } from "@/data/payment";
 import { CONTACT_PHONE_DISPLAY, getShippingWhatsAppUrl, WHATSAPP_URL } from "@/lib/contact";
 import { COMPANY } from "@/data/legal";
+import { CLUB_PATH } from "@/data/club";
 import { FadeIn } from "@/components/site/FadeIn";
 
 const ITEMS = [
@@ -19,10 +21,11 @@ const ITEMS = [
     href: WHATSAPP_URL,
   },
   {
-    title: "SHOW ROOM",
-    desc: "בדקו ציוד לפני רכישה",
+    title: "מתחם CHOLE TLV",
+    desc: "טניס שולחן · חוגי ילדים",
+    to: CLUB_PATH,
   },
-];
+] as const;
 
 export function Promo() {
   return (
@@ -43,6 +46,13 @@ export function Promo() {
                 >
                   {item.desc}
                 </a>
+              ) : "to" in item && item.to ? (
+                <Link
+                  to={item.to}
+                  className="text-sm md:text-base font-medium text-primary-foreground/90 hover:text-accent transition underline-offset-4 hover:underline"
+                >
+                  {item.desc}
+                </Link>
               ) : (
                 <p className="text-sm md:text-base font-medium text-primary-foreground/90">
                   {item.desc}

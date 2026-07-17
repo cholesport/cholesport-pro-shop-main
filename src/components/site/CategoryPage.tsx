@@ -4,6 +4,7 @@ import type { CategoryDefinition } from "@/data/categories";
 import type { Product } from "@/data/products";
 import { ProductCard } from "@/components/site/ProductCard";
 import { COMPANY } from "@/data/legal";
+import { CLUB_PATH, CLUB_TEASER } from "@/data/club";
 import { SHOWROOM_PAGE_PARAGRAPHS } from "@/data/showroom";
 import { ShowroomActivitiesSection } from "@/components/site/ShowroomActivitiesSection";
 import { BrandMark } from "@/components/site/BrandLogos";
@@ -96,18 +97,27 @@ export function CategoryPage({ category, products }: CategoryPageProps) {
           )}
 
           {isShowRoom && (
-            <div className="mt-6 flex flex-wrap gap-4 text-sm">
-              <p className="inline-flex items-center gap-2 text-foreground">
-                <MapPin size={16} className="text-accent shrink-0" aria-hidden />
-                {COMPANY.address}, צמוד למחסן
-              </p>
-              <a
-                href={`tel:${COMPANY.phone.replace(/-/g, "")}`}
-                className="inline-flex items-center gap-2 text-accent font-semibold hover:underline"
+            <div className="mt-6 space-y-4">
+              <div className="flex flex-wrap gap-4 text-sm">
+                <p className="inline-flex items-center gap-2 text-foreground">
+                  <MapPin size={16} className="text-accent shrink-0" aria-hidden />
+                  {COMPANY.address}, צמוד למחסן
+                </p>
+                <a
+                  href={`tel:${COMPANY.phone.replace(/-/g, "")}`}
+                  className="inline-flex items-center gap-2 text-accent font-semibold hover:underline"
+                >
+                  <Phone size={16} aria-hidden />
+                  {COMPANY.phone}
+                </a>
+              </div>
+              <Link
+                to={CLUB_PATH}
+                className="inline-flex items-center gap-2 text-sm font-bold text-accent hover:underline"
               >
-                <Phone size={16} aria-hidden />
-                {COMPANY.phone}
-              </a>
+                {CLUB_TEASER.label} — {CLUB_TEASER.cta}
+                <ChevronLeft size={16} aria-hidden />
+              </Link>
             </div>
           )}
         </div>

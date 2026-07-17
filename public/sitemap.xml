@@ -43,6 +43,12 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://cholesport.co.il/categories/flexi-roll</loc>
+    <lastmod>2026-07-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://cholesport.co.il/categories/landing-mats</loc>
     <lastmod>2026-07-16</lastmod>
     <changefreq>weekly</changefreq>
@@ -55,6 +61,12 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://cholesport.co.il/club</loc>
+    <lastmod>2026-07-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://cholesport.co.il/terms</loc>
     <lastmod>2026-07-16</lastmod>
     <changefreq>yearly</changefreq>
@@ -65,6 +77,18 @@
     <lastmod>2026-07-16</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://cholesport.co.il/products/flexi-roll-12x1.5x0.4</loc>
+    <lastmod>2026-07-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://cholesport.co.il/products/flexi-roll-12x2x0.2</loc>
+    <lastmod>2026-07-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://cholesport.co.il/products/airfloor-10x2x0.2</loc>

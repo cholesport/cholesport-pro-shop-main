@@ -24,7 +24,59 @@ export type UserProfile = {
   lastName: string;
   email: string;
   phone: string;
+  /** True for freshly registered accounts — start with empty orders/addresses. */
+  isNew?: boolean;
+  registeredAt?: string;
 };
+
+/** Owner notification inbox for new customer signups. */
+export const NEW_CUSTOMER_NOTIFY_EMAIL = "hillelisaacs@gmail.com";
+
+export const ACCOUNT_SESSION_KEY = "chole-account-session";
+
+/** Minimum password length for registration. */
+export const ACCOUNT_PASSWORD_MIN_LENGTH = 8;
+
+export type RegisterFormInput = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  password: string;
+};
+
+/** Digits only from a phone string (allows formatting like 054-2366279). */
+export function getPhoneDigits(phone: string) {
+  return phone.replace(/\D/g, "");
+}
+
+/** Israeli mobile: 05X + 7 digits (10 total), or +9725X... */
+export function isValidIsraeliMobile(phone: string) {
+  const digits = getPhoneDigits(phone);
+  if (/^05\d{8}$/.test(digits)) return true;
+  if (/^9725\d{8}$/.test(digits)) return true;
+  return false;
+}
+
+export function validateRegisterForm(input: RegisterFormInput): string | null {
+  const firstName = input.firstName.trim();
+  const lastName = input.lastName.trim();
+  const email = input.email.trim();
+  const phone = input.phone.trim();
+  const password = input.password;
+
+  if (!firstName) return "נא למלא שם פרטי";
+  if (!lastName) return "נא למלא שם משפחה";
+  if (!email) return "נא למלא כתובת אימייל";
+  if (!phone) return "נא למלא טלפון נייד";
+  if (!isValidIsraeliMobile(phone)) {
+    return "נא להזין טלפון נייד תקין (למשל 054-1234567)";
+  }
+  if (password.length < ACCOUNT_PASSWORD_MIN_LENGTH) {
+    return `הסיסמה חייבת להכיל לפחות ${ACCOUNT_PASSWORD_MIN_LENGTH} תווים`;
+  }
+  return null;
+}
 
 export const MOCK_USER: UserProfile = {
   firstName: "יוסי",
@@ -88,4 +140,12 @@ export const MOCK_ADDRESSES: Address[] = [
 
 export function formatPrice(n: number) {
   return n.toLocaleString("he-IL", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+export function getAccountOrders(profile: UserProfile): Order[] {
+  return profile.isNew ? [] : MOCK_ORDERS;
+}
+
+export function getAccountAddresses(profile: UserProfile): Address[] {
+  return profile.isNew ? [] : MOCK_ADDRESSES;
 }

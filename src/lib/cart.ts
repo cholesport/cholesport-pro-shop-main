@@ -3,6 +3,11 @@ import {
   getPuzzleMatUnitPrice,
   isPuzzleMatProductId,
 } from "@/data/trainingAccessories";
+import {
+  getFlexiRollCatalogPrice,
+  getFlexiRollUnitPrice,
+  isFlexiRollProductId,
+} from "@/data/flexiRoll";
 
 export type CartItem = {
   productId: string;
@@ -21,7 +26,8 @@ export function loadCart(): CartItem[] {
     const raw = localStorage.getItem(CART_STORAGE_KEY);
     if (!raw) return [];
     const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed.map(normalizeCartItem) : [];
+    if (!Array.isArray(parsed)) return [];
+    return withRecalculatedPrices(parsed.map(normalizeCartItemShape));
   } catch {
     return [];
   }
@@ -31,21 +37,56 @@ export function saveCart(items: CartItem[]) {
   localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
 }
 
-/** Resolve unit price for a cart line (quantity deals for puzzle mats). */
+function normalizeCartItemShape(item: CartItem): CartItem {
+  return {
+    ...item,
+    quantity: Math.max(1, Math.floor(Number(item.quantity) || 1)),
+  };
+}
+
+export function getFlexiRollCartQuantity(
+  items: Pick<CartItem, "productId" | "quantity">[],
+) {
+  return items.reduce(
+    (sum, item) =>
+      isFlexiRollProductId(item.productId) ? sum + item.quantity : sum,
+    0,
+  );
+}
+
+/** Recompute unit prices for quantity deals (puzzle mats, flexi roll). */
+export function withRecalculatedPrices(items: CartItem[]): CartItem[] {
+  const flexiQty = getFlexiRollCartQuantity(items);
+
+  return items.map((item) => {
+    const quantity = Math.max(1, Math.floor(Number(item.quantity) || 1));
+
+    if (isPuzzleMatProductId(item.productId)) {
+      return { ...item, quantity, price: getPuzzleMatUnitPrice(quantity) };
+    }
+
+    if (isFlexiRollProductId(item.productId)) {
+      const price = getFlexiRollUnitPrice(item.productId, flexiQty);
+      return {
+        ...item,
+        quantity,
+        price: price ?? getFlexiRollCatalogPrice(item.productId) ?? item.price,
+      };
+    }
+
+    return { ...item, quantity };
+  });
+}
+
+/** @deprecated prefer withRecalculatedPrices for multi-item deals */
 export function getCartUnitPrice(productId: string, quantity: number, fallbackPrice: number) {
   if (isPuzzleMatProductId(productId)) {
     return getPuzzleMatUnitPrice(quantity);
   }
+  if (isFlexiRollProductId(productId)) {
+    return getFlexiRollUnitPrice(productId, quantity) ?? fallbackPrice;
+  }
   return fallbackPrice;
-}
-
-function normalizeCartItem(item: CartItem): CartItem {
-  const quantity = Math.max(1, Math.floor(Number(item.quantity) || 1));
-  return {
-    ...item,
-    quantity,
-    price: getCartUnitPrice(item.productId, quantity, item.price),
-  };
 }
 
 export function productToCartItem(product: Product, quantity: number): CartItem {
@@ -54,7 +95,7 @@ export function productToCartItem(product: Product, quantity: number): CartItem 
     productId: product.id,
     title: product.title,
     brand: product.brand,
-    price: getCartUnitPrice(product.id, qty, product.price),
+    price: product.price,
     image: product.img ?? product.images[0] ?? "",
     quantity: qty,
   };
@@ -65,7 +106,6 @@ export function withUpdatedCartQuantity(item: CartItem, quantity: number): CartI
   return {
     ...item,
     quantity: qty,
-    price: getCartUnitPrice(item.productId, qty, item.price),
   };
 }
 

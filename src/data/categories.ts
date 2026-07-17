@@ -1,5 +1,5 @@
 import type { LucideIcon } from "lucide-react";
-import { Dumbbell, Heart } from "lucide-react";
+import { Dumbbell, Heart, Layers } from "lucide-react";
 import tableTennisPaddle from "@/assets/table-tennis-paddle.png";
 import proGameTablesIcon from "@/assets/pro-game-tables-icon.png";
 import airfloorMatsIcon from "@/assets/airfloor-mats-icon.png";
@@ -7,6 +7,13 @@ import landingMatsIcon from "@/assets/landing-mats-icon.png";
 import showRoomIcon from "@/assets/show-room-icon.png";
 import { LANDING_MAT_VARIANTS } from "@/data/landingMats";
 import { AIRFLOOR_MAT_VARIANTS } from "@/data/airfloorMats";
+import {
+  FLEXI_ROLL_CATEGORY,
+  FLEXI_ROLL_CATEGORY_SLUG,
+  FLEXI_ROLL_MULTI_DEAL_COPY,
+  FLEXI_ROLL_VARIANTS,
+  formatFlexiRollSizeSlash,
+} from "@/data/flexiRoll";
 import { SHOWROOM_ACTIVITIES } from "@/data/showroom";
 import {
   getGymboreeProductIds,
@@ -41,7 +48,7 @@ export const CATEGORIES_PAGE_TITLE = "קולקציית המוצרים";
 export const CATEGORIES_PAGE_SUBTITLE =
   "כל הקטגוריות במקום אחד — בחרו תחום והמשיכו למוצרים שמתאימים לכם.";
 export const CATEGORIES_PAGE_SEO_DESCRIPTION =
-  "קולקציית המוצרים של CHOLE sport — אביזרי אימון, ציוד ג׳ימבורי, מזרני איירפלור ונחיתה, שולחנות משחק וציוד טניס שולחן.";
+  "קולקציית המוצרים של CHOLE sport — אביזרי אימון, ציוד ג׳ימבורי, מזרני איירפלור, פלקסי רול, מזרני נחיתה, שולחנות משחק וציוד טניס שולחן.";
 
 
 export const CATEGORIES: CategoryDefinition[] = [
@@ -92,6 +99,16 @@ export const CATEGORIES: CategoryDefinition[] = [
     subcategoryProductIds: AIRFLOOR_MAT_VARIANTS.map((v) => v.id),
     productCats: ["מזרני איירפלור"],
     image: airfloorMatsIcon,
+  },
+  {
+    slug: FLEXI_ROLL_CATEGORY_SLUG,
+    name: "פלקסי רול",
+    description:
+      `פלקסי רול (Flexi Roll) מקצועי מ-LEVITATE — משטח אימון גמיש ומתקפל באורך 12 מטר. שתי מידות: 12/2/0.2 ו-12/1.5/0.4. ${FLEXI_ROLL_MULTI_DEAL_COPY}`,
+    subcategories: FLEXI_ROLL_VARIANTS.map((v) => `${formatFlexiRollSizeSlash(v)} מטר`),
+    subcategoryProductIds: FLEXI_ROLL_VARIANTS.map((v) => v.id),
+    productCats: [FLEXI_ROLL_CATEGORY],
+    icon: Layers,
   },
   {
     slug: "landing-mats",

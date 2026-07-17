@@ -16,6 +16,12 @@ import {
   isAirfloorMatProduct,
 } from "@/data/airfloorMats";
 import {
+  getFlexiRollSeoDescription,
+  getFlexiRollSeoTitle,
+  getFlexiRollVariantById,
+  isFlexiRollProduct,
+} from "@/data/flexiRoll";
+import {
   getGymboreeProductById,
   getGymboreeSeoDescription,
   getGymboreeSeoTitle,
@@ -38,10 +44,12 @@ export const Route = createFileRoute("/products/$productId")({
   head: ({ loaderData }) => {
     const landingVariant = getLandingMatVariantById(loaderData.id);
     const airfloorVariant = getAirfloorMatVariantById(loaderData.id);
+    const flexiRollVariant = getFlexiRollVariantById(loaderData.id);
     const gymboreeProduct = getGymboreeProductById(loaderData.id);
     const trainingAccessory = getTrainingAccessoryById(loaderData.id);
     const isLandingMat = isLandingMatProduct(loaderData) && landingVariant;
     const isAirfloorMat = isAirfloorMatProduct(loaderData) && airfloorVariant;
+    const isFlexiRoll = isFlexiRollProduct(loaderData) && flexiRollVariant;
     const isGymboree = isGymboreeProduct(loaderData) && gymboreeProduct;
     const isTrainingAccessory = isTrainingAccessoryProduct(loaderData) && trainingAccessory;
 
@@ -49,21 +57,25 @@ export const Route = createFileRoute("/products/$productId")({
       ? getLandingMatSeoTitle(landingVariant)
       : isAirfloorMat
         ? getAirfloorMatSeoTitle(airfloorVariant)
-        : isGymboree
-          ? getGymboreeSeoTitle(gymboreeProduct)
-          : isTrainingAccessory
-            ? getTrainingAccessorySeoTitle(trainingAccessory)
-            : loaderData.title;
+        : isFlexiRoll
+          ? getFlexiRollSeoTitle(flexiRollVariant)
+          : isGymboree
+            ? getGymboreeSeoTitle(gymboreeProduct)
+            : isTrainingAccessory
+              ? getTrainingAccessorySeoTitle(trainingAccessory)
+              : loaderData.title;
 
     const description = isLandingMat
       ? getLandingMatSeoDescription(landingVariant)
       : isAirfloorMat
         ? getAirfloorMatSeoDescription(airfloorVariant)
-        : isGymboree
-          ? getGymboreeSeoDescription(gymboreeProduct)
-          : isTrainingAccessory
-            ? getTrainingAccessorySeoDescription(trainingAccessory)
-            : (loaderData.introParagraphs[0] ?? loaderData.title);
+        : isFlexiRoll
+          ? getFlexiRollSeoDescription(flexiRollVariant)
+          : isGymboree
+            ? getGymboreeSeoDescription(gymboreeProduct)
+            : isTrainingAccessory
+              ? getTrainingAccessorySeoDescription(trainingAccessory)
+              : (loaderData.introParagraphs[0] ?? loaderData.title);
 
     const image =
       typeof loaderData.image === "string"

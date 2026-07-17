@@ -6,6 +6,7 @@ import type { Product } from "@/data/products";
 import { getRelatedProducts } from "@/data/products";
 import { useCart } from "@/context/CartContext";
 import { PAYMENT_SUMMARY, PAYMENT_WHATSAPP_NOTICE } from "@/data/payment";
+import { CLUB_PATH, CLUB_TEASER } from "@/data/club";
 import { SHOWROOM_SHORT, SHOWROOM_TITLE } from "@/data/showroom";
 import { COMPANY } from "@/data/legal";
 import { ComplementaryEquipmentSection } from "@/components/site/ComplementaryEquipmentSection";
@@ -14,6 +15,7 @@ import { LandingMatAirfloorSection } from "@/components/site/LandingMatAirfloorS
 import { LandingMatWarrantySection } from "@/components/site/LandingMatWarrantySection";
 import { LandingMatSizeBar } from "@/components/site/LandingMatSizeBar";
 import { AirfloorSizeBar } from "@/components/site/AirfloorSizeBar";
+import { FlexiRollSizeBar } from "@/components/site/FlexiRollSizeBar";
 import { GymboreeProductBar } from "@/components/site/GymboreeProductBar";
 import { TrainingAccessoriesProductBar } from "@/components/site/TrainingAccessoriesProductBar";
 import { TrainingHurdleHeightBar } from "@/components/site/TrainingHurdleHeightBar";
@@ -32,6 +34,13 @@ import {
   isAirfloorMatProduct,
   shouldShowAirfloorSafetyNotice,
 } from "@/data/airfloorMats";
+import {
+  getFlexiRollCatalogPrice,
+  getFlexiRollDealLabel,
+  getFlexiRollUnitPrice,
+  isFlexiRollProduct,
+  isFlexiRollProductId,
+} from "@/data/flexiRoll";
 import { isGymboreeProduct } from "@/data/gymboree";
 import {
   getPuzzleMatDealLabel,
@@ -41,6 +50,7 @@ import {
   isTrainingAccessoryProduct,
   PUZZLE_MAT_UNIT_PRICE,
 } from "@/data/trainingAccessories";
+import { getFlexiRollCartQuantity } from "@/lib/cart";
 import { hasProductImage, shouldContainProductImage } from "@/lib/productMedia";
 import {
   Accordion,
@@ -149,7 +159,7 @@ export function ProductDetailPage({ product }: { product: Product }) {
   const [activeImage, setActiveImage] = useState(0);
   const [isGalleryHovered, setIsGalleryHovered] = useState(false);
   const [quantity, setQuantity] = useState(1);
-  const { addItem } = useCart();
+  const { addItem, items } = useCart();
   const navigate = useNavigate();
   const related = getRelatedProducts(product);
   const isGameTable = product.cat === "שולחנות משחק";
@@ -157,14 +167,28 @@ export function ProductDetailPage({ product }: { product: Product }) {
   const showLandingMatSizes = isLandingMatProduct(product);
   const showLandingMatAirfloor = isLandingMatAirfloorProduct(product.id);
   const showAirfloorSizes = isAirfloorMatProduct(product);
+  const showFlexiRollSizes = isFlexiRollProduct(product);
   const showAirfloorSafety = shouldShowAirfloorSafetyNotice(product.id);
   const showGymboreeProducts = isGymboreeProduct(product);
   const showTrainingAccessories = isTrainingAccessoryProduct(product);
   const showHurdleHeights = isHurdleProduct(product.id);
   const showBalancePitaColors = product.id === "training-balance-pita";
   const isPuzzleMat = isPuzzleMatProductId(product.id);
-  const unitPrice = isPuzzleMat ? getPuzzleMatUnitPrice(quantity) : product.price;
+  const isFlexiRoll = isFlexiRollProductId(product.id);
+  const flexiQtyAfterAdd = isFlexiRoll
+    ? getFlexiRollCartQuantity(items) + quantity
+    : 0;
+  const flexiCatalogPrice = isFlexiRoll
+    ? (getFlexiRollCatalogPrice(product.id) ?? product.price)
+    : product.price;
+  const unitPrice = isPuzzleMat
+    ? getPuzzleMatUnitPrice(quantity)
+    : isFlexiRoll
+      ? (getFlexiRollUnitPrice(product.id, flexiQtyAfterAdd) ?? product.price)
+      : product.price;
   const puzzleDealLabel = isPuzzleMat ? getPuzzleMatDealLabel(quantity) : null;
+  const flexiDealLabel = isFlexiRoll ? getFlexiRollDealLabel(flexiQtyAfterAdd) : null;
+  const hasFlexiQtyDeal = isFlexiRoll && unitPrice < flexiCatalogPrice;
   const hasDiscount = product.was > product.price;
   const showGallery = hasProductImage(product);
   const primaryImage = product.images[activeImage] ?? product.img;
@@ -187,6 +211,7 @@ export function ProductDetailPage({ product }: { product: Product }) {
     <div className="max-w-7xl mx-auto px-4 py-8 md:py-12">
       {showLandingMatSizes && <LandingMatSizeBar currentProductId={product.id} />}
       {showAirfloorSizes && <AirfloorSizeBar currentProductId={product.id} />}
+      {showFlexiRollSizes && <FlexiRollSizeBar currentProductId={product.id} />}
       {showGymboreeProducts && <GymboreeProductBar currentProductId={product.id} />}
       {showTrainingAccessories && (
         <TrainingAccessoriesProductBar currentProductId={product.id} />
@@ -267,7 +292,7 @@ export function ProductDetailPage({ product }: { product: Product }) {
           <div className="mt-6 flex items-baseline gap-3 flex-wrap">
             <span
               className={`text-3xl font-bold ${
-                isPuzzleMat && unitPrice < PUZZLE_MAT_UNIT_PRICE
+                (isPuzzleMat && unitPrice < PUZZLE_MAT_UNIT_PRICE) || hasFlexiQtyDeal
                   ? "text-destructive"
                   : hasDiscount
                     ? "text-destructive"
@@ -280,6 +305,10 @@ export function ProductDetailPage({ product }: { product: Product }) {
               <span className="text-lg text-muted-foreground line-through">
                 ₪ {formatPrice(PUZZLE_MAT_UNIT_PRICE)}
               </span>
+            ) : hasFlexiQtyDeal ? (
+              <span className="text-lg text-muted-foreground line-through">
+                ₪ {formatPrice(flexiCatalogPrice)}
+              </span>
             ) : (
               hasDiscount && (
                 <span className="text-lg text-muted-foreground line-through">
@@ -287,13 +316,15 @@ export function ProductDetailPage({ product }: { product: Product }) {
                 </span>
               )
             )}
-            {isPuzzleMat && (
+            {(isPuzzleMat || isFlexiRoll) && (
               <span className="text-sm text-muted-foreground">ליחידה</span>
             )}
           </div>
 
-          {puzzleDealLabel && (
-            <p className="mt-2 text-sm font-medium text-accent">{puzzleDealLabel}</p>
+          {(puzzleDealLabel || flexiDealLabel) && (
+            <p className="mt-2 text-sm font-medium text-accent">
+              {puzzleDealLabel ?? flexiDealLabel}
+            </p>
           )}
 
           <p className="mt-2 text-sm text-muted-foreground">{PAYMENT_WHATSAPP_NOTICE}</p>
@@ -350,13 +381,21 @@ export function ProductDetailPage({ product }: { product: Product }) {
                   {COMPANY.phone}
                 </a>
               </p>
-              <Link
-                to="/categories/$categorySlug"
-                params={{ categorySlug: "show-room" }}
-                className="inline-block mt-2 text-xs font-semibold text-accent hover:underline"
-              >
-                למידע נוסף על ה-{SHOWROOM_TITLE}
-              </Link>
+              <div className="mt-2 flex flex-col gap-1">
+                <Link
+                  to="/categories/$categorySlug"
+                  params={{ categorySlug: "show-room" }}
+                  className="inline-block text-xs font-semibold text-accent hover:underline"
+                >
+                  למידע נוסף על ה-{SHOWROOM_TITLE}
+                </Link>
+                <Link
+                  to={CLUB_PATH}
+                  className="inline-block text-xs font-semibold text-accent hover:underline"
+                >
+                  {CLUB_TEASER.label} — אימונים, חוגים ואירועים
+                </Link>
+              </div>
             </div>
           </div>
 

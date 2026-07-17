@@ -24,6 +24,13 @@ import {
   AIRFLOOR_MAT_BRAND,
 } from "@/data/airfloorMats";
 import {
+  buildFlexiRollProductExtra,
+  getFlexiRollTitle,
+  FLEXI_ROLL_BRAND,
+  FLEXI_ROLL_CATEGORY,
+  FLEXI_ROLL_VARIANTS,
+} from "@/data/flexiRoll";
+import {
   buildGymboreeProductExtra,
   GYMBOREE_BRAND,
   GYMBOREE_CATEGORY,
@@ -505,6 +512,27 @@ export const PRODUCTS: Product[] = [
       buildAirfloorMatProductExtra(
         variant,
         AIRFLOOR_MAT_VARIANTS.map((v) => v.id),
+      ),
+    ),
+  ),
+  ...FLEXI_ROLL_VARIANTS.map((variant) =>
+    makeProduct(
+      {
+        id: variant.id,
+        img: variant.img,
+        brand: FLEXI_ROLL_BRAND,
+        title: getFlexiRollTitle(variant),
+        sku: variant.id,
+        cat: FLEXI_ROLL_CATEGORY,
+        price: variant.price,
+        was: variant.price,
+        rating: 0,
+        reviews: 0,
+        badge: "Flexi Roll",
+      },
+      buildFlexiRollProductExtra(
+        variant,
+        FLEXI_ROLL_VARIANTS.map((v) => v.id),
       ),
     ),
   ),

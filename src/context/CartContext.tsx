@@ -5,6 +5,7 @@ import {
   loadCart,
   productToCartItem,
   saveCart,
+  withRecalculatedPrices,
   withUpdatedCartQuantity,
   type CartItem,
 } from "@/lib/cart";
@@ -39,29 +40,33 @@ export function CartProvider({ children }: { children: ReactNode }) {
     const addQty = Math.max(1, Math.floor(quantity));
     setItems((prev) => {
       const existing = prev.find((item) => item.productId === product.id);
-      if (existing) {
-        return prev.map((item) =>
-          item.productId === product.id
-            ? withUpdatedCartQuantity(item, item.quantity + addQty)
-            : item,
-        );
-      }
-      return [...prev, productToCartItem(product, addQty)];
+      const next = existing
+        ? prev.map((item) =>
+            item.productId === product.id
+              ? withUpdatedCartQuantity(item, item.quantity + addQty)
+              : item,
+          )
+        : [...prev, productToCartItem(product, addQty)];
+      return withRecalculatedPrices(next);
     });
   }, []);
 
   const removeItem = useCallback((productId: string) => {
-    setItems((prev) => prev.filter((item) => item.productId !== productId));
+    setItems((prev) => withRecalculatedPrices(prev.filter((item) => item.productId !== productId)));
   }, []);
 
   const updateQuantity = useCallback((productId: string, quantity: number) => {
     if (quantity < 1) {
-      setItems((prev) => prev.filter((item) => item.productId !== productId));
+      setItems((prev) =>
+        withRecalculatedPrices(prev.filter((item) => item.productId !== productId)),
+      );
       return;
     }
     setItems((prev) =>
-      prev.map((item) =>
-        item.productId === productId ? withUpdatedCartQuantity(item, quantity) : item,
+      withRecalculatedPrices(
+        prev.map((item) =>
+          item.productId === productId ? withUpdatedCartQuantity(item, quantity) : item,
+        ),
       ),
     );
   }, []);

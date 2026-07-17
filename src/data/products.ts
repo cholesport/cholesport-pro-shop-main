@@ -42,6 +42,7 @@ import {
   TRAINING_ACCESSORIES_CATEGORY,
   TRAINING_ACCESSORIES_PRODUCTS,
 } from "@/data/trainingAccessories";
+import { LAST_UNITS_STOCK_NOTE, QUANTITY_DEAL_BADGE } from "@/lib/productLabels";
 
 export type ProductFeature = { title: string; description: string };
 export type ProductSpec = { label: string; value: string };
@@ -110,14 +111,14 @@ const DEFAULT_ACCORDION: ProductAccordion[] = [
 function makeProduct(
   base: Pick<
     Product,
-    "id" | "brand" | "title" | "sku" | "cat" | "price" | "was" | "rating" | "reviews" | "badge"
-  > & { img?: string },
+    "id" | "brand" | "title" | "sku" | "cat" | "price" | "was" | "rating" | "reviews"
+  > & { img?: string; badge?: string },
   extra?: Partial<Product>,
 ): Product {
   return {
     img: base.img,
     images: base.img ? [base.img] : [],
-    stockNote: "נותרו יחידות אחרונות",
+    stockNote: LAST_UNITS_STOCK_NOTE,
     introTitle: base.title,
     introParagraphs: [
       `${base.title} — ציוד מקצועי באיכות גבוהה, מתאים לאימון, לפנאי ולשימוש יומיומי.`,
@@ -162,8 +163,6 @@ function makeProduct(
 }
 
 export const PONG_BOT_NOVA_S_PRO_ID = "pong-bot-nova-s-pro";
-export const PONG_BOT_NOVA_S_PRO_STOCK_NOTE =
-  "כרגע לא במלאי — ניתן להזמין מראש, והמלאי יחזור בקרוב.";
 
 export const PRODUCTS: Product[] = [
   makeProduct(
@@ -244,7 +243,6 @@ export const PRODUCTS: Product[] = [
       was: 2950,
       rating: 0,
       reviews: 0,
-      badge: "Outdoor",
     },
     {
       images: [choleOutdoor18, choleOutdoor18Playback],
@@ -326,7 +324,6 @@ export const PRODUCTS: Product[] = [
       was: 3290,
       rating: 0,
       reviews: 0,
-      badge: "NAVY6",
     },
     {
       images: [choleNavy6, choleNavy6Folded],
@@ -412,7 +409,6 @@ export const PRODUCTS: Product[] = [
       was: 2000,
       rating: 0,
       reviews: 0,
-      badge: "מתנה: אוסף כדורים",
     },
     {
       introTitle: "ה-Ultimate Partner לאימון אישי — NOVA S PRO מבית PONG BOT",
@@ -470,7 +466,6 @@ export const PRODUCTS: Product[] = [
         },
       ],
       ctaText: "שדרגו את האימון שלכם — הזמינו את NOVA S PRO עכשיו!",
-      stockNote: PONG_BOT_NOVA_S_PRO_STOCK_NOTE,
       relatedIds: ["chole-pro-25", "chole-navy6", "chole-outdoor-18"],
     },
   ),
@@ -507,7 +502,6 @@ export const PRODUCTS: Product[] = [
         was: variant.was,
         rating: 0,
         reviews: 0,
-        badge: "מבצע",
       },
       buildAirfloorMatProductExtra(
         variant,
@@ -528,7 +522,7 @@ export const PRODUCTS: Product[] = [
         was: variant.price,
         rating: 0,
         reviews: 0,
-        badge: "Flexi Roll",
+        badge: QUANTITY_DEAL_BADGE,
       },
       buildFlexiRollProductExtra(
         variant,

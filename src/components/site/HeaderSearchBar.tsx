@@ -3,8 +3,6 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { Search } from "lucide-react";
 import { searchProducts } from "@/lib/productSearch";
 
-const SEARCH_PLACEHOLDER = "חיפוש: מזרני איירפלור, מזרני נחיתה, ציוד ג׳ימבורי…";
-
 function formatPrice(price: number) {
   return price.toLocaleString("he-IL");
 }
@@ -105,7 +103,6 @@ export function HeaderSearchBar({ id }: HeaderSearchBarProps) {
         aria-activedescendant={
           showDropdown && activeIndex >= 0 ? `${listboxId}-option-${activeIndex}` : undefined
         }
-        placeholder={SEARCH_PLACEHOLDER}
         value={query}
         onChange={(event) => {
           setQuery(event.target.value);
@@ -144,12 +141,12 @@ export function HeaderSearchBar({ id }: HeaderSearchBarProps) {
                         isActive ? "bg-accent/10 text-foreground" : "hover:bg-secondary/80"
                       }`}
                     >
-                      <div className="size-12 shrink-0 overflow-hidden rounded-lg border border-border bg-secondary flex items-center justify-center px-1">
+                      <div className="size-12 shrink-0 overflow-hidden rounded-lg border border-border bg-white flex items-center justify-center p-1">
                         {product.img || product.images[0] ? (
                           <img
                             src={product.img ?? product.images[0]}
                             alt=""
-                            className="size-full object-cover"
+                            className="size-full object-contain"
                           />
                         ) : (
                           <span className="text-[9px] font-semibold leading-tight text-center text-foreground/70 line-clamp-3">

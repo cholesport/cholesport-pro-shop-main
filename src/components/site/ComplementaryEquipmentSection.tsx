@@ -11,6 +11,7 @@ import {
 } from "@/data/products";
 import { PAYMENT_SUMMARY } from "@/data/payment";
 import { ProductMedia } from "@/components/site/ProductMedia";
+import { isAllowedProductBadge } from "@/lib/productLabels";
 
 const SECTION_TITLE = "ציוד משלים למקצוענים: רובוט אימון NOVA S PRO";
 
@@ -65,8 +66,8 @@ export function ComplementaryEquipmentSection({
             fit="contain"
             imgClassName="p-6 md:p-10 group-hover:scale-[1.02] transition duration-500"
           />
-          {product.badge && (
-            <span className="absolute top-4 start-4 bg-accent text-accent-foreground text-xs font-bold uppercase tracking-wide px-3 py-1 rounded">
+          {isAllowedProductBadge(product.badge) && (
+            <span className="absolute top-4 start-4 bg-accent text-accent-foreground text-xs font-bold tracking-wide px-3 py-1 rounded">
               {product.badge}
             </span>
           )}

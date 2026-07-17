@@ -1,6 +1,7 @@
 import type { Product, ProductFeature, ProductSpec } from "@/data/products";
 import flexiRollImg from "@/assets/p-flexi-roll.png";
 import flexiRollLargeImg from "@/assets/p-flexi-roll-12x2.png";
+import { QUANTITY_DEAL_BADGE } from "@/lib/productLabels";
 
 export const FLEXI_ROLL_CATEGORY = "פלקסי רול";
 export const FLEXI_ROLL_CATEGORY_SLUG = "flexi-roll";
@@ -176,7 +177,6 @@ export function buildFlexiRollProductExtra(
       FLEXI_ROLL_MULTI_DEAL_COPY,
       `המידה שבחרתם: ${sizeSlash} מטר — ${variant.price.toLocaleString("he-IL")} ₪ ליחידה. ניתן לעבור בין המידות בסרגל למעלה.`,
     ],
-    stockNote: FLEXI_ROLL_MULTI_DEAL_COPY,
     featuresTitle: "למה לבחור בפלקסי רול?",
     features,
     specsTitle: "מפרט מלא",
@@ -186,7 +186,7 @@ export function buildFlexiRollProductExtra(
     audienceTitle: "למי הפלקסי רול מתאים?",
     audience: FLEXI_ROLL_AUDIENCE,
     ctaText: `הזמינו פלקסי רול ${sizeSlash} מטר — משטח אימון מקצועי ונוח לשימוש!`,
-    badge: "Flexi Roll",
+    badge: QUANTITY_DEAL_BADGE,
     relatedIds: allIds.filter((id) => id !== variant.id),
   };
 }

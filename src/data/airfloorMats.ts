@@ -25,7 +25,6 @@ export const AIRFLOOR_MAT_VARIANTS: AirfloorMatVariant[] = [
   { id: "airfloor-10x2x0.2", lengthM: 10, widthM: 2, thicknessM: 0.2, price: 6300, was: 7500, showSafetyNotice: false },
 ];
 
-export const AIRFLOOR_SALE_BADGE = "מבצע";
 export const AIRFLOOR_SALE_HEADLINE = "מבצע מיוחד עכשיו על מזרני איירפלור";
 export const AIRFLOOR_SALE_COPY =
   "כל המידות במחיר מבצע — חיסכון של כ־16% ממחיר הקטלוג. הזדמנות מצוינת לשדרג את משטח האימון במחיר שלא חוזר כל יום.";
@@ -181,7 +180,6 @@ export function buildAirfloorMatProductExtra(
     audienceTitle: "למי המזרן מתאים?",
     audience: AIRFLOOR_AUDIENCE,
     ctaText: `מבצע איירפלור ${sizeSlash} מטר — ${salePriceLabel} במקום ${wasPriceLabel}. הזמינו עכשיו!`,
-    badge: AIRFLOOR_SALE_BADGE,
     relatedIds: [...allIds.filter((id) => id !== variant.id), "landing-mat-250x200x30"],
   };
 }

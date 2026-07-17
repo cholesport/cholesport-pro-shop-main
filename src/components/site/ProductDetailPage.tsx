@@ -44,14 +44,18 @@ import {
 import { isGymboreeProduct } from "@/data/gymboree";
 import {
   getPuzzleMatDealLabel,
+  getPuzzleMatQuantityHint,
   getPuzzleMatUnitPrice,
   isHurdleProduct,
   isPuzzleMatProductId,
   isTrainingAccessoryProduct,
+  PUZZLE_MAT_DEAL_BANNER,
+  PUZZLE_MAT_DEAL_HEADLINE,
   PUZZLE_MAT_UNIT_PRICE,
 } from "@/data/trainingAccessories";
 import { getFlexiRollCartQuantity } from "@/lib/cart";
-import { hasProductImage, shouldContainProductImage } from "@/lib/productMedia";
+import { isAllowedProductBadge, isAllowedStockNote } from "@/lib/productLabels";
+import { hasProductImage } from "@/lib/productMedia";
 import {
   Accordion,
   AccordionContent,
@@ -84,7 +88,6 @@ function Stars({ rating, reviews }: { rating: number; reviews: number }) {
 
 function RelatedCard({ product }: { product: Product }) {
   const storeBrand = getStoreBrandByProductBrand(product.brand);
-  const containImage = shouldContainProductImage(product);
 
   return (
     <Link
@@ -92,20 +95,12 @@ function RelatedCard({ product }: { product: Product }) {
       params={{ productId: product.id }}
       className="group block text-center"
     >
-      <div
-        className={`aspect-square rounded-lg overflow-hidden mb-3 ${
-          containImage ? "bg-white border border-border" : "bg-secondary"
-        }`}
-      >
+      <div className="aspect-square rounded-lg overflow-hidden mb-3 bg-white border border-border">
         <ProductMedia
           product={product}
           alt={product.title}
-          fit={containImage ? "contain" : "cover"}
-          imgClassName={
-            containImage
-              ? "p-2 group-hover:scale-[1.02] transition duration-300"
-              : "group-hover:scale-105 transition duration-300"
-          }
+          fit="contain"
+          imgClassName="p-2 group-hover:scale-[1.02] transition duration-300"
         />
       </div>
       <p className="text-sm font-medium text-foreground leading-snug line-clamp-2 min-h-[2.5rem]">
@@ -189,6 +184,7 @@ export function ProductDetailPage({ product }: { product: Product }) {
   const puzzleDealLabel = isPuzzleMat ? getPuzzleMatDealLabel(quantity) : null;
   const flexiDealLabel = isFlexiRoll ? getFlexiRollDealLabel(flexiQtyAfterAdd) : null;
   const hasFlexiQtyDeal = isFlexiRoll && unitPrice < flexiCatalogPrice;
+  const hasPuzzleQtyDeal = isPuzzleMat && unitPrice < PUZZLE_MAT_UNIT_PRICE;
   const hasDiscount = product.was > product.price;
   const showGallery = hasProductImage(product);
   const primaryImage = product.images[activeImage] ?? product.img;
@@ -226,6 +222,20 @@ export function ProductDetailPage({ product }: { product: Product }) {
             onMouseEnter={() => setIsGalleryHovered(true)}
             onMouseLeave={() => setIsGalleryHovered(false)}
           >
+            {isAllowedStockNote(product.stockNote) && (
+              <p className="absolute top-3 start-3 z-10 max-w-[min(100%,18rem)] rounded-md bg-amber-500 px-3 py-1.5 text-xs font-bold text-white shadow-sm md:text-sm">
+                {product.stockNote}
+              </p>
+            )}
+            {isAllowedProductBadge(product.badge) && (
+              <p
+                className={`absolute start-3 z-10 rounded-md bg-accent px-3 py-1.5 text-xs font-bold text-accent-foreground shadow-sm md:text-sm ${
+                  isAllowedStockNote(product.stockNote) ? "top-12" : "top-3"
+                }`}
+              >
+                {product.badge}
+              </p>
+            )}
             {showGallery && primaryImage ? (
               <div className="relative w-full h-full flex items-center justify-center bg-white p-3 md:p-5">
                 <img
@@ -281,8 +291,8 @@ export function ProductDetailPage({ product }: { product: Product }) {
           )}
           <div className="flex flex-wrap items-center gap-2 mt-1">
             <h1 className="text-2xl md:text-3xl font-bold text-foreground leading-tight">{product.title}</h1>
-            {product.badge && (
-              <span className="inline-flex items-center rounded-full bg-accent px-3 py-1 text-xs font-bold uppercase tracking-wide text-accent-foreground">
+            {isAllowedProductBadge(product.badge) && (
+              <span className="inline-flex items-center rounded-full bg-accent px-3 py-1 text-xs font-bold tracking-wide text-accent-foreground">
                 {product.badge}
               </span>
             )}
@@ -292,16 +302,18 @@ export function ProductDetailPage({ product }: { product: Product }) {
           <div className="mt-6 flex items-baseline gap-3 flex-wrap">
             <span
               className={`text-3xl font-bold ${
-                (isPuzzleMat && unitPrice < PUZZLE_MAT_UNIT_PRICE) || hasFlexiQtyDeal
-                  ? "text-destructive"
-                  : hasDiscount
+                hasPuzzleQtyDeal
+                  ? "text-emerald-700"
+                  : hasFlexiQtyDeal
                     ? "text-destructive"
-                    : "text-foreground"
+                    : hasDiscount
+                      ? "text-destructive"
+                      : "text-foreground"
               }`}
             >
               ₪ {formatPrice(unitPrice)}
             </span>
-            {isPuzzleMat && unitPrice < PUZZLE_MAT_UNIT_PRICE ? (
+            {hasPuzzleQtyDeal ? (
               <span className="text-lg text-muted-foreground line-through">
                 ₪ {formatPrice(PUZZLE_MAT_UNIT_PRICE)}
               </span>
@@ -321,8 +333,31 @@ export function ProductDetailPage({ product }: { product: Product }) {
             )}
           </div>
 
+          {isPuzzleMat && (
+            <div
+              className={`mt-4 border px-4 py-3 ${
+                hasPuzzleQtyDeal
+                  ? "border-emerald-600/40 bg-emerald-50"
+                  : "border-accent/50 bg-accent/10"
+              }`}
+            >
+              <p
+                className={`text-sm font-extrabold ${
+                  hasPuzzleQtyDeal ? "text-emerald-700" : "text-accent"
+                }`}
+              >
+                {PUZZLE_MAT_DEAL_HEADLINE}
+              </p>
+              <p className="mt-1 text-sm leading-relaxed text-foreground">{PUZZLE_MAT_DEAL_BANNER}</p>
+            </div>
+          )}
+
           {(puzzleDealLabel || flexiDealLabel) && (
-            <p className="mt-2 text-sm font-medium text-accent">
+            <p
+              className={`mt-2 text-sm font-bold ${
+                puzzleDealLabel ? "text-emerald-700" : "text-destructive"
+              }`}
+            >
               {puzzleDealLabel ?? flexiDealLabel}
             </p>
           )}
@@ -346,18 +381,15 @@ export function ProductDetailPage({ product }: { product: Product }) {
               size="md"
             />
             {isPuzzleMat && (
-              <p className="mt-2 text-xs text-muted-foreground leading-relaxed">
-                מ-20 יח׳ המחיר יורד ל-100 ₪ ליחידה · מעל 40 יח׳ — 80 ₪ ליחידה
+              <p
+                className={`mt-2 text-sm font-semibold leading-relaxed ${
+                  hasPuzzleQtyDeal ? "text-emerald-700" : "text-accent"
+                }`}
+              >
+                {getPuzzleMatQuantityHint(quantity)}
               </p>
             )}
           </div>
-
-          {product.stockNote && (
-            <p className="mt-4 text-sm text-amber-600 font-medium flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-amber-500" />
-              {product.stockNote}
-            </p>
-          )}
 
           <p className="mt-4 text-xs text-muted-foreground">{PAYMENT_SUMMARY}</p>
 

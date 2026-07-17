@@ -5,18 +5,17 @@ import balancePitaImg from "@/assets/p-balance-pita.png";
 import hurdlesOrangeImg from "@/assets/p-hurdles-orange.png";
 import plyoBoxes4pcImg from "@/assets/p-plyo-boxes-4pc.png";
 import plyoSoftBoxImg from "@/assets/p-plyo-soft-box.png";
+import { QUANTITY_DEAL_BADGE } from "@/lib/productLabels";
 
 export const TRAINING_ACCESSORIES_CATEGORY = "אביזרי אימון";
 export const TRAINING_ACCESSORIES_CATEGORY_SLUG = "training-accessories";
 export const TRAINING_ACCESSORIES_BRAND = "CHOLE®";
 
-/** Puzzle-mat unit price (regular) and quantity deals. */
+/** Puzzle-mat unit price (regular) and bulk quantity deal. */
 export const PUZZLE_MAT_UNIT_PRICE = 120;
-export const PUZZLE_MAT_PRICE_FROM_20 = 100;
-export const PUZZLE_MAT_PRICE_OVER_40 = 80;
-
-/** @deprecated use PUZZLE_MAT_PRICE_FROM_20 */
-export const PUZZLE_MAT_PRICE_OVER_20 = PUZZLE_MAT_PRICE_FROM_20;
+/** Deal applies from this quantity and above (inclusive). */
+export const PUZZLE_MAT_BULK_THRESHOLD = 50;
+export const PUZZLE_MAT_BULK_PRICE = 85;
 
 export const PUZZLE_MAT_PRODUCT_IDS = [
   "training-puzzle-mat-blue-red",
@@ -27,27 +26,47 @@ export function isPuzzleMatProductId(productId: string) {
   return (PUZZLE_MAT_PRODUCT_IDS as readonly string[]).includes(productId);
 }
 
+export function getPuzzleMatSavingsPercent() {
+  return Math.round(
+    ((PUZZLE_MAT_UNIT_PRICE - PUZZLE_MAT_BULK_PRICE) / PUZZLE_MAT_UNIT_PRICE) * 100,
+  );
+}
+
 /**
  * Unit price by quantity:
- * 1–19 → 120 ₪ · 20–40 → 100 ₪ · 41+ → 80 ₪
+ * 1–49 → 120 ₪ · מ-50 יח׳ → 85 ₪
  */
 export function getPuzzleMatUnitPrice(quantity: number) {
   const qty = Math.max(0, Math.floor(quantity));
-  if (qty > 40) return PUZZLE_MAT_PRICE_OVER_40;
-  if (qty >= 20) return PUZZLE_MAT_PRICE_FROM_20;
+  if (qty >= PUZZLE_MAT_BULK_THRESHOLD) return PUZZLE_MAT_BULK_PRICE;
   return PUZZLE_MAT_UNIT_PRICE;
 }
 
 export function getPuzzleMatDealLabel(quantity: number) {
-  const unit = getPuzzleMatUnitPrice(quantity);
-  if (unit === PUZZLE_MAT_PRICE_OVER_40) {
-    return `דיל כמות: ${PUZZLE_MAT_PRICE_OVER_40} ₪ ליחידה (מעל 40 יח׳)`;
-  }
-  if (unit === PUZZLE_MAT_PRICE_FROM_20) {
-    return `דיל כמות: ${PUZZLE_MAT_PRICE_FROM_20} ₪ ליחידה (מ-20 יח׳)`;
+  if (getPuzzleMatUnitPrice(quantity) === PUZZLE_MAT_BULK_PRICE) {
+    return `דיל כמות פעיל: ${PUZZLE_MAT_BULK_PRICE} ₪ ליחידה במקום ${PUZZLE_MAT_UNIT_PRICE} ₪ — חסכתם כ-${getPuzzleMatSavingsPercent()}%!`;
   }
   return null;
 }
+
+/** Short prompt under the qty input — pushes customers toward the bulk deal. */
+export function getPuzzleMatQuantityHint(quantity: number) {
+  const qty = Math.max(0, Math.floor(quantity));
+  if (qty >= PUZZLE_MAT_BULK_THRESHOLD) {
+    return `מעולה! ההנחה פעילה — ${PUZZLE_MAT_BULK_PRICE} ₪ ליחידה על כל הכמות.`;
+  }
+  const remaining = PUZZLE_MAT_BULK_THRESHOLD - qty;
+  return `עוד ${remaining} יח׳ ותקבלו ${PUZZLE_MAT_BULK_PRICE} ₪ ליחידה במקום ${PUZZLE_MAT_UNIT_PRICE} ₪ (כ-${getPuzzleMatSavingsPercent()}% הנחה).`;
+}
+
+export const PUZZLE_MAT_DEAL_HEADLINE = `מ-${PUZZLE_MAT_BULK_THRESHOLD} יחידות — רק ${PUZZLE_MAT_BULK_PRICE} ₪ ליחידה`;
+
+export const PUZZLE_MAT_DEAL_BANNER =
+  `דיל כמות חזק: מחיר רגיל ${PUZZLE_MAT_UNIT_PRICE} ₪ ליחידה. ` +
+  `ברכישת ${PUZZLE_MAT_BULK_THRESHOLD} יחידות ומעלה — המחיר יורד ל-${PUZZLE_MAT_BULK_PRICE} ₪ ליחידה ` +
+  `(כ-${getPuzzleMatSavingsPercent()}% הנחה על כל יחידה). ככל שמזמינים יותר — חוסכים יותר.`;
+
+export const PUZZLE_MAT_DEAL_BADGE = QUANTITY_DEAL_BADGE;
 
 export const BALANCE_PITA_COLORS = ["סגול", "ירוק", "אדום", "ורוד"] as const;
 
@@ -85,7 +104,7 @@ export type TrainingAccessoryDefinition = {
 };
 
 function puzzleMatPricingCopy() {
-  return `מחיר רגיל ליחידה: ${PUZZLE_MAT_UNIT_PRICE} ₪. דיל כמות: מ-20 יחידות — ${PUZZLE_MAT_PRICE_FROM_20} ₪ ליח׳ · מעל 40 יחידות — ${PUZZLE_MAT_PRICE_OVER_40} ₪ ליח׳.`;
+  return PUZZLE_MAT_DEAL_BANNER;
 }
 
 function puzzleMatSpecs(): ProductSpec[] {
@@ -93,12 +112,8 @@ function puzzleMatSpecs(): ProductSpec[] {
     { label: "עובי", value: '4 ס"מ' },
     { label: "מחיר ליחידה", value: `${PUZZLE_MAT_UNIT_PRICE} ₪` },
     {
-      label: "דיל מ-20 יח׳",
-      value: `${PUZZLE_MAT_PRICE_FROM_20} ₪ ליחידה`,
-    },
-    {
-      label: "דיל מעל 40 יח׳",
-      value: `${PUZZLE_MAT_PRICE_OVER_40} ₪ ליחידה`,
+      label: `דיל מ-${PUZZLE_MAT_BULK_THRESHOLD} יח׳`,
+      value: `${PUZZLE_MAT_BULK_PRICE} ₪ ליחידה (במקום ${PUZZLE_MAT_UNIT_PRICE} ₪)`,
     },
   ];
 }
@@ -152,7 +167,7 @@ export const TRAINING_ACCESSORIES_PRODUCTS: TrainingAccessoryDefinition[] = [
     title: "מזרן פאזל 4 ס״מ — כחול אדום",
     subcategoryLabel: "מזרן פאזל כחול אדום",
     price: PUZZLE_MAT_UNIT_PRICE,
-    badge: "דיל כמות",
+    badge: PUZZLE_MAT_DEAL_BADGE,
     introTitle: "מזרן פאזל מקצועי בעובי 4 ס״מ — כחול ואדום",
     introParagraphs: [
       "מזרן פאזל בעובי 4 ס״מ בצבעי כחול ואדום — משטח אימון מודולרי שמתחבר בקלות ליצירת רצפה בטוחה באולם, בחדר כושר או בבית.",
@@ -173,13 +188,13 @@ export const TRAINING_ACCESSORIES_PRODUCTS: TrainingAccessoryDefinition[] = [
         description: "כחול ואדום — מראה אנרגטי וזיהוי קל באולם.",
       },
       {
-        title: "דיל כמות",
-        description: `מ-20 יח׳ — ${PUZZLE_MAT_PRICE_FROM_20} ₪ · מעל 40 יח׳ — ${PUZZLE_MAT_PRICE_OVER_40} ₪ ליחידה (במקום ${PUZZLE_MAT_UNIT_PRICE} ₪).`,
+        title: PUZZLE_MAT_DEAL_HEADLINE,
+        description: `מחיר רגיל ${PUZZLE_MAT_UNIT_PRICE} ₪ ליחידה. מ-${PUZZLE_MAT_BULK_THRESHOLD} יח׳ — רק ${PUZZLE_MAT_BULK_PRICE} ₪ ליחידה (כ-${getPuzzleMatSavingsPercent()}% הנחה). משתלם במיוחד לאולמות ולחוגים.`,
       },
     ],
     specs: [...puzzleMatSpecs(), { label: "צבע", value: "כחול / אדום" }, { label: "סוג", value: "מזרן פאזל מודולרי" }],
-    ctaText: "הזמינו מזרני פאזל כחול-אדום — ובנו משטח אימון לפי המידה שלכם!",
-    seoDescription: `מזרן פאזל 4 ס"מ כחול אדום — ${PUZZLE_MAT_UNIT_PRICE} ₪ ליחידה, דיל מ-20 / מעל 40 יח׳. אביזרי אימון ב-CHOLE sport.`,
+    ctaText: `הזמינו מ-${PUZZLE_MAT_BULK_THRESHOLD} יח׳ וחסכו — מזרני פאזל כחול-אדום במחיר דיל!`,
+    seoDescription: `מזרן פאזל 4 ס"מ כחול אדום — ${PUZZLE_MAT_UNIT_PRICE} ₪ ליחידה, מ-${PUZZLE_MAT_BULK_THRESHOLD} יח׳ רק ${PUZZLE_MAT_BULK_PRICE} ₪. אביזרי אימון ב-CHOLE sport.`,
   },
   {
     id: "training-puzzle-mat-grey-black",
@@ -188,7 +203,7 @@ export const TRAINING_ACCESSORIES_PRODUCTS: TrainingAccessoryDefinition[] = [
     price: PUZZLE_MAT_UNIT_PRICE,
     img: puzzleGreyBlackImg,
     images: [puzzleGreyBlackImg, puzzleGreyBlackAltImg],
-    badge: "דיל כמות",
+    badge: PUZZLE_MAT_DEAL_BADGE,
     introTitle: "מזרן פאזל מקצועי בעובי 4 ס״מ — אפור ושחור",
     introParagraphs: [
       "מזרן פאזל בעובי 4 ס״מ בגווני אפור ושחור — מראה נקי ומודרני לחדרי כושר, סטודיו ומתחמי אימון.",
@@ -209,20 +224,19 @@ export const TRAINING_ACCESSORIES_PRODUCTS: TrainingAccessoryDefinition[] = [
         description: "אפור ושחור — משתלבים בכל עיצוב אולם.",
       },
       {
-        title: "דיל כמות",
-        description: `מ-20 יח׳ — ${PUZZLE_MAT_PRICE_FROM_20} ₪ · מעל 40 יח׳ — ${PUZZLE_MAT_PRICE_OVER_40} ₪ ליחידה (במקום ${PUZZLE_MAT_UNIT_PRICE} ₪).`,
+        title: PUZZLE_MAT_DEAL_HEADLINE,
+        description: `מחיר רגיל ${PUZZLE_MAT_UNIT_PRICE} ₪ ליחידה. מ-${PUZZLE_MAT_BULK_THRESHOLD} יח׳ — רק ${PUZZLE_MAT_BULK_PRICE} ₪ ליחידה (כ-${getPuzzleMatSavingsPercent()}% הנחה). משתלם במיוחד לאולמות ולחוגים.`,
       },
     ],
     specs: [...puzzleMatSpecs(), { label: "צבע", value: "אפור / שחור" }, { label: "סוג", value: "מזרן פאזל מודולרי" }],
-    ctaText: "הזמינו מזרני פאזל אפור-שחור — משטח נקי ומקצועי לאולם שלכם!",
-    seoDescription: `מזרן פאזל 4 ס"מ אפור שחור — ${PUZZLE_MAT_UNIT_PRICE} ₪ ליחידה, דיל מ-20 / מעל 40 יח׳. אביזרי אימון ב-CHOLE sport.`,
+    ctaText: `הזמינו מ-${PUZZLE_MAT_BULK_THRESHOLD} יח׳ וחסכו — מזרני פאזל אפור-שחור במחיר דיל!`,
+    seoDescription: `מזרן פאזל 4 ס"מ אפור שחור — ${PUZZLE_MAT_UNIT_PRICE} ₪ ליחידה, מ-${PUZZLE_MAT_BULK_THRESHOLD} יח׳ רק ${PUZZLE_MAT_BULK_PRICE} ₪. אביזרי אימון ב-CHOLE sport.`,
   },
   {
     id: "training-plyo-soft-box",
     title: "קוביה פליאומטרית רכה מונעת החלקה",
     subcategoryLabel: "קוביה פליאומטרית רכה",
     price: 750,
-    badge: "3-in-1",
     img: plyoSoftBoxImg,
     images: [plyoSoftBoxImg],
     introTitle: "קוביה פליאומטרית רכה — 3 גבהים בקוביה אחת",
@@ -262,7 +276,6 @@ export const TRAINING_ACCESSORIES_PRODUCTS: TrainingAccessoryDefinition[] = [
     title: "4 קוביות פליאומטריות במגוון גדלים",
     subcategoryLabel: "סט 4 קוביות פליאומטריות",
     price: 2250,
-    badge: "סט 4",
     img: plyoBoxes4pcImg,
     images: [plyoBoxes4pcImg],
     introTitle: "סט 4 קוביות פליאומטריות — מגוון גבהים לאימון מתקדם",
@@ -474,5 +487,10 @@ export function buildTrainingAccessoryProductExtra(
     audience: TRAINING_ACCESSORIES_AUDIENCE,
     ctaText: definition.ctaText,
     relatedIds: allIds.filter((id) => id !== definition.id),
+    ...(isPuzzleMatProductId(definition.id)
+      ? { badge: definition.badge ?? PUZZLE_MAT_DEAL_BADGE }
+      : definition.badge
+        ? { badge: definition.badge }
+        : {}),
   };
 }

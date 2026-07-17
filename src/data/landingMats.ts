@@ -3,8 +3,6 @@ import type { Product, ProductFeature, ProductSpec } from "@/data/products";
 export const LANDING_MAT_CATEGORY = "מזרני נחיתה";
 export const LANDING_MAT_CATEGORY_SLUG = "landing-mats";
 export const LANDING_MAT_BRAND = "LEVITATE®";
-export const LANDING_MAT_STOCK_NOTE = "המלאי מתחדש ב-15.7";
-
 export type LandingMatVariant = {
   id: string;
   lengthCm: number;
@@ -265,13 +263,8 @@ export function buildLandingMatProductExtra(
     ctaText: isAirfloor
       ? "השלימו את מערכת ה-AirFloor שלכם — הזמינו עכשיו!"
       : `הזמינו מזרן נחיתה ${dims} — בטיחות ואיכות מקצועית!`,
-    stockNote: LANDING_MAT_STOCK_NOTE,
     relatedIds: allIds.filter((id) => id !== variant.id),
   };
-
-  if (isAirfloor) {
-    return { ...base, badge: "AirFloor" };
-  }
 
   return base;
 }

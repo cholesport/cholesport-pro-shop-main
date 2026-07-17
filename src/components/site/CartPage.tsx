@@ -63,10 +63,12 @@ export function CartPage() {
       <div className="space-y-4">
         {items.map((item) => {
           const isFlexiRoll = isFlexiRollProductId(item.productId);
+          const isPuzzleMat = isPuzzleMatProductId(item.productId);
+          const hasPuzzleQtyDeal = isPuzzleMat && item.price < PUZZLE_MAT_UNIT_PRICE;
           const flexiCatalog = isFlexiRoll
             ? getFlexiRollCatalogPrice(item.productId)
             : undefined;
-          const dealLabel = isPuzzleMatProductId(item.productId)
+          const dealLabel = isPuzzleMat
             ? getPuzzleMatDealLabel(item.quantity)
             : isFlexiRoll
               ? getFlexiRollDealLabel(flexiRollCartQty)
@@ -83,7 +85,7 @@ export function CartPage() {
                 className="shrink-0 w-24 h-24 rounded-lg overflow-hidden bg-secondary flex items-center justify-center px-2"
               >
                 {item.image ? (
-                  <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
+                  <img src={item.image} alt={item.title} className="w-full h-full object-contain" />
                 ) : (
                   <span className="text-xs font-semibold text-center leading-snug text-foreground/80 line-clamp-4">
                     {item.title}
@@ -101,9 +103,15 @@ export function CartPage() {
                 </Link>
                 <p className="text-xs text-muted-foreground mt-1">{item.brand}</p>
                 <div className="mt-auto flex flex-wrap items-baseline gap-2">
-                  <p className="text-lg font-bold text-foreground">₪{formatPrice(item.price)}</p>
+                  <p
+                    className={`text-lg font-bold ${
+                      hasPuzzleQtyDeal ? "text-emerald-700" : "text-foreground"
+                    }`}
+                  >
+                    ₪{formatPrice(item.price)}
+                  </p>
                   <span className="text-xs text-muted-foreground">ליחידה</span>
-                  {isPuzzleMatProductId(item.productId) && item.price < PUZZLE_MAT_UNIT_PRICE && (
+                  {hasPuzzleQtyDeal && (
                     <span className="text-xs text-muted-foreground line-through">
                       ₪{formatPrice(PUZZLE_MAT_UNIT_PRICE)}
                     </span>
@@ -117,7 +125,13 @@ export function CartPage() {
                     )}
                 </div>
                 {dealLabel && (
-                  <p className="text-xs font-medium text-accent mt-1">{dealLabel}</p>
+                  <p
+                    className={`text-xs font-bold mt-1 ${
+                      hasPuzzleQtyDeal ? "text-emerald-700" : "text-accent"
+                    }`}
+                  >
+                    {dealLabel}
+                  </p>
                 )}
               </div>
 
@@ -137,7 +151,11 @@ export function CartPage() {
                   size="sm"
                 />
 
-                <p className="text-sm font-bold text-foreground">
+                <p
+                  className={`text-sm font-bold ${
+                    hasPuzzleQtyDeal ? "text-emerald-700" : "text-foreground"
+                  }`}
+                >
                   ₪{formatPrice(item.price * item.quantity)}
                 </p>
               </div>

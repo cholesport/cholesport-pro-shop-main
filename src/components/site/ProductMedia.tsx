@@ -6,7 +6,7 @@ type ProductMediaProps = {
   alt?: string;
   className?: string;
   imgClassName?: string;
-  /** object-cover for cards; object-contain for PDP gallery */
+  /** Prefer contain so products stay fully visible on mobile. */
   fit?: "cover" | "contain";
   loading?: "lazy" | "eager";
 };
@@ -17,7 +17,7 @@ export function ProductMedia({
   alt,
   className = "",
   imgClassName = "",
-  fit = "cover",
+  fit = "contain",
   loading = "lazy",
 }: ProductMediaProps) {
   const src = product.images[0] ?? product.img;

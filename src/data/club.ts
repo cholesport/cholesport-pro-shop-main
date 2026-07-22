@@ -11,7 +11,7 @@ export const CLUB_INSTAGRAM_URL = `https://www.instagram.com/${CLUB_INSTAGRAM_HA
 
 /** Community WhatsApp group for finding table-tennis partners. */
 export const CLUB_WHATSAPP_GROUP_URL =
-  "https://chat.whatsapp.com/KdaeTc1M4nRDt9JcfV5kb2";
+  "https://chat.whatsapp.com/B6uiLU2DH1i6I7fFvnHuTi?s=cl&p=i&mlu=4";
 
 export const CLUB_PATH = "/club";
 
@@ -125,6 +125,7 @@ export const CLUB_PRACTICAL = {
     {
       label: "קהילה",
       value: "בקבוצת הוואטסאפ מתעדכנים בהודעות ומוצאים פרטנרים למשחק.",
+      href: CLUB_WHATSAPP_GROUP_URL,
     },
   ],
 };

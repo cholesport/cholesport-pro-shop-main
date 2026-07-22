@@ -313,9 +313,20 @@ export function ClubLandingPage() {
                 <p className="text-xs font-semibold uppercase tracking-[0.16em] text-accent">
                   {item.label}
                 </p>
-                <p className="mt-2 text-sm leading-relaxed text-foreground md:text-base">
-                  {item.value}
-                </p>
+                {"href" in item && item.href ? (
+                  <a
+                    href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-2 block text-sm leading-relaxed text-foreground underline-offset-4 transition hover:text-accent hover:underline md:text-base"
+                  >
+                    {item.value}
+                  </a>
+                ) : (
+                  <p className="mt-2 text-sm leading-relaxed text-foreground md:text-base">
+                    {item.value}
+                  </p>
+                )}
               </FadeIn>
             ))}
           </div>

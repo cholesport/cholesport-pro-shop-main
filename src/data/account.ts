@@ -24,7 +24,7 @@ export type UserProfile = {
   lastName: string;
   email: string;
   phone: string;
-  /** True for freshly registered accounts — start with empty orders/addresses. */
+  /** True for freshly registered accounts - start with empty orders/addresses. */
   isNew?: boolean;
   registeredAt?: string;
 };
@@ -52,7 +52,7 @@ export function getPhoneDigits(phone: string) {
 
 /**
  * Accepts Israeli mobiles and international numbers.
- * Requires enough digits for a real phone (7–15 per E.164).
+ * Requires enough digits for a real phone (7-15 per E.164).
  */
 export function isValidAccountPhone(phone: string) {
   const digits = getPhoneDigits(phone);

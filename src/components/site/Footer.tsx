@@ -9,7 +9,7 @@ import { FadeIn } from "@/components/site/FadeIn";
 type FooterLink = {
   label: string;
   href?: string;
-  to?: "/privacy" | "/terms" | "/account" | "/categories" | "/club";
+  to?: "/privacy" | "/terms" | "/account" | "/categories" | "/club" | "/about";
 };
 
 const COLS: Record<string, FooterLink[]> = {
@@ -19,6 +19,7 @@ const COLS: Record<string, FooterLink[]> = {
     { label: "קטגוריות", to: "/categories" },
     { label: "SHOW ROOM", href: "/categories/show-room" },
     { label: "מתחם CHOLE TLV", to: "/club" },
+    { label: "אודות", to: "/about" },
   ],
   שירות: [
     { label: "צור קשר בוואטסאפ", href: WHATSAPP_URL },
@@ -58,7 +59,7 @@ export function Footer() {
           <FadeIn preset="footer" className="md:col-span-5">
             <img src={logo} alt="CHOLE sport" className="h-14 w-auto mb-5" />
             <p className="text-sm text-muted-foreground max-w-sm leading-relaxed">
-              CHOLE sport — ציוד ספורט מקצועי מהיבואן לצרכן. {COMPANY.address}.
+              CHOLE sport - ציוד ספורט מקצועי מהיבואן לצרכן. {COMPANY.address}.
             </p>
             <div className="mt-5">
               <p className="text-[11px] font-semibold tracking-[0.14em] uppercase text-muted-foreground mb-3">
@@ -66,8 +67,10 @@ export function Footer() {
               </p>
               <BrandLogoRow heightClass="h-7" />
             </div>
-            <p className="mt-5 text-sm font-medium text-foreground" dir="ltr">
-              {CONTACT_PHONE_DISPLAY}
+            <p className="mt-5 text-sm font-medium text-foreground">
+              <span dir="ltr" className="inline-block">
+                {CONTACT_PHONE_DISPLAY}
+              </span>
             </p>
           </FadeIn>
 

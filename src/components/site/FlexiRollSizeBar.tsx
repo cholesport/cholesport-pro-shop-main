@@ -16,7 +16,7 @@ export function FlexiRollSizeBar({ currentProductId }: FlexiRollSizeBarProps) {
         id="flexi-roll-size-bar-heading"
         className="text-sm font-bold uppercase tracking-wider text-muted-foreground mb-2"
       >
-        מידות זמינות — פלקסי רול
+        מידות זמינות - פלקסי רול
       </h2>
       <div className="flex flex-wrap items-center gap-2">
         {FLEXI_ROLL_VARIANTS.map((variant) => {

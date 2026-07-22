@@ -41,7 +41,7 @@ export type OrderWhatsAppDetails = {
 export function buildOrderWhatsAppMessage(details: OrderWhatsAppDetails) {
   const lines = details.items.map(
     (item) =>
-      `• ${item.title} × ${item.quantity} — ₪${formatPrice(item.price * item.quantity)}`,
+      `• ${item.title} × ${item.quantity} - ₪${formatPrice(item.price * item.quantity)}`,
   );
   const deliveryLabel =
     details.delivery === "pickup" ? "איסוף עצמי מהחנות" : "משלוח לכתובת (לתיאום)";

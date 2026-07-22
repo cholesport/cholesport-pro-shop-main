@@ -8,9 +8,9 @@ import { buildPageSeoHead } from "@/lib/seo";
 export const Route = createFileRoute("/terms")({
   head: () => {
     const seo = buildPageSeoHead({
-      title: `תנאי שימוש — ${COMPANY.name}`,
+      title: `תנאי שימוש - ${COMPANY.name}`,
       description:
-        "תנאי השימוש של CHOLE sport — רכישות מקוונות, משלוחים, החזרות, אחריות ודין ישראלי.",
+        "תנאי השימוש של CHOLE sport - רכישות מקוונות, משלוחים, החזרות, אחריות ודין ישראלי.",
       path: "/terms",
     });
     return { meta: seo.meta, links: seo.links };

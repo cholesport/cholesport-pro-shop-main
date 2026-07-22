@@ -16,7 +16,7 @@ import {
 import { COMPANY } from "@/data/legal";
 import { cn } from "@/lib/utils";
 
-/** Soft cinematic grade — muted, professional, never harsh. */
+/** Soft cinematic grade - muted, professional, never harsh. */
 const MEDIA_GRADE =
   "brightness-[0.92] contrast-[1.06] saturate-[0.92]";
 
@@ -46,7 +46,7 @@ type ClubShadedMediaProps = {
   src: string;
   alt: string;
   className?: string;
-  /** Decorative hero media — hide from screen readers when copy is enough. */
+  /** Decorative hero media - hide from screen readers when copy is enough. */
   decorative?: boolean;
   objectPosition?: string;
   /** Optional muted looping background video (falls back to poster image). */
@@ -67,7 +67,7 @@ function ClubShadedMedia({
     const video = videoRef.current;
     if (!video || !videoSrc) return;
 
-    // Always silent — browsers may ignore the muted attribute in some cases.
+    // Always silent - browsers may ignore the muted attribute in some cases.
     video.muted = true;
     video.defaultMuted = true;
     video.volume = 0;

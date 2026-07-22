@@ -47,7 +47,7 @@ export function TableTennisEquipmentCarousel({
             עוד מציוד הטניס שולחן שלנו
           </h2>
           <p className="text-sm text-muted-foreground mt-1">
-            מוצרים משלימים ומקצועיים — רובוטי אימון, מחבטים, כדורים ועוד
+            מוצרים משלימים ומקצועיים - רובוטי אימון, מחבטים, כדורים ועוד
           </p>
         </div>
         <Link

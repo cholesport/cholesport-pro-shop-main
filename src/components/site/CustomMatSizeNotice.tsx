@@ -23,7 +23,7 @@ export function CustomMatSizeNotice({ kind, compact = false }: CustomMatSizeNoti
         className="inline-flex items-center gap-2 px-4 py-2 text-sm font-bold border-2 border-accent text-accent bg-accent/5 hover:bg-accent hover:text-accent-foreground transition"
       >
         <MessageCircle size={16} aria-hidden />
-        גודל מיוחד — הזמנה בוואטסאפ
+        גודל מיוחד - הזמנה בוואטסאפ
       </a>
     );
   }

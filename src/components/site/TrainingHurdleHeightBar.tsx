@@ -16,7 +16,7 @@ export function TrainingHurdleHeightBar({ currentProductId }: TrainingHurdleHeig
         id="training-hurdle-height-bar-heading"
         className="text-sm font-bold uppercase tracking-wider text-muted-foreground mb-3"
       >
-        {HURDLE_PRODUCT_TITLE} — אפשרויות רכישה
+        {HURDLE_PRODUCT_TITLE} - אפשרויות רכישה
       </h2>
       <div className="flex flex-wrap gap-2">
         {HURDLE_HEIGHT_VARIANTS.map((variant) => {

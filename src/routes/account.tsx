@@ -7,7 +7,7 @@ import { buildPageSeoHead } from "@/lib/seo";
 export const Route = createFileRoute("/account")({
   head: () => {
     const seo = buildPageSeoHead({
-      title: "החשבון שלי — CHOLE sport",
+      title: "החשבון שלי - CHOLE sport",
       description:
         "התחברו לחשבון CHOLE sport לצפייה בהזמנות, ניהול כתובות ועדכון פרטים אישיים.",
       path: "/account",

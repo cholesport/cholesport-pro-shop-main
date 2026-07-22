@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 
 type FadeInProps = {
   children: ReactNode;
-  /** Timing preset from `src/data/motion.ts` — tweak values there. */
+  /** Timing preset from `src/data/motion.ts` - tweak values there. */
   preset?: FadePresetName;
   /** Extra delay on top of the preset (ms). */
   delay?: number;
@@ -63,7 +63,7 @@ export function FadeIn({
 
 type PageFadeProps = {
   children: ReactNode;
-  /** Remount key — typically the current pathname. */
+  /** Remount key - typically the current pathname. */
   pageKey: string;
   className?: string;
 };

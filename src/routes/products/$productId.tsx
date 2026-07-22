@@ -85,7 +85,7 @@ export const Route = createFileRoute("/products/$productId")({
         : undefined;
 
     const seo = buildPageSeoHead({
-      title: `${title} — CHOLE sport | cholesport.co.il`,
+      title: `${title} - CHOLE sport | cholesport.co.il`,
       description,
       path: `/products/${loaderData.id}`,
       type: "product",

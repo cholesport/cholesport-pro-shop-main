@@ -27,7 +27,7 @@ export const AIRFLOOR_MAT_VARIANTS: AirfloorMatVariant[] = [
 
 export const AIRFLOOR_SALE_HEADLINE = "מבצע מיוחד עכשיו על מזרני איירפלור";
 export const AIRFLOOR_SALE_COPY =
-  "כל המידות במחיר מבצע — חיסכון של כ־16% ממחיר הקטלוג. הזדמנות מצוינת לשדרג את משטח האימון במחיר שלא חוזר כל יום.";
+  "כל המידות במחיר מבצע - חיסכון של כ־16% ממחיר הקטלוג. הזדמנות מצוינת לשדרג את משטח האימון במחיר שלא חוזר כל יום.";
 
 export function getAirfloorSalePercent(v: Pick<AirfloorMatVariant, "price" | "was">) {
   if (v.was <= v.price) return 0;
@@ -58,7 +58,7 @@ export function getAirfloorMatSeoDescription(v: AirfloorMatVariant) {
   const salePct = getAirfloorSalePercent(v);
   return (
     `מבצע איירפלור: מזרן מקצועי ${formatAirfloorSizeSlash(v)} מטר מ-LEVITATE` +
-    (salePct > 0 ? ` — ${salePct}% הנחה` : "") +
+    (salePct > 0 ? ` - ${salePct}% הנחה` : "") +
     `. מחיר מבצע ${v.price.toLocaleString("he-IL")} ₪` +
     (v.was > v.price ? ` במקום ${v.was.toLocaleString("he-IL")} ₪` : "") +
     `. כולל משאבה, ערכת תיקונים ופס חיבור. ניתן להזמין גם בגודל מיוחד.`
@@ -82,17 +82,17 @@ const AIRFLOOR_INTRO =
   "הכירו את הדור הבא של משטחי האימון. מזרן האיירפלור של LV מציע שילוב מושלם בין גמישות, בלימת זעזועים ועמידות גבוהה, המותאם למתעמלים, אקרובטים ואוהבי נינג'ה. המזרן מגיע כערכה מלאה הכוללת משאבה, ערכת תיקונים ופס חיבור ייעודי.";
 
 const AIRFLOOR_INTRO_CUSTOM_SIZE =
-  "מעבר למידות שבקטלוג — ניתן להזמין מזרן איירפלור גם בגודל מיוחד לפי הצורך שלכם. בחרו מידה מהסרגל למעלה, או פנו אלינו בוואטסאפ להצעה על מידה מותאמת.";
+  "מעבר למידות שבקטלוג - ניתן להזמין מזרן איירפלור גם בגודל מיוחד לפי הצורך שלכם. בחרו מידה מהסרגל למעלה, או פנו אלינו בוואטסאפ להצעה על מידה מותאמת.";
 
 const AIRFLOOR_INTRO_SALE =
-  `${AIRFLOOR_SALE_HEADLINE} — המחיר שאתם רואים הוא מחיר מבצע מוזל ממחיר הקטלוג. כדאי לנצל עכשיו: איכות מקצועית של LEVITATE במחיר שלא חוזר כל יום.`;
+  `${AIRFLOOR_SALE_HEADLINE} - המחיר שאתם רואים הוא מחיר מבצע מוזל ממחיר הקטלוג. כדאי לנצל עכשיו: איכות מקצועית של LEVITATE במחיר שלא חוזר כל יום.`;
 
 const AIRFLOOR_FEATURES: ProductFeature[] = [
   { title: "מידות", description: "" },
   {
     title: "גודל מיוחד",
     description:
-      "צריכים מידה שלא מופיעה בקטלוג? ניתן להזמין מזרן איירפלור בגודל מיוחד — תאמו איתנו בוואטסאפ ונחזור עם הצעה.",
+      "צריכים מידה שלא מופיעה בקטלוג? ניתן להזמין מזרן איירפלור בגודל מיוחד - תאמו איתנו בוואטסאפ ונחזור עם הצעה.",
   },
   {
     title: "בטיחות",
@@ -179,7 +179,7 @@ export function buildAirfloorMatProductExtra(
     warrantyText: "12 חודשי אחריות על פגמי ייצור.",
     audienceTitle: "למי המזרן מתאים?",
     audience: AIRFLOOR_AUDIENCE,
-    ctaText: `מבצע איירפלור ${sizeSlash} מטר — ${salePriceLabel} במקום ${wasPriceLabel}. הזמינו עכשיו!`,
+    ctaText: `מבצע איירפלור ${sizeSlash} מטר - ${salePriceLabel} במקום ${wasPriceLabel}. הזמינו עכשיו!`,
     relatedIds: [...allIds.filter((id) => id !== variant.id), "landing-mat-250x200x30"],
   };
 }

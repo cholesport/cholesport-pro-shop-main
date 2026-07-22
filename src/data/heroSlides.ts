@@ -24,7 +24,7 @@ export const HERO_SLIDES: HeroSlide[] = [
   { src: slide04, alt: "קופסאות קפיצה PLYO SOFT BOX" },
   { src: slide05, alt: "משולש אדום וירוק לג'ימבורי" },
   { src: slide06, alt: "מזרן נחיתה כחול עם ונטים" },
-  { src: slide07, alt: "סט ציוד ג'ימבורי — מדרגות, קובייה ורampa" },
+  { src: slide07, alt: "סט ציוד ג'ימבורי - מדרגות, קובייה ורampa" },
   { src: slide08, alt: "שולחן טניס שולחן מקצועי CHOLE PRO25" },
   { src: slide09, alt: "שולחן טניס שולחן חוץ CHOLE OUTDOOR NAVY6" },
   { src: slide10, alt: "רובוט אימון טניס שולחן PONG BOT NOVA S PRO" },

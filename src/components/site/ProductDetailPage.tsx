@@ -248,7 +248,7 @@ export function ProductDetailPage({ product }: { product: Product }) {
                 {hoverSwapImage && activeImage === 0 && (
                   <img
                     src={hoverSwapImage}
-                    alt={`${product.title} — מצב קיפול`}
+                    alt={`${product.title} - מצב קיפול`}
                     className={`absolute inset-3 md:inset-5 w-auto h-auto max-w-[calc(100%-1.5rem)] md:max-w-[calc(100%-2.5rem)] max-h-[calc(100%-1.5rem)] md:max-h-[calc(100%-2.5rem)] object-contain m-auto transition-opacity duration-300 ${
                       showHoverSwap ? "opacity-100" : "opacity-0"
                     }`}
@@ -425,7 +425,7 @@ export function ProductDetailPage({ product }: { product: Product }) {
                   to={CLUB_PATH}
                   className="inline-block text-xs font-semibold text-accent hover:underline"
                 >
-                  {CLUB_TEASER.label} — אימונים, חוגים ואירועים
+                  {CLUB_TEASER.label} - אימונים, חוגים ואירועים
                 </Link>
               </div>
             </div>
@@ -527,7 +527,7 @@ export function ProductDetailPage({ product }: { product: Product }) {
         )}
       </section>
 
-      {/* Complementary training robot — game tables only */}
+      {/* Complementary training robot - game tables only */}
       {isGameTable && <ComplementaryEquipmentSection />}
 
       {/* Accordion */}

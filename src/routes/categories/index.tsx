@@ -11,7 +11,7 @@ import { buildPageSeoHead } from "@/lib/seo";
 export const Route = createFileRoute("/categories/")({
   head: () => {
     const seo = buildPageSeoHead({
-      title: `${CATEGORIES_PAGE_TITLE} — CHOLE sport | cholesport.co.il`,
+      title: `${CATEGORIES_PAGE_TITLE} - CHOLE sport | cholesport.co.il`,
       description: CATEGORIES_PAGE_SEO_DESCRIPTION,
       path: "/categories",
     });

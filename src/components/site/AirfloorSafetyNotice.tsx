@@ -6,7 +6,7 @@ export function AirfloorSafetyNotice() {
     <aside
       dir="rtl"
       className="mt-6 rounded-xl border-2 border-amber-400/60 bg-amber-50 p-4 md:p-5"
-      aria-label="הודעת בטיחות — רוחב המזרן"
+      aria-label="הודעת בטיחות - רוחב המזרן"
     >
       <div className="flex items-start gap-3">
         <ShieldAlert className="size-5 shrink-0 text-amber-600 mt-0.5" aria-hidden />

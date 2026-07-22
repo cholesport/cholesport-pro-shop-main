@@ -30,9 +30,9 @@ import {
 export type CategoryDefinition = {
   slug: string;
   name: string;
-  /** Placeholder — fill in later with marketing copy. */
+  /** Placeholder - fill in later with marketing copy. */
   description: string;
-  /** Optional anchor IDs aligned with subcategories (same order) — for in-page links. */
+  /** Optional anchor IDs aligned with subcategories (same order) - for in-page links. */
   subcategoryAnchorIds?: string[];
   subcategories: string[];
   productCats: string[];
@@ -46,9 +46,9 @@ export type CategoryDefinition = {
 
 export const CATEGORIES_PAGE_TITLE = "קולקציית המוצרים";
 export const CATEGORIES_PAGE_SUBTITLE =
-  "כל הקטגוריות במקום אחד — בחרו תחום והמשיכו למוצרים שמתאימים לכם.";
+  "כל הקטגוריות במקום אחד - בחרו תחום והמשיכו למוצרים שמתאימים לכם.";
 export const CATEGORIES_PAGE_SEO_DESCRIPTION =
-  "קולקציית המוצרים של CHOLE sport — אביזרי אימון, ציוד ג׳ימבורי, מזרני איירפלור, פלקסי רול, מזרני נחיתה, שולחנות משחק וציוד טניס שולחן.";
+  "קולקציית המוצרים של CHOLE sport - אביזרי אימון, ציוד ג׳ימבורי, מזרני איירפלור, פלקסי רול, מזרני נחיתה, שולחנות משחק וציוד טניס שולחן.";
 
 
 export const CATEGORIES: CategoryDefinition[] = [
@@ -74,7 +74,7 @@ export const CATEGORIES: CategoryDefinition[] = [
     slug: "gymboree",
     name: "ציוד ג׳ימבורי",
     description:
-      "ציוד רך מקצועי לג׳ימבורי ולהתעמלות קרקע — ערכות טיפוס וגלישה, משולשים רכים ושיפועתי לתרגול בטוח.",
+      "ציוד רך מקצועי לג׳ימבורי ולהתעמלות קרקע - ערכות טיפוס וגלישה, משולשים רכים ושיפועתי לתרגול בטוח.",
     subcategories: getGymboreeSubcategoryLabels(),
     subcategoryProductIds: getGymboreeProductIds(),
     productCats: [GYMBOREE_CATEGORY],
@@ -84,7 +84,7 @@ export const CATEGORIES: CategoryDefinition[] = [
     slug: "training-accessories",
     name: "אביזרי אימון",
     description:
-      "אביזרי אימון מקצועיים — מזרני פאזל, קוביות פליאומטריות, כדור בוסו, סטפרים ופיתות לשיווי משקל.",
+      "אביזרי אימון מקצועיים - מזרני פאזל, קוביות פליאומטריות, כדור בוסו, סטפרים ופיתות לשיווי משקל.",
     subcategories: getTrainingAccessorySubcategoryLabels(),
     subcategoryProductIds: getTrainingAccessoryProductIds(),
     productCats: [TRAINING_ACCESSORIES_CATEGORY],
@@ -94,7 +94,7 @@ export const CATEGORIES: CategoryDefinition[] = [
     slug: "airfloor-mats",
     name: "מזרני איירפלור",
     description:
-      "מבצע מיוחד עכשיו על מזרני איירפלור — חיסכון של כ־16% ממחיר הקטלוג. 5 גדלים במלאי מ-LEVITATE, רוחב 2 מטר לבטיחות מרבית. כולל משאבה, ערכת תיקונים ופס חיבור. ניתן להזמין גם בגודל מיוחד.",
+      "מבצע מיוחד עכשיו על מזרני איירפלור - חיסכון של כ־16% ממחיר הקטלוג. 5 גדלים במלאי מ-LEVITATE, רוחב 2 מטר לבטיחות מרבית. כולל משאבה, ערכת תיקונים ופס חיבור. ניתן להזמין גם בגודל מיוחד.",
     subcategories: AIRFLOOR_MAT_VARIANTS.map((v) => `${v.lengthM}/${v.widthM}/${v.thicknessM} מטר`),
     subcategoryProductIds: AIRFLOOR_MAT_VARIANTS.map((v) => v.id),
     productCats: ["מזרני איירפלור"],
@@ -104,7 +104,7 @@ export const CATEGORIES: CategoryDefinition[] = [
     slug: FLEXI_ROLL_CATEGORY_SLUG,
     name: "פלקסי רול",
     description:
-      `פלקסי רול (Flexi Roll) מקצועי מ-LEVITATE — משטח אימון גמיש ומתקפל באורך 12 מטר. שתי מידות: 12/2/0.2 ו-12/1.5/0.4. ${FLEXI_ROLL_MULTI_DEAL_COPY}`,
+      `פלקסי רול (Flexi Roll) מקצועי מ-LEVITATE - משטח אימון גמיש ומתקפל באורך 12 מטר. שתי מידות: 12/2/0.2 ו-12/1.5/0.4. ${FLEXI_ROLL_MULTI_DEAL_COPY}`,
     subcategories: FLEXI_ROLL_VARIANTS.map((v) => `${formatFlexiRollSizeSlash(v)} מטר`),
     subcategoryProductIds: FLEXI_ROLL_VARIANTS.map((v) => v.id),
     productCats: [FLEXI_ROLL_CATEGORY],
@@ -114,7 +114,7 @@ export const CATEGORIES: CategoryDefinition[] = [
     slug: "landing-mats",
     name: "מזרני נחיתה במידות שונות",
     description:
-      "מזרני נחיתה מחומר שמשונית עבה — פתחי אוורור אדומים לשינוע, ידיות חזקות מלפנים ומאחור, ו-5 גדלים במלאי. ניתן להזמין גם בגודל מיוחד.",
+      "מזרני נחיתה מחומר שמשונית עבה - פתחי אוורור אדומים לשינוע, ידיות חזקות מלפנים ומאחור, ו-5 גדלים במלאי. ניתן להזמין גם בגודל מיוחד.",
     subcategories: [
       "250×120×20 ס\"מ",
       "250×120×30 ס\"מ",
@@ -130,7 +130,7 @@ export const CATEGORIES: CategoryDefinition[] = [
     slug: "show-room",
     name: "SHOW ROOM",
     description:
-      "מתחם האימונים שלנו — חוגי נינג'ה, אקרובטיקה, טניס שולחן וטורנירים. ניתן גם לבדוק מוצרים לפני הרכישה.",
+      "מתחם האימונים שלנו - חוגי נינג'ה, אקרובטיקה, טניס שולחן וטורנירים. ניתן גם לבדוק מוצרים לפני הרכישה.",
     subcategories: SHOWROOM_ACTIVITIES.map((activity) => activity.title),
     subcategoryAnchorIds: SHOWROOM_ACTIVITIES.map((activity) => activity.id),
     productCats: [],

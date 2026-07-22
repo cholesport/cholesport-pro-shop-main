@@ -26,7 +26,7 @@ export function AirfloorSizesTable({ currentProductId }: AirfloorSizesTableProps
   return (
     <section dir="rtl" className="mt-12 max-w-3xl" aria-labelledby="airfloor-sizes-heading">
       <h2 id="airfloor-sizes-heading" className="text-xl font-bold text-foreground mb-2">
-        טבלת מידות ומחירי מבצע — מזרני איירפלור
+        טבלת מידות ומחירי מבצע - מזרני איירפלור
       </h2>
       <p className="text-sm text-muted-foreground mb-5">
         כל המידות במחיר מבצע (כ־16% הנחה). לחצו על שורה כדי לעבור למידה אחרת. צריכים מידה שלא מופיעה כאן? אפשר להזמין איירפלור בגודל מיוחד בוואטסאפ.

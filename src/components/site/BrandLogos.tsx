@@ -3,6 +3,7 @@ import {
   BRANDS_SECTION_TITLE,
   STORE_BRANDS,
   getBrandLogo,
+  getBrandMarkHeightClass,
   type StoreBrand,
 } from "@/data/brands";
 import { FadeIn } from "@/components/site/FadeIn";
@@ -23,11 +24,12 @@ export function BrandMark({
   className = "",
   linked = true,
 }: BrandMarkProps) {
+  const resolvedHeight = getBrandMarkHeightClass(brand, heightClass);
   const img = (
     <img
       src={getBrandLogo(brand, variant)}
       alt={brand.name}
-      className={`${heightClass} w-auto object-contain ${className}`}
+      className={`${resolvedHeight} w-auto object-contain ${brand.markClassName ?? ""} ${className}`}
     />
   );
 
@@ -50,7 +52,7 @@ type BrandLogoRowProps = {
   className?: string;
 };
 
-/** Compact horizontal row of all store brands — footer / inline use. */
+/** Compact horizontal row of all store brands - footer / inline use. */
 export function BrandLogoRow({
   variant = "light",
   heightClass = "h-7 md:h-8",

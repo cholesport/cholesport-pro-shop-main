@@ -14,7 +14,7 @@ export const Route = createFileRoute("/categories/$categorySlug")({
   },
   head: ({ loaderData }) => {
     const seo = buildPageSeoHead({
-      title: `${loaderData.category.name} — CHOLE sport | cholesport.co.il`,
+      title: `${loaderData.category.name} - CHOLE sport | cholesport.co.il`,
       description:
         loaderData.category.description ||
         `קנו ${loaderData.category.name} ב-CHOLE sport (cholesport.co.il).`,

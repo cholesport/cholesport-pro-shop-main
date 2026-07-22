@@ -16,7 +16,7 @@ import { isAllowedProductBadge } from "@/lib/productLabels";
 const SECTION_TITLE = "ציוד משלים למקצוענים: רובוט אימון NOVA S PRO";
 
 const SECTION_DESCRIPTION =
-  "רובוט האימון NOVA S PRO מבית PONG BOT הוא ה-Ultimate Partner לאימון אישי — " +
+  "רובוט האימון NOVA S PRO מבית PONG BOT הוא ה-Ultimate Partner לאימון אישי - " +
   "מגיע עם 100 כדורי טניס שולחן, רשת איסוף מקצועית, ומהווה את פתרון ה-All-in-one " +
   "הכי מתקדם שיש לשחקנים שרוצים להתאמן בקצב שלהם.";
 

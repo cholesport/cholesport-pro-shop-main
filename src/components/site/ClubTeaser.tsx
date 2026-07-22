@@ -3,7 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { FadeIn } from "@/components/site/FadeIn";
 import { CLUB_PATH, CLUB_TEASER } from "@/data/club";
 
-/** Compact strip — visible if relevant, never competing with the shop hero. */
+/** Compact strip - visible if relevant, never competing with the shop hero. */
 export function ClubTeaser() {
   return (
     <aside

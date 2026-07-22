@@ -1,28 +1,32 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
-import { CartPage } from "@/components/site/CartPage";
+import { AboutPage } from "@/components/site/AboutPage";
+import {
+  ABOUT_PATH,
+  ABOUT_SEO_DESCRIPTION,
+  ABOUT_SEO_TITLE,
+} from "@/data/about";
 import { buildPageSeoHead } from "@/lib/seo";
 
-export const Route = createFileRoute("/cart")({
+export const Route = createFileRoute("/about")({
   head: () => {
     const seo = buildPageSeoHead({
-      title: "עגלת קניות - CHOLE sport",
-      description: "עגלת הקניות שלכם ב-CHOLE sport.",
-      path: "/cart",
-      noIndex: true,
+      title: ABOUT_SEO_TITLE,
+      description: ABOUT_SEO_DESCRIPTION,
+      path: ABOUT_PATH,
     });
     return { meta: seo.meta, links: seo.links };
   },
-  component: CartRoute,
+  component: AboutRoute,
 });
 
-function CartRoute() {
+function AboutRoute() {
   return (
     <div className="min-h-screen bg-background">
       <Header />
       <main id="main-content">
-        <CartPage />
+        <AboutPage />
       </main>
       <Footer />
     </div>

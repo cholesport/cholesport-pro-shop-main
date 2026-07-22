@@ -49,7 +49,7 @@ export function buildPageSeoHead(input: PageSeoInput = {}) {
       { property: "og:description", content: description },
       { property: "og:url", content: url },
       { property: "og:image", content: image },
-      { property: "og:image:alt", content: `${SITE_NAME} — לוגו` },
+      { property: "og:image:alt", content: `${SITE_NAME} - לוגו` },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: title },
       { name: "twitter:description", content: description },

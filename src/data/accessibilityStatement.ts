@@ -2,7 +2,7 @@ import type { LegalSection } from "@/data/legal";
 import { COMPANY } from "@/data/legal";
 import { CONTACT_PHONE_DISPLAY, WHATSAPP_URL } from "@/lib/contact";
 
-/** Accessibility statement content — required for Israeli service sites (תקנות נגישות). */
+/** Accessibility statement content - required for Israeli service sites (תקנות נגישות). */
 export const ACCESSIBILITY_COORDINATOR = {
   title: "רכז נגישות",
   organization: COMPANY.name,
@@ -16,7 +16,7 @@ export const ACCESSIBILITY_STATEMENT_SECTIONS: LegalSection[] = [
   {
     title: "1. מחויבות לנגישות",
     paragraphs: [
-      `${COMPANY.name} פועלת להנגשת אתר האינטרנט שלה לאנשים עם מוגבלות, בהתאם לחוק שוויון זכויות לאנשים עם מוגבלות, התשנ"ח–1998, ולתקנות שוויון זכויות לאנשים עם מוגבלות (התאמות נגישות לשירות), התשע"ג–2013.`,
+      `${COMPANY.name} פועלת להנגשת אתר האינטרנט שלה לאנשים עם מוגבלות, בהתאם לחוק שוויון זכויות לאנשים עם מוגבלות, התשנ"ח-1998, ולתקנות שוויון זכויות לאנשים עם מוגבלות (התאמות נגישות לשירות), התשע"ג-2013.`,
       "אנו רואים בנגישות ערך מרכזי וממשיכים לשפר את חוויית השימוש באתר עבור כלל הלקוחות.",
     ],
   },
@@ -57,7 +57,7 @@ export const ACCESSIBILITY_STATEMENT_SECTIONS: LegalSection[] = [
   {
     title: "6. מגבלות ידועות",
     paragraphs: [
-      "חלק מתכנים של צד שלישי (למשל הטמעות חיצוניות) עשויים שלא להיות נגישים במלואם. אנו פועלים לצמצם מגבלות אלה ככל הניתן. אם נמצאה מגבלה — נשמח שתדווחו לנו.",
+      "חלק מתכנים של צד שלישי (למשל הטמעות חיצוניות) עשויים שלא להיות נגישים במלואם. אנו פועלים לצמצם מגבלות אלה ככל הניתן. אם נמצאה מגבלה - נשמח שתדווחו לנו.",
     ],
   },
   {

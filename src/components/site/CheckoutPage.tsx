@@ -197,7 +197,7 @@ export function CheckoutPage() {
         <div>
           <p className="font-bold text-foreground">{PAYMENT_WHATSAPP_NOTICE}</p>
           <p className="text-sm text-muted-foreground mt-1 leading-relaxed">
-            בחרו אספקה, מלאו פרטים בקצרה ושלחו את ההזמנה בוואטסאפ — שם נשלים תשלום ותיאום.
+            בחרו אספקה, מלאו פרטים בקצרה ושלחו את ההזמנה בוואטסאפ - שם נשלים תשלום ותיאום.
           </p>
         </div>
       </div>
@@ -322,7 +322,7 @@ export function CheckoutPage() {
         <section className="mt-14 pt-10 border-t border-border">
           <h2 className="text-xl font-bold text-foreground mb-1">רגע לפני ששולחים…</h2>
           <p className="text-sm text-muted-foreground mb-6">
-            מוצרים פופולריים שאולי שכחתם — הוסיפו בלחיצה אחת
+            מוצרים פופולריים שאולי שכחתם - הוסיפו בלחיצה אחת
           </p>
           <div className="flex gap-4 overflow-x-auto pb-2 -mx-1 px-1 snap-x snap-mandatory">
             {suggestions.map((product) => (

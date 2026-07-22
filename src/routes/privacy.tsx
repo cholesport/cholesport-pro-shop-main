@@ -8,9 +8,9 @@ import { buildPageSeoHead } from "@/lib/seo";
 export const Route = createFileRoute("/privacy")({
   head: () => {
     const seo = buildPageSeoHead({
-      title: `מדיניות פרטיות — ${COMPANY.name}`,
+      title: `מדיניות פרטיות - ${COMPANY.name}`,
       description:
-        "מדיניות הפרטיות של CHOLE sport — איסוף מידע, שימוש, עוגיות וזכויות המשתמש בהתאם לחוק הגנת הפרטיות.",
+        "מדיניות הפרטיות של CHOLE sport - איסוף מידע, שימוש, עוגיות וזכויות המשתמש בהתאם לחוק הגנת הפרטיות.",
       path: "/privacy",
     });
     return { meta: seo.meta, links: seo.links };

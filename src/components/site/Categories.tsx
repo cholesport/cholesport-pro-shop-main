@@ -39,7 +39,7 @@ export function Categories() {
       <FadeIn preset="section" className="mb-10 max-w-xl">
         <h2 className="text-3xl md:text-4xl font-extrabold text-foreground">תחומי ספורט</h2>
         <p className="text-muted-foreground mt-3 leading-relaxed">
-          בחרו תחום והמשיכו למוצרים — בלי רעש, בלי מבצעי ענק על כל המסך.
+          בחרו תחום והמשיכו למוצרים - בלי רעש, בלי מבצעי ענק על כל המסך.
         </p>
       </FadeIn>
 

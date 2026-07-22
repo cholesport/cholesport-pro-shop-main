@@ -26,10 +26,10 @@ export function LandingMatSizesTable({ currentProductId }: LandingMatSizesTableP
   return (
     <section dir="rtl" className="mt-12 max-w-3xl" aria-labelledby="landing-mat-sizes-heading">
       <h2 id="landing-mat-sizes-heading" className="text-xl font-bold text-foreground mb-2">
-        טבלת מידות — מזרני נחיתה
+        טבלת מידות - מזרני נחיתה
       </h2>
       <p className="text-sm text-muted-foreground mb-5">
-        5 גדלים במלאי — ולחצו על שורה כדי לעבור למידה אחרת. צריכים מידה שלא מופיעה כאן? אפשר להזמין בגודל מיוחד.
+        5 גדלים במלאי - ולחצו על שורה כדי לעבור למידה אחרת. צריכים מידה שלא מופיעה כאן? אפשר להזמין בגודל מיוחד.
       </p>
 
       {/* Desktop table */}

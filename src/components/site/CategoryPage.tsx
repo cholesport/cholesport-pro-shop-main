@@ -115,7 +115,7 @@ export function CategoryPage({ category, products }: CategoryPageProps) {
                 to={CLUB_PATH}
                 className="inline-flex items-center gap-2 text-sm font-bold text-accent hover:underline"
               >
-                {CLUB_TEASER.label} — {CLUB_TEASER.cta}
+                {CLUB_TEASER.label} - {CLUB_TEASER.cta}
                 <ChevronLeft size={16} aria-hidden />
               </Link>
             </div>

@@ -34,7 +34,7 @@ export function getPuzzleMatSavingsPercent() {
 
 /**
  * Unit price by quantity:
- * 1–49 → 120 ₪ · מ-50 יח׳ → 85 ₪
+ * 1-49 → 120 ₪ · מ-50 יח׳ → 85 ₪
  */
 export function getPuzzleMatUnitPrice(quantity: number) {
   const qty = Math.max(0, Math.floor(quantity));
@@ -44,27 +44,27 @@ export function getPuzzleMatUnitPrice(quantity: number) {
 
 export function getPuzzleMatDealLabel(quantity: number) {
   if (getPuzzleMatUnitPrice(quantity) === PUZZLE_MAT_BULK_PRICE) {
-    return `דיל כמות פעיל: ${PUZZLE_MAT_BULK_PRICE} ₪ ליחידה במקום ${PUZZLE_MAT_UNIT_PRICE} ₪ — חסכתם כ-${getPuzzleMatSavingsPercent()}%!`;
+    return `דיל כמות פעיל: ${PUZZLE_MAT_BULK_PRICE} ₪ ליחידה במקום ${PUZZLE_MAT_UNIT_PRICE} ₪ - חסכתם כ-${getPuzzleMatSavingsPercent()}%!`;
   }
   return null;
 }
 
-/** Short prompt under the qty input — pushes customers toward the bulk deal. */
+/** Short prompt under the qty input - pushes customers toward the bulk deal. */
 export function getPuzzleMatQuantityHint(quantity: number) {
   const qty = Math.max(0, Math.floor(quantity));
   if (qty >= PUZZLE_MAT_BULK_THRESHOLD) {
-    return `מעולה! ההנחה פעילה — ${PUZZLE_MAT_BULK_PRICE} ₪ ליחידה על כל הכמות.`;
+    return `מעולה! ההנחה פעילה - ${PUZZLE_MAT_BULK_PRICE} ₪ ליחידה על כל הכמות.`;
   }
   const remaining = PUZZLE_MAT_BULK_THRESHOLD - qty;
   return `עוד ${remaining} יח׳ ותקבלו ${PUZZLE_MAT_BULK_PRICE} ₪ ליחידה במקום ${PUZZLE_MAT_UNIT_PRICE} ₪ (כ-${getPuzzleMatSavingsPercent()}% הנחה).`;
 }
 
-export const PUZZLE_MAT_DEAL_HEADLINE = `מ-${PUZZLE_MAT_BULK_THRESHOLD} יחידות — רק ${PUZZLE_MAT_BULK_PRICE} ₪ ליחידה`;
+export const PUZZLE_MAT_DEAL_HEADLINE = `מ-${PUZZLE_MAT_BULK_THRESHOLD} יחידות - רק ${PUZZLE_MAT_BULK_PRICE} ₪ ליחידה`;
 
 export const PUZZLE_MAT_DEAL_BANNER =
   `דיל כמות חזק: מחיר רגיל ${PUZZLE_MAT_UNIT_PRICE} ₪ ליחידה. ` +
-  `ברכישת ${PUZZLE_MAT_BULK_THRESHOLD} יחידות ומעלה — המחיר יורד ל-${PUZZLE_MAT_BULK_PRICE} ₪ ליחידה ` +
-  `(כ-${getPuzzleMatSavingsPercent()}% הנחה על כל יחידה). ככל שמזמינים יותר — חוסכים יותר.`;
+  `ברכישת ${PUZZLE_MAT_BULK_THRESHOLD} יחידות ומעלה - המחיר יורד ל-${PUZZLE_MAT_BULK_PRICE} ₪ ליחידה ` +
+  `(כ-${getPuzzleMatSavingsPercent()}% הנחה על כל יחידה). ככל שמזמינים יותר - חוסכים יותר.`;
 
 export const PUZZLE_MAT_DEAL_BADGE = QUANTITY_DEAL_BADGE;
 
@@ -76,7 +76,7 @@ export type HurdleHeightVariant = {
   price: number;
 };
 
-/** Strong plastic hurdles — purchase options by height. */
+/** Strong plastic hurdles - purchase options by height. */
 export const HURDLE_HEIGHT_VARIANTS: HurdleHeightVariant[] = [
   { id: "training-hurdle-23", heightCm: 23, price: 25 },
   { id: "training-hurdle-30", heightCm: 30, price: 35 },
@@ -122,15 +122,15 @@ function buildHurdleDefinition(variant: HurdleHeightVariant): TrainingAccessoryD
   const heightLabel = `${variant.heightCm} ס״מ`;
   return {
     id: variant.id,
-    title: `${HURDLE_PRODUCT_TITLE} — ${heightLabel}`,
+    title: `${HURDLE_PRODUCT_TITLE} - ${heightLabel}`,
     subcategoryLabel: `משוכה ${heightLabel}`,
     price: variant.price,
     img: hurdlesOrangeImg,
     images: [hurdlesOrangeImg],
     introTitle: `${HURDLE_PRODUCT_TITLE} בגובה ${heightLabel}`,
     introParagraphs: [
-      `${HURDLE_PRODUCT_TITLE} לאימוני זריזות, קואורדינציה ומסלולי ריצה — צבע ${HURDLE_COLOR}.`,
-      `גובה ${heightLabel} · ${variant.price} ₪ ליחידה. אפשרויות נוספות: 23 ס״מ — 25 ₪ · 30 ס״מ — 35 ₪ · 40 ס״מ — 45 ₪.`,
+      `${HURDLE_PRODUCT_TITLE} לאימוני זריזות, קואורדינציה ומסלולי ריצה - צבע ${HURDLE_COLOR}.`,
+      `גובה ${heightLabel} · ${variant.price} ₪ ליחידה. אפשרויות נוספות: 23 ס״מ - 25 ₪ · 30 ס״מ - 35 ₪ · 40 ס״מ - 45 ₪.`,
     ],
     featuresTitle: "למה לבחור במשוכות האלה?",
     features: [
@@ -140,7 +140,7 @@ function buildHurdleDefinition(variant: HurdleHeightVariant): TrainingAccessoryD
       },
       {
         title: "בחירת גובה",
-        description: "שלוש אפשרויות רכישה — 23, 30 ו-40 ס״מ — לפי רמת האימון.",
+        description: "שלוש אפשרויות רכישה - 23, 30 ו-40 ס״מ - לפי רמת האימון.",
       },
       {
         title: "קל לפריסה",
@@ -156,21 +156,21 @@ function buildHurdleDefinition(variant: HurdleHeightVariant): TrainingAccessoryD
       { label: "30 ס״מ", value: "35 ₪ ליחידה" },
       { label: "40 ס״מ", value: "45 ₪ ליחידה" },
     ],
-    ctaText: `הזמינו ${HURDLE_PRODUCT_TITLE} בגובה ${heightLabel} — ובנו מסלול זריזות מדויק!`,
-    seoDescription: `${HURDLE_PRODUCT_TITLE} בגובה ${heightLabel} — ${variant.price} ₪ ליחידה. צבע ${HURDLE_COLOR}. אביזרי אימון ב-CHOLE sport.`,
+    ctaText: `הזמינו ${HURDLE_PRODUCT_TITLE} בגובה ${heightLabel} - ובנו מסלול זריזות מדויק!`,
+    seoDescription: `${HURDLE_PRODUCT_TITLE} בגובה ${heightLabel} - ${variant.price} ₪ ליחידה. צבע ${HURDLE_COLOR}. אביזרי אימון ב-CHOLE sport.`,
   };
 }
 
 export const TRAINING_ACCESSORIES_PRODUCTS: TrainingAccessoryDefinition[] = [
   {
     id: "training-puzzle-mat-blue-red",
-    title: "מזרן פאזל 4 ס״מ — כחול אדום",
+    title: "מזרן פאזל 4 ס״מ - כחול אדום",
     subcategoryLabel: "מזרן פאזל כחול אדום",
     price: PUZZLE_MAT_UNIT_PRICE,
     badge: PUZZLE_MAT_DEAL_BADGE,
-    introTitle: "מזרן פאזל מקצועי בעובי 4 ס״מ — כחול ואדום",
+    introTitle: "מזרן פאזל מקצועי בעובי 4 ס״מ - כחול ואדום",
     introParagraphs: [
-      "מזרן פאזל בעובי 4 ס״מ בצבעי כחול ואדום — משטח אימון מודולרי שמתחבר בקלות ליצירת רצפה בטוחה באולם, בחדר כושר או בבית.",
+      "מזרן פאזל בעובי 4 ס״מ בצבעי כחול ואדום - משטח אימון מודולרי שמתחבר בקלות ליצירת רצפה בטוחה באולם, בחדר כושר או בבית.",
       puzzleMatPricingCopy(),
     ],
     featuresTitle: "למה לבחור במזרן הפאזל?",
@@ -185,28 +185,28 @@ export const TRAINING_ACCESSORIES_PRODUCTS: TrainingAccessoryDefinition[] = [
       },
       {
         title: "צבעים בולטים",
-        description: "כחול ואדום — מראה אנרגטי וזיהוי קל באולם.",
+        description: "כחול ואדום - מראה אנרגטי וזיהוי קל באולם.",
       },
       {
         title: PUZZLE_MAT_DEAL_HEADLINE,
-        description: `מחיר רגיל ${PUZZLE_MAT_UNIT_PRICE} ₪ ליחידה. מ-${PUZZLE_MAT_BULK_THRESHOLD} יח׳ — רק ${PUZZLE_MAT_BULK_PRICE} ₪ ליחידה (כ-${getPuzzleMatSavingsPercent()}% הנחה). משתלם במיוחד לאולמות ולחוגים.`,
+        description: `מחיר רגיל ${PUZZLE_MAT_UNIT_PRICE} ₪ ליחידה. מ-${PUZZLE_MAT_BULK_THRESHOLD} יח׳ - רק ${PUZZLE_MAT_BULK_PRICE} ₪ ליחידה (כ-${getPuzzleMatSavingsPercent()}% הנחה). משתלם במיוחד לאולמות ולחוגים.`,
       },
     ],
     specs: [...puzzleMatSpecs(), { label: "צבע", value: "כחול / אדום" }, { label: "סוג", value: "מזרן פאזל מודולרי" }],
-    ctaText: `הזמינו מ-${PUZZLE_MAT_BULK_THRESHOLD} יח׳ וחסכו — מזרני פאזל כחול-אדום במחיר דיל!`,
-    seoDescription: `מזרן פאזל 4 ס"מ כחול אדום — ${PUZZLE_MAT_UNIT_PRICE} ₪ ליחידה, מ-${PUZZLE_MAT_BULK_THRESHOLD} יח׳ רק ${PUZZLE_MAT_BULK_PRICE} ₪. אביזרי אימון ב-CHOLE sport.`,
+    ctaText: `הזמינו מ-${PUZZLE_MAT_BULK_THRESHOLD} יח׳ וחסכו - מזרני פאזל כחול-אדום במחיר דיל!`,
+    seoDescription: `מזרן פאזל 4 ס"מ כחול אדום - ${PUZZLE_MAT_UNIT_PRICE} ₪ ליחידה, מ-${PUZZLE_MAT_BULK_THRESHOLD} יח׳ רק ${PUZZLE_MAT_BULK_PRICE} ₪. אביזרי אימון ב-CHOLE sport.`,
   },
   {
     id: "training-puzzle-mat-grey-black",
-    title: "מזרן פאזל 4 ס״מ — אפור שחור",
+    title: "מזרן פאזל 4 ס״מ - אפור שחור",
     subcategoryLabel: "מזרן פאזל אפור שחור",
     price: PUZZLE_MAT_UNIT_PRICE,
     img: puzzleGreyBlackImg,
     images: [puzzleGreyBlackImg, puzzleGreyBlackAltImg],
     badge: PUZZLE_MAT_DEAL_BADGE,
-    introTitle: "מזרן פאזל מקצועי בעובי 4 ס״מ — אפור ושחור",
+    introTitle: "מזרן פאזל מקצועי בעובי 4 ס״מ - אפור ושחור",
     introParagraphs: [
-      "מזרן פאזל בעובי 4 ס״מ בגווני אפור ושחור — מראה נקי ומודרני לחדרי כושר, סטודיו ומתחמי אימון.",
+      "מזרן פאזל בעובי 4 ס״מ בגווני אפור ושחור - מראה נקי ומודרני לחדרי כושר, סטודיו ומתחמי אימון.",
       puzzleMatPricingCopy(),
     ],
     featuresTitle: "למה לבחור במזרן הפאזל?",
@@ -221,16 +221,16 @@ export const TRAINING_ACCESSORIES_PRODUCTS: TrainingAccessoryDefinition[] = [
       },
       {
         title: "גוונים ניטרליים",
-        description: "אפור ושחור — משתלבים בכל עיצוב אולם.",
+        description: "אפור ושחור - משתלבים בכל עיצוב אולם.",
       },
       {
         title: PUZZLE_MAT_DEAL_HEADLINE,
-        description: `מחיר רגיל ${PUZZLE_MAT_UNIT_PRICE} ₪ ליחידה. מ-${PUZZLE_MAT_BULK_THRESHOLD} יח׳ — רק ${PUZZLE_MAT_BULK_PRICE} ₪ ליחידה (כ-${getPuzzleMatSavingsPercent()}% הנחה). משתלם במיוחד לאולמות ולחוגים.`,
+        description: `מחיר רגיל ${PUZZLE_MAT_UNIT_PRICE} ₪ ליחידה. מ-${PUZZLE_MAT_BULK_THRESHOLD} יח׳ - רק ${PUZZLE_MAT_BULK_PRICE} ₪ ליחידה (כ-${getPuzzleMatSavingsPercent()}% הנחה). משתלם במיוחד לאולמות ולחוגים.`,
       },
     ],
     specs: [...puzzleMatSpecs(), { label: "צבע", value: "אפור / שחור" }, { label: "סוג", value: "מזרן פאזל מודולרי" }],
-    ctaText: `הזמינו מ-${PUZZLE_MAT_BULK_THRESHOLD} יח׳ וחסכו — מזרני פאזל אפור-שחור במחיר דיל!`,
-    seoDescription: `מזרן פאזל 4 ס"מ אפור שחור — ${PUZZLE_MAT_UNIT_PRICE} ₪ ליחידה, מ-${PUZZLE_MAT_BULK_THRESHOLD} יח׳ רק ${PUZZLE_MAT_BULK_PRICE} ₪. אביזרי אימון ב-CHOLE sport.`,
+    ctaText: `הזמינו מ-${PUZZLE_MAT_BULK_THRESHOLD} יח׳ וחסכו - מזרני פאזל אפור-שחור במחיר דיל!`,
+    seoDescription: `מזרן פאזל 4 ס"מ אפור שחור - ${PUZZLE_MAT_UNIT_PRICE} ₪ ליחידה, מ-${PUZZLE_MAT_BULK_THRESHOLD} יח׳ רק ${PUZZLE_MAT_BULK_PRICE} ₪. אביזרי אימון ב-CHOLE sport.`,
   },
   {
     id: "training-plyo-soft-box",
@@ -239,16 +239,16 @@ export const TRAINING_ACCESSORIES_PRODUCTS: TrainingAccessoryDefinition[] = [
     price: 750,
     img: plyoSoftBoxImg,
     images: [plyoSoftBoxImg],
-    introTitle: "קוביה פליאומטרית רכה — 3 גבהים בקוביה אחת",
+    introTitle: "קוביה פליאומטרית רכה - 3 גבהים בקוביה אחת",
     introParagraphs: [
-      "קוביה פליאומטרית רכה מונעת החלקה לאימוני קפיצה, כוח וזריזות — עם סימון גבהים מובנה לשימוש בטוח ומגוון.",
-      'מידות 76×50×60 ס״מ — קוביה אחת לשלושה כיווני עבודה, מתאימה לבית, לסטודיו ולמתנ"ס.',
+      "קוביה פליאומטרית רכה מונעת החלקה לאימוני קפיצה, כוח וזריזות - עם סימון גבהים מובנה לשימוש בטוח ומגוון.",
+      'מידות 76×50×60 ס״מ - קוביה אחת לשלושה כיווני עבודה, מתאימה לבית, לסטודיו ולמתנ"ס.',
     ],
     featuresTitle: "למה לבחור בקוביה הרכה?",
     features: [
       {
         title: "מבנה רך ובטיחותי",
-        description: "פחות עומס על מפרקים בהשוואה לקוביות קשיחות — אידיאלי לאימון יומיומי.",
+        description: "פחות עומס על מפרקים בהשוואה לקוביות קשיחות - אידיאלי לאימון יומיומי.",
       },
       {
         title: "מונעת החלקה",
@@ -260,7 +260,7 @@ export const TRAINING_ACCESSORIES_PRODUCTS: TrainingAccessoryDefinition[] = [
       },
       {
         title: "מידות מקצועיות",
-        description: '76×50×60 ס"מ — נוחה לאחסון ולעבודה באולמות קטנים וגדולים.',
+        description: '76×50×60 ס"מ - נוחה לאחסון ולעבודה באולמות קטנים וגדולים.',
       },
     ],
     specs: [
@@ -268,8 +268,8 @@ export const TRAINING_ACCESSORIES_PRODUCTS: TrainingAccessoryDefinition[] = [
       { label: "סוג", value: "קוביה פליאומטרית רכה (soft plyo)" },
       { label: "תכונה", value: "מונעת החלקה · 3 גבהים" },
     ],
-    ctaText: "שדרגו את אימוני הקפיצה — הזמינו את הקוביה הפליאומטרית הרכה!",
-    seoDescription: 'קוביה פליאומטרית רכה מונעת החלקה 76×50×60 ס"מ — 3 גבהים בקוביה אחת. מחיר: 750 ₪.',
+    ctaText: "שדרגו את אימוני הקפיצה - הזמינו את הקוביה הפליאומטרית הרכה!",
+    seoDescription: 'קוביה פליאומטרית רכה מונעת החלקה 76×50×60 ס"מ - 3 גבהים בקוביה אחת. מחיר: 750 ₪.',
   },
   {
     id: "training-plyo-boxes-4pc",
@@ -278,16 +278,16 @@ export const TRAINING_ACCESSORIES_PRODUCTS: TrainingAccessoryDefinition[] = [
     price: 2250,
     img: plyoBoxes4pcImg,
     images: [plyoBoxes4pcImg],
-    introTitle: "סט 4 קוביות פליאומטריות — מגוון גבהים לאימון מתקדם",
+    introTitle: "סט 4 קוביות פליאומטריות - מגוון גבהים לאימון מתקדם",
     introParagraphs: [
-      "סט של 4 קוביות פליאומטריות בצבעים וגבהים שונים — ירוק, תכלת, אדום ושחור — למגוון רחב של תרגילי קפיצה, מדרגות וכוח.",
+      "סט של 4 קוביות פליאומטריות בצבעים וגבהים שונים - ירוק, תכלת, אדום ושחור - למגוון רחב של תרגילי קפיצה, מדרגות וכוח.",
       'רוחב 75 ס״מ · אורך 90 ס״מ · גבהים: 15 / 30 / 45 / 60 ס״מ. ניתן לרכוש במשקל של 40/60 ק"ג.',
     ],
     featuresTitle: "למה לבחור בסט הקוביות?",
     features: [
       {
         title: "4 גבהים בסט אחד",
-        description: '15, 30, 45 ו-60 ס"מ — התקדמות הדרגתית לכל רמה.',
+        description: '15, 30, 45 ו-60 ס"מ - התקדמות הדרגתית לכל רמה.',
       },
       {
         title: "מגוון שימושים",
@@ -295,11 +295,11 @@ export const TRAINING_ACCESSORIES_PRODUCTS: TrainingAccessoryDefinition[] = [
       },
       {
         title: "מידות אחידות לרוחב ולאורך",
-        description: 'רוחב 75 ס"מ ואורך 90 ס"מ — יציבות ונוחות בעמידה ובקפיצה.',
+        description: 'רוחב 75 ס"מ ואורך 90 ס"מ - יציבות ונוחות בעמידה ובקפיצה.',
       },
       {
         title: "בחירת משקל",
-        description: 'זמין במשקל 40 או 60 ק"ג — לפי הצורך באימון ובמתקן.',
+        description: 'זמין במשקל 40 או 60 ק"ג - לפי הצורך באימון ובמתקן.',
       },
     ],
     specs: [
@@ -312,8 +312,8 @@ export const TRAINING_ACCESSORIES_PRODUCTS: TrainingAccessoryDefinition[] = [
       { label: "גובה שחורה", value: '60 ס"מ' },
       { label: "משקל זמין", value: '40 / 60 ק"ג' },
     ],
-    ctaText: "השלימו תחנת פליו מלאה — הזמינו את סט 4 הקוביות עכשיו!",
-    seoDescription: 'סט 4 קוביות פליאומטריות בגבהים 15–60 ס"מ — רוחב 75 ואורך 90. מחיר: 2,250 ₪.',
+    ctaText: "השלימו תחנת פליו מלאה - הזמינו את סט 4 הקוביות עכשיו!",
+    seoDescription: 'סט 4 קוביות פליאומטריות בגבהים 15-60 ס"מ - רוחב 75 ואורך 90. מחיר: 2,250 ₪.',
   },
   {
     id: "training-bosu-ball",
@@ -322,8 +322,8 @@ export const TRAINING_ACCESSORIES_PRODUCTS: TrainingAccessoryDefinition[] = [
     price: 220,
     introTitle: "כדור בוסו לאימון שיווי משקל וליבה",
     introParagraphs: [
-      "כדור בוסו מקצועי לאימוני שיווי משקל, ליבה, שיקום וכוח פונקציונלי — עם ידיות התנגדות לתרגול מגוון.",
-      "קוטר 59 ס״מ — מתאים לבית, לסטודיו ולחדרי כושר.",
+      "כדור בוסו מקצועי לאימוני שיווי משקל, ליבה, שיקום וכוח פונקציונלי - עם ידיות התנגדות לתרגול מגוון.",
+      "קוטר 59 ס״מ - מתאים לבית, לסטודיו ולחדרי כושר.",
     ],
     featuresTitle: "למה לבחור בכדור הבוסו?",
     features: [
@@ -345,8 +345,8 @@ export const TRAINING_ACCESSORIES_PRODUCTS: TrainingAccessoryDefinition[] = [
       { label: "סוג", value: "כדור בוסו / מאמן שיווי משקל" },
       { label: "תוספת", value: "ידיות התנגדות" },
     ],
-    ctaText: "חזקו שיווי משקל וליבה — הזמינו כדור בוסו עכשיו!",
-    seoDescription: 'כדור בוסו בקוטר 59 ס"מ עם ידיות התנגדות — אימון שיווי משקל וליבה. מחיר: 220 ₪.',
+    ctaText: "חזקו שיווי משקל וליבה - הזמינו כדור בוסו עכשיו!",
+    seoDescription: 'כדור בוסו בקוטר 59 ס"מ עם ידיות התנגדות - אימון שיווי משקל וליבה. מחיר: 220 ₪.',
   },
   ...HURDLE_HEIGHT_VARIANTS.map(buildHurdleDefinition),
   {
@@ -356,16 +356,16 @@ export const TRAINING_ACCESSORIES_PRODUCTS: TrainingAccessoryDefinition[] = [
     price: 50,
     img: balancePitaImg,
     images: [balancePitaImg],
-    introTitle: "פיתה לשיווי משקל — בחירת צבע",
+    introTitle: "פיתה לשיווי משקל - בחירת צבע",
     introParagraphs: [
-      `פיתה (דיסקית) לשיווי משקל — אפשרות בחירה בין ארבעה צבעים: ${BALANCE_PITA_COLORS.join(", ")}.`,
-      "מחיר: 50 ₪ ליחידה. מתאימה לבית, לחוגים ולחדרי כושר — ציינו את הצבע הרצוי בהזמנה בוואטסאפ.",
+      `פיתה (דיסקית) לשיווי משקל - אפשרות בחירה בין ארבעה צבעים: ${BALANCE_PITA_COLORS.join(", ")}.`,
+      "מחיר: 50 ₪ ליחידה. מתאימה לבית, לחוגים ולחדרי כושר - ציינו את הצבע הרצוי בהזמנה בוואטסאפ.",
     ],
     featuresTitle: "למה לבחור בפיתה?",
     features: [
       {
         title: "בחירת צבע",
-        description: `${BALANCE_PITA_COLORS.join(" · ")} — בחרו את הצבע שמתאים לכם.`,
+        description: `${BALANCE_PITA_COLORS.join(" · ")} - בחרו את הצבע שמתאים לכם.`,
       },
       {
         title: "אימון שיווי משקל",
@@ -373,7 +373,7 @@ export const TRAINING_ACCESSORIES_PRODUCTS: TrainingAccessoryDefinition[] = [
       },
       {
         title: "מחיר נוח ליחידה",
-        description: "50 ₪ ליחידה — קל להרכיב סט מלא לאולם.",
+        description: "50 ₪ ליחידה - קל להרכיב סט מלא לאולם.",
       },
     ],
     specs: [
@@ -381,8 +381,8 @@ export const TRAINING_ACCESSORIES_PRODUCTS: TrainingAccessoryDefinition[] = [
       { label: "מחיר", value: "50 ₪ ליחידה" },
       { label: "שימוש", value: "שיווי משקל, יציבות ומוטוריקה" },
     ],
-    ctaText: "השלימו תחנת שיווי משקל — בחרו צבע והזמינו פיתה!",
-    seoDescription: `פיתה לשיווי משקל בצבעים ${BALANCE_PITA_COLORS.join(", ")} — 50 ₪ ליחידה. אביזרי אימון ב-CHOLE sport.`,
+    ctaText: "השלימו תחנת שיווי משקל - בחרו צבע והזמינו פיתה!",
+    seoDescription: `פיתה לשיווי משקל בצבעים ${BALANCE_PITA_COLORS.join(", ")} - 50 ₪ ליחידה. אביזרי אימון ב-CHOLE sport.`,
   },
 ];
 
@@ -433,7 +433,7 @@ export function getTrainingAccessoryProductIds(): string[] {
   return TRAINING_ACCESSORIES_PRODUCTS.map((p) => p.id);
 }
 
-/** Category / nav chips — one entry for hurdles, then height picker on PDP. */
+/** Category / nav chips - one entry for hurdles, then height picker on PDP. */
 export function getTrainingAccessoryNavProducts(): TrainingAccessoryDefinition[] {
   const result: TrainingAccessoryDefinition[] = [];
   let hurdleAdded = false;
@@ -482,7 +482,7 @@ export function buildTrainingAccessoryProductExtra(
     ],
     warrantyTitle: "אחריות מלאה לאביזרי האימון שלכם:",
     warrantyText:
-      "12 חודשי אחריות על פגמי ייצור מבית CHOLE sport. אנחנו כאן לכל שאלה — לפני, במהלך ואחרי הקנייה.",
+      "12 חודשי אחריות על פגמי ייצור מבית CHOLE sport. אנחנו כאן לכל שאלה - לפני, במהלך ואחרי הקנייה.",
     audienceTitle: "למי המוצר מתאים?",
     audience: TRAINING_ACCESSORIES_AUDIENCE,
     ctaText: definition.ctaText,

@@ -47,7 +47,7 @@ export function Header() {
             <Link
               to="/cart"
               className="relative text-foreground hover:text-accent transition"
-              aria-label={`עגלת קניות — ${totalQuantity} פריטים`}
+              aria-label={`עגלת קניות - ${totalQuantity} פריטים`}
             >
               <ShoppingCart size={21} />
               {totalQuantity > 0 && (

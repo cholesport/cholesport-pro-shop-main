@@ -13,7 +13,7 @@ import { buildPageSeoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/")({
   head: () => {
-    const title = `${BRAND_NAME} | ${SITE_HOST} — ${BRAND_HERO_HEADLINE}`;
+    const title = `${BRAND_NAME} | ${SITE_HOST} - ${BRAND_HERO_HEADLINE}`;
     const seo = buildPageSeoHead({
       title,
       description: SITE_SEO_DESCRIPTION,

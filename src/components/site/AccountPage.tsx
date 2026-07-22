@@ -402,7 +402,7 @@ function Dashboard({
               <h2 className="text-2xl font-black text-foreground">שלום, {profile.firstName}</h2>
               <p className="text-muted-foreground mt-1">
                 {profile.isNew
-                  ? "החשבון שלכם מוכן — אפשר להתחיל לקנות מאפס"
+                  ? "החשבון שלכם מוכן - אפשר להתחיל לקנות מאפס"
                   : "ברוכים השבים ל-CHOLE sport"}
               </p>
             </div>
@@ -436,7 +436,7 @@ function Dashboard({
               ) : (
                 <EmptyState
                   title="עדיין אין הזמנות"
-                  text="החשבון ריק ומוכן — ברגע שתשלחו הזמנה היא תופיע כאן."
+                  text="החשבון ריק ומוכן - ברגע שתשלחו הזמנה היא תופיע כאן."
                 />
               )}
             </div>
@@ -641,12 +641,12 @@ export function AccountPage() {
           console.error(error);
           toast.message("החשבון נוצר", {
             description:
-              "לא הצלחנו לשלוח את התראת המייל כרגע — נסו שוב מאוחר יותר אם צריך.",
+              "לא הצלחנו לשלוח את התראת המייל כרגע - נסו שוב מאוחר יותר אם צריך.",
           });
         }
 
         toast.success("החשבון נוצר בהצלחה", {
-          description: "התחלתם מדף נקי — בלי הזמנות או כתובות קודמות.",
+          description: "התחלתם מדף נקי - בלי הזמנות או כתובות קודמות.",
         });
       }
 

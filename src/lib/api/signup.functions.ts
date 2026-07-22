@@ -32,7 +32,7 @@ export const notifyNewCustomerSignup = createServerFn({ method: "POST" })
         Accept: "application/json",
       },
       body: JSON.stringify({
-        _subject: `לקוח חדש ב-CHOLE sport — ${fullName}`,
+        _subject: `לקוח חדש ב-CHOLE sport - ${fullName}`,
         _template: "table",
         _captcha: "false",
         name: fullName,

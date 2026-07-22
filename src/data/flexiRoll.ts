@@ -49,7 +49,7 @@ export function formatFlexiRollDimensionsSpec(
 }
 
 export function getFlexiRollTitle(v: FlexiRollVariant) {
-  return `פלקסי רול (Flexi Roll) מקצועי — ${formatFlexiRollSizeSlash(v)} מטר`;
+  return `פלקסי רול (Flexi Roll) מקצועי - ${formatFlexiRollSizeSlash(v)} מטר`;
 }
 
 export function getFlexiRollSeoTitle(v: FlexiRollVariant) {
@@ -61,7 +61,7 @@ export function getFlexiRollSeoDescription(v: FlexiRollVariant) {
     `פלקסי רול מקצועי ${formatFlexiRollSizeSlash(v)} מטר מ-LEVITATE. ` +
     `משטח אימון גמיש ומתקפל לאימוני התעמלות, אקרובטיקה ונינג'ה. ` +
     `מחיר: ${v.price.toLocaleString("he-IL")} ₪ ליחידה. ` +
-    `ברכישת יותר מיחידה אחת — 10% הנחה.`
+    `ברכישת יותר מיחידה אחת - 10% הנחה.`
   );
 }
 
@@ -81,7 +81,7 @@ export function isFlexiRollProductId(productId: string) {
 export const FLEXI_ROLL_MULTI_UNIT_DISCOUNT = 0.1;
 
 export const FLEXI_ROLL_MULTI_DEAL_COPY =
-  "ברכישת יותר מיחידה אחת של פלקסי רול — 10% הנחה אוטומטית על כל יחידה.";
+  "ברכישת יותר מיחידה אחת של פלקסי רול - 10% הנחה אוטומטית על כל יחידה.";
 
 export function getFlexiRollCatalogPrice(productId: string): number | undefined {
   return getFlexiRollVariantById(productId)?.price;
@@ -104,7 +104,7 @@ export function getFlexiRollDealLabel(flexiRollTotalQty: number) {
 }
 
 const FLEXI_ROLL_INTRO =
-  "פלקסי רול (Flexi Roll) הוא משטח אימון מקצועי גמיש ומתקפל — נוח לפריסה, לאחסון ולהעברה. מתאים לחוגים, מתנ\"סים ואולמות אימון שצריכים משטח ארוך ואיכותי בלי לוותר על נוחות השימוש.";
+  "פלקסי רול (Flexi Roll) הוא משטח אימון מקצועי גמיש ומתקפל - נוח לפריסה, לאחסון ולהעברה. מתאים לחוגים, מתנ\"סים ואולמות אימון שצריכים משטח ארוך ואיכותי בלי לוותר על נוחות השימוש.";
 
 const FLEXI_ROLL_FEATURES: ProductFeature[] = [
   { title: "מידות", description: "" },
@@ -114,11 +114,11 @@ const FLEXI_ROLL_FEATURES: ProductFeature[] = [
   },
   {
     title: "משטח ארוך לאימון",
-    description: "אורך 12 מטר — מרחב עבודה רציף לתרגילים, גלישות ומסלולי אימון.",
+    description: "אורך 12 מטר - מרחב עבודה רציף לתרגילים, גלישות ומסלולי אימון.",
   },
   {
     title: "שתי אפשרויות מידה",
-    description: "12/2/0.2 או 12/1.5/0.4 — בחרו את השילוב שמתאים לחלל ולסוג האימון.",
+    description: "12/2/0.2 או 12/1.5/0.4 - בחרו את השילוב שמתאים לחלל ולסוג האימון.",
   },
   {
     title: "הנחת כמות",
@@ -175,7 +175,7 @@ export function buildFlexiRollProductExtra(
     introParagraphs: [
       FLEXI_ROLL_INTRO,
       FLEXI_ROLL_MULTI_DEAL_COPY,
-      `המידה שבחרתם: ${sizeSlash} מטר — ${variant.price.toLocaleString("he-IL")} ₪ ליחידה. ניתן לעבור בין המידות בסרגל למעלה.`,
+      `המידה שבחרתם: ${sizeSlash} מטר - ${variant.price.toLocaleString("he-IL")} ₪ ליחידה. ניתן לעבור בין המידות בסרגל למעלה.`,
     ],
     featuresTitle: "למה לבחור בפלקסי רול?",
     features,
@@ -185,7 +185,7 @@ export function buildFlexiRollProductExtra(
     warrantyText: "12 חודשי אחריות על פגמי ייצור.",
     audienceTitle: "למי הפלקסי רול מתאים?",
     audience: FLEXI_ROLL_AUDIENCE,
-    ctaText: `הזמינו פלקסי רול ${sizeSlash} מטר — משטח אימון מקצועי ונוח לשימוש!`,
+    ctaText: `הזמינו פלקסי רול ${sizeSlash} מטר - משטח אימון מקצועי ונוח לשימוש!`,
     badge: QUANTITY_DEAL_BADGE,
     stockNote: LAST_UNITS_STOCK_NOTE,
     relatedIds: allIds.filter((id) => id !== variant.id),

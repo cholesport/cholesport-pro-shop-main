@@ -7,7 +7,7 @@ import { buildPageSeoHead } from "@/lib/seo";
 export const Route = createFileRoute("/checkout")({
   head: () => {
     const seo = buildPageSeoHead({
-      title: "השלמת רכישה — CHOLE sport",
+      title: "השלמת רכישה - CHOLE sport",
       description: "השלימו את הרכישה שלכם ב-CHOLE sport.",
       path: "/checkout",
       noIndex: true,

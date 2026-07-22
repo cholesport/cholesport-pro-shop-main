@@ -2,11 +2,11 @@
  * Site-wide fade / motion timings.
  * Tweak values here to tune each zone without hunting through components.
  *
- * duration — fade length in ms
- * delay — base delay before the zone starts
- * stagger — extra delay between sibling items (ms × index)
- * y — subtle upward drift in px (0 = pure fade)
- * ease — CSS easing
+ * duration - fade length in ms
+ * delay - base delay before the zone starts
+ * stagger - extra delay between sibling items (ms × index)
+ * y - subtle upward drift in px (0 = pure fade)
+ * ease - CSS easing
  */
 
 export type FadePresetName =

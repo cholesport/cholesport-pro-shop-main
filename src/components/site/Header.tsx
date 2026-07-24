@@ -14,8 +14,8 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/80 bg-background/90 backdrop-blur-md">
-      <div className="max-w-7xl mx-auto px-4">
-        {/* Top bar: logo · search · actions */}
+      <div className="relative max-w-7xl mx-auto px-4">
+        {/* Top bar: logo · actions (search icon like Bash Gal) */}
         <div className="flex items-center gap-3 md:gap-4 py-3 md:py-3.5">
           <a href="/" className="shrink-0">
             <img
@@ -25,11 +25,7 @@ export function Header() {
             />
           </a>
 
-          <div className="hidden md:block flex-1 min-w-0 max-w-xl ms-auto">
-            <HeaderSearchBar id="header-search-desktop" />
-          </div>
-
-          <div className="flex items-center gap-3 shrink-0 ms-auto md:ms-0">
+          <div className="flex items-center gap-3 sm:gap-4 shrink-0 ms-auto">
             <a
               href={`tel:${CONTACT_PHONE_DISPLAY.replace(/-/g, "")}`}
               className="hidden xl:inline text-xs font-medium text-muted-foreground hover:text-accent transition"
@@ -37,16 +33,17 @@ export function Header() {
             >
               {CONTACT_PHONE_DISPLAY}
             </a>
+            <HeaderSearchBar id="header-search" />
             <Link
               to="/account"
-              className="hidden sm:flex text-foreground hover:text-accent transition"
+              className="hidden sm:flex text-foreground hover:text-sky-600 transition"
               aria-label="החשבון שלי"
             >
               <User size={20} />
             </Link>
             <Link
               to="/cart"
-              className="relative text-foreground hover:text-accent transition"
+              className="relative text-foreground hover:text-sky-600 transition"
               aria-label={`עגלת קניות - ${totalQuantity} פריטים`}
             >
               <ShoppingCart size={21} />
@@ -67,7 +64,7 @@ export function Header() {
           </div>
         </div>
 
-        {/* Desktop nav: own row so long Hebrew labels don’t fight the search */}
+        {/* Desktop nav */}
         <nav className="hidden lg:block border-t border-border/60">
           <ul
             className="flex items-center justify-between gap-1 py-1.5"
@@ -130,10 +127,6 @@ export function Header() {
             })}
           </ul>
         </nav>
-
-        <div className="md:hidden pb-3">
-          <HeaderSearchBar id="header-search-mobile" />
-        </div>
       </div>
 
       {mobile && (

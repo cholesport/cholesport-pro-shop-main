@@ -3,6 +3,7 @@ import {
   formatLandingMatDimensions,
   LANDING_MAT_VARIANTS,
 } from "@/data/landingMats";
+import { OUT_OF_STOCK_NOTE } from "@/lib/productLabels";
 import { CustomMatSizeNotice } from "@/components/site/CustomMatSizeNotice";
 
 type LandingMatSizeBarProps = {
@@ -26,6 +27,7 @@ export function LandingMatSizeBar({ currentProductId }: LandingMatSizeBarProps) 
         {LANDING_MAT_VARIANTS.map((variant) => {
           const isCurrent = variant.id === currentProductId;
           const label = formatLandingMatDimensions(variant);
+          const outOfStock = Boolean(variant.outOfStock);
 
           return (
             <Link
@@ -36,12 +38,17 @@ export function LandingMatSizeBar({ currentProductId }: LandingMatSizeBarProps) 
               className={`px-4 py-2 text-sm font-medium transition ${
                 isCurrent
                   ? "bg-accent text-accent-foreground"
-                  : "bg-secondary text-foreground hover:bg-accent/10 hover:text-accent"
+                  : outOfStock
+                    ? "bg-secondary/70 text-muted-foreground hover:bg-secondary"
+                    : "bg-secondary text-foreground hover:bg-accent/10 hover:text-accent"
               }`}
             >
               <span dir="ltr" className="unicode-bidi-plaintext inline-block">
                 {label}
               </span>
+              {outOfStock && (
+                <span className="ms-2 text-[11px] font-bold">{OUT_OF_STOCK_NOTE}</span>
+              )}
             </Link>
           );
         })}

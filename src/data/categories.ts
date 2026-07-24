@@ -5,7 +5,7 @@ import proGameTablesIcon from "@/assets/pro-game-tables-icon.png";
 import airfloorMatsIcon from "@/assets/airfloor-mats-icon.png";
 import landingMatsIcon from "@/assets/landing-mats-icon.png";
 import showRoomIcon from "@/assets/show-room-icon.png";
-import { LANDING_MAT_VARIANTS } from "@/data/landingMats";
+import { formatLandingMatDimensions, LANDING_MAT_VARIANTS } from "@/data/landingMats";
 import { AIRFLOOR_MAT_VARIANTS } from "@/data/airfloorMats";
 import {
   FLEXI_ROLL_CATEGORY,
@@ -114,14 +114,8 @@ export const CATEGORIES: CategoryDefinition[] = [
     slug: "landing-mats",
     name: "מזרני נחיתה במידות שונות",
     description:
-      "מזרני נחיתה מחומר שמשונית עבה - פתחי אוורור אדומים לשינוע, ידיות חזקות מלפנים ומאחור, ו-5 גדלים במלאי. ניתן להזמין גם בגודל מיוחד.",
-    subcategories: [
-      "250×120×20 ס\"מ",
-      "250×120×30 ס\"מ",
-      "250×150×20 ס\"מ",
-      "250×150×30 ס\"מ",
-      "250×200×30 ס\"מ",
-    ],
+      "מזרני נחיתה מחומר שמשונית עבה - פתחי אוורור אדומים לשינוע, ידיות חזקות מלפנים ומאחור, ו-6 גדלים בקטלוג. ניתן להזמין גם בגודל מיוחד.",
+    subcategories: LANDING_MAT_VARIANTS.map((v) => formatLandingMatDimensions(v)),
     subcategoryProductIds: LANDING_MAT_VARIANTS.map((v) => v.id),
     productCats: ["מזרני נחיתה"],
     image: landingMatsIcon,

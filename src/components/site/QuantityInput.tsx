@@ -9,6 +9,7 @@ type QuantityInputProps = {
   id?: string;
   /** Larger padding for PDP buy box */
   size?: "sm" | "md";
+  disabled?: boolean;
 };
 
 function clampQuantity(raw: number, min: number, max: number) {
@@ -24,6 +25,7 @@ export function QuantityInput({
   max = 9999,
   id,
   size = "md",
+  disabled = false,
 }: QuantityInputProps) {
   const [draft, setDraft] = useState(String(value));
   const [focused, setFocused] = useState(false);
@@ -46,9 +48,14 @@ export function QuantityInput({
   }
 
   return (
-    <div className="inline-flex items-center border border-border rounded-lg">
+    <div
+      className={`inline-flex items-center border border-border rounded-lg ${
+        disabled ? "opacity-50 pointer-events-none" : ""
+      }`}
+    >
       <button
         type="button"
+        disabled={disabled}
         onClick={() => onChange(clampQuantity(value - 1, min, max))}
         className={`${btnPad} hover:bg-secondary transition`}
         aria-label="הפחת כמות"
@@ -61,6 +68,7 @@ export function QuantityInput({
         inputMode="numeric"
         pattern="[0-9]*"
         value={draft}
+        disabled={disabled}
         onFocus={() => setFocused(true)}
         onChange={(e) => setDraft(e.target.value.replace(/[^\d]/g, ""))}
         onBlur={() => {
@@ -77,6 +85,7 @@ export function QuantityInput({
       />
       <button
         type="button"
+        disabled={disabled}
         onClick={() => onChange(clampQuantity(value + 1, min, max))}
         className={`${btnPad} hover:bg-secondary transition`}
         aria-label="הוסף כמות"

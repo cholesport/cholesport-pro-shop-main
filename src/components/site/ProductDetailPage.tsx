@@ -54,7 +54,7 @@ import {
   PUZZLE_MAT_UNIT_PRICE,
 } from "@/data/trainingAccessories";
 import { getFlexiRollCartQuantity } from "@/lib/cart";
-import { isAllowedProductBadge, isAllowedStockNote } from "@/lib/productLabels";
+import { isAllowedProductBadge, isAllowedStockNote, isOutOfStockNote } from "@/lib/productLabels";
 import { hasProductImage } from "@/lib/productMedia";
 import {
   Accordion,
@@ -193,6 +193,7 @@ export function ProductDetailPage({ product }: { product: Product }) {
   const storeBrand = getStoreBrandByProductBrand(product.brand);
 
   function handleAddToCart() {
+    if (product.outOfStock) return;
     addItem(product, quantity);
     toast.success("נוסף לעגלה", {
       description: `${product.title} · כמות ${quantity}`,
@@ -223,7 +224,11 @@ export function ProductDetailPage({ product }: { product: Product }) {
             onMouseLeave={() => setIsGalleryHovered(false)}
           >
             {isAllowedStockNote(product.stockNote) && (
-              <p className="absolute top-3 start-3 z-10 max-w-[min(100%,18rem)] rounded-md bg-amber-500 px-3 py-1.5 text-xs font-bold text-white shadow-sm md:text-sm">
+              <p
+                className={`absolute top-3 start-3 z-10 max-w-[min(100%,18rem)] rounded-md px-3 py-1.5 text-xs font-bold text-white shadow-sm md:text-sm ${
+                  isOutOfStockNote(product.stockNote) ? "bg-foreground" : "bg-amber-500"
+                }`}
+              >
                 {product.stockNote}
               </p>
             )}
@@ -379,6 +384,7 @@ export function ProductDetailPage({ product }: { product: Product }) {
               value={quantity}
               onChange={setQuantity}
               size="md"
+              disabled={product.outOfStock}
             />
             {isPuzzleMat && (
               <p
@@ -397,9 +403,10 @@ export function ProductDetailPage({ product }: { product: Product }) {
 
           <Button
             onClick={handleAddToCart}
-            className="mt-6 w-full h-12 text-base font-bold rounded-none bg-foreground text-background hover:bg-foreground/90"
+            disabled={product.outOfStock}
+            className="mt-6 w-full h-12 text-base font-bold rounded-none bg-foreground text-background hover:bg-foreground/90 disabled:opacity-50"
           >
-            הוספה לסל
+            {product.outOfStock ? "אזל מהמלאי" : "הוספה לסל"}
           </Button>
 
           <div className="mt-6 flex gap-3 rounded-xl border border-border bg-secondary/50 p-4">

@@ -1,5 +1,5 @@
 import type { Product, ProductFeature, ProductSpec } from "@/data/products";
-import { LAST_UNITS_STOCK_NOTE } from "@/lib/productLabels";
+import { LAST_UNITS_STOCK_NOTE, OUT_OF_STOCK_NOTE } from "@/lib/productLabels";
 
 export const LANDING_MAT_CATEGORY = "מזרני נחיתה";
 export const LANDING_MAT_CATEGORY_SLUG = "landing-mats";
@@ -10,11 +10,13 @@ export type LandingMatVariant = {
   widthCm: number;
   thicknessCm: number;
   price: number;
+  outOfStock?: boolean;
 };
 
 /** Sizes and prices from product catalog (אורך / רוחב / עובי, cm). */
 export const LANDING_MAT_VARIANTS: LandingMatVariant[] = [
-  { id: "landing-mat-250x120x20", lengthCm: 250, widthCm: 120, thicknessCm: 20, price: 1600 },
+  { id: "landing-mat-200x120x20", lengthCm: 200, widthCm: 120, thicknessCm: 20, price: 1150 },
+  { id: "landing-mat-250x120x20", lengthCm: 250, widthCm: 120, thicknessCm: 20, price: 1600, outOfStock: true },
   { id: "landing-mat-250x120x30", lengthCm: 250, widthCm: 120, thicknessCm: 30, price: 1950 },
   { id: "landing-mat-250x150x20", lengthCm: 250, widthCm: 150, thicknessCm: 20, price: 2150 },
   { id: "landing-mat-250x150x30", lengthCm: 250, widthCm: 150, thicknessCm: 30, price: 2550 },
@@ -93,7 +95,7 @@ const LANDING_MAT_FEATURES: ProductFeature[] = [
   {
     title: "מידות במלאי + גודל מיוחד",
     description:
-      "5 גדלים זמינים בקטלוג - ממזרן קומפקטי ועד משטח רחב. צריכים מידה אחרת? ניתן להזמין מזרן נחיתה בגודל מיוחד בוואטסאפ.",
+      "6 גדלים בקטלוג - ממזרן קומפקטי ועד משטח רחב. צריכים מידה אחרת? ניתן להזמין מזרן נחיתה בגודל מיוחד בוואטסאפ.",
   },
 ];
 
@@ -264,7 +266,8 @@ export function buildLandingMatProductExtra(
     ctaText: isAirfloor
       ? "השלימו את מערכת ה-AirFloor שלכם - הזמינו עכשיו!"
       : `הזמינו מזרן נחיתה ${dims} - בטיחות ואיכות מקצועית!`,
-    stockNote: LAST_UNITS_STOCK_NOTE,
+    stockNote: variant.outOfStock ? OUT_OF_STOCK_NOTE : LAST_UNITS_STOCK_NOTE,
+    outOfStock: Boolean(variant.outOfStock),
     relatedIds: allIds.filter((id) => id !== variant.id),
   };
 

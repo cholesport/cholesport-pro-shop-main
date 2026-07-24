@@ -71,6 +71,8 @@ export type Product = {
   reviews: number;
   badge?: string;
   stockNote?: string;
+  /** When true, purchase is disabled in the storefront. */
+  outOfStock?: boolean;
   introTitle: string;
   introParagraphs: string[];
   featuresTitle: string;

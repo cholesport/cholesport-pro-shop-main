@@ -5,6 +5,7 @@ import {
   LANDING_MAT_VARIANTS,
   type LandingMatVariant,
 } from "@/data/landingMats";
+import { OUT_OF_STOCK_NOTE } from "@/lib/productLabels";
 
 type LandingMatSizesTableProps = {
   currentProductId: string;
@@ -29,7 +30,7 @@ export function LandingMatSizesTable({ currentProductId }: LandingMatSizesTableP
         טבלת מידות - מזרני נחיתה
       </h2>
       <p className="text-sm text-muted-foreground mb-5">
-        5 גדלים במלאי - ולחצו על שורה כדי לעבור למידה אחרת. צריכים מידה שלא מופיעה כאן? אפשר להזמין בגודל מיוחד.
+        6 גדלים בקטלוג - לחצו על שורה כדי לעבור למידה אחרת. צריכים מידה שלא מופיעה כאן? אפשר להזמין בגודל מיוחד.
       </p>
 
       {/* Desktop table */}
@@ -88,6 +89,7 @@ function SizeRow({
   const isCurrent = variant.id === currentProductId;
   const dims = formatLandingMatDimensionsSlash(variant);
   const shortDims = formatLandingMatDimensions(variant);
+  const outOfStock = Boolean(variant.outOfStock);
 
   if (layout === "card") {
     return (
@@ -109,9 +111,12 @@ function SizeRow({
             <p className="text-xs text-muted-foreground mt-0.5">
               <DimensionsText>{dims}</DimensionsText>
             </p>
+            {outOfStock && (
+              <p className="mt-1 text-xs font-bold text-foreground">{OUT_OF_STOCK_NOTE}</p>
+            )}
           </div>
           <div className="text-end shrink-0">
-            <p className="text-lg font-black text-foreground">
+            <p className={`text-lg font-black ${outOfStock ? "text-muted-foreground" : "text-foreground"}`}>
               <span dir="ltr" className="unicode-bidi-plaintext inline-block">
                 {formatPrice(variant.price)} ₪
               </span>
@@ -144,9 +149,12 @@ function SizeRow({
           {isCurrent && (
             <span className="ms-2 text-xs font-bold text-accent">(נבחר)</span>
           )}
+          {outOfStock && (
+            <span className="ms-2 text-xs font-bold text-foreground">{OUT_OF_STOCK_NOTE}</span>
+          )}
         </Link>
       </td>
-      <td className="px-4 py-3 font-bold text-foreground whitespace-nowrap">
+      <td className={`px-4 py-3 font-bold whitespace-nowrap ${outOfStock ? "text-muted-foreground" : "text-foreground"}`}>
         <span dir="ltr" className="unicode-bidi-plaintext inline-block">
           {formatPrice(variant.price)} ₪
         </span>

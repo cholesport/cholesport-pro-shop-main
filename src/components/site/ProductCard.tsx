@@ -5,7 +5,7 @@ import { PAYMENT_SUMMARY } from "@/data/payment";
 import { BrandMark } from "@/components/site/BrandLogos";
 import { ProductMedia } from "@/components/site/ProductMedia";
 import { getStoreBrandByProductBrand } from "@/data/brands";
-import { isAllowedProductBadge, isAllowedStockNote } from "@/lib/productLabels";
+import { isAllowedProductBadge, isAllowedStockNote, isOutOfStockNote } from "@/lib/productLabels";
 
 type ProductCardProps = {
   product: Product;
@@ -16,6 +16,7 @@ export function ProductCard({ product: p }: ProductCardProps) {
   const storeBrand = getStoreBrandByProductBrand(p.brand);
   const showBadge = isAllowedProductBadge(p.badge);
   const showStockNote = isAllowedStockNote(p.stockNote);
+  const outOfStock = isOutOfStockNote(p.stockNote) || p.outOfStock;
 
   return (
     <article className="group flex flex-col">
@@ -34,9 +35,9 @@ export function ProductCard({ product: p }: ProductCardProps) {
           )}
           {showStockNote && (
             <span
-              className={`absolute start-3 z-10 max-w-[calc(100%-1.5rem)] rounded-md bg-amber-500 px-2 py-1 text-[11px] font-bold text-white ${
-                showBadge ? "top-11" : "top-3"
-              }`}
+              className={`absolute start-3 z-10 max-w-[calc(100%-1.5rem)] rounded-md px-2 py-1 text-[11px] font-bold text-white ${
+                outOfStock ? "bg-foreground" : "bg-amber-500"
+              } ${showBadge ? "top-11" : "top-3"}`}
             >
               {p.stockNote}
             </span>

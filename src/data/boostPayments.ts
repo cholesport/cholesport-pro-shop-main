@@ -7,6 +7,7 @@ import { PAYMENT_SECURE_NOTICE, PAYMENT_SUMMARY } from "@/data/payment";
 
 export const BOOST_PRODUCT_PAYMENT_URLS: Record<string, string> = {
   "chole-pro-25": "https://1pa.co/oyqJ1z_5Sj",
+  "gymboree-climb-slide-3pc": "https://1pa.co/SNPICwUGdp",
 };
 
 export const BOOST_PAYMENT_CTA = PAYMENT_SUMMARY;

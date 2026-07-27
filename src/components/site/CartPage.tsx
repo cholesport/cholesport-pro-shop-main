@@ -1,11 +1,10 @@
 import { Link } from "@tanstack/react-router";
-import { MessageCircle, ShoppingBag, Trash2 } from "lucide-react";
+import { CreditCard, ShoppingBag, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { QuantityInput } from "@/components/site/QuantityInput";
 import { useCart } from "@/context/CartContext";
 import { formatPrice, getFlexiRollCartQuantity } from "@/lib/cart";
-import { PAYMENT_SUMMARY, PAYMENT_WHATSAPP_NOTICE } from "@/data/payment";
-import {
+import { PAYMENT_SECURE_NOTICE, PAYMENT_SUMMARY } from "@/data/payment";import {
   getPuzzleMatDealLabel,
   isPuzzleMatProductId,
   PUZZLE_MAT_UNIT_PRICE,
@@ -53,10 +52,10 @@ export function CartPage() {
       </div>
 
       <div className="mb-6 rounded-xl border border-accent/40 bg-accent/5 p-4 flex gap-3">
-        <MessageCircle className="text-accent shrink-0 mt-0.5" size={20} aria-hidden />
+        <CreditCard className="text-accent shrink-0 mt-0.5" size={20} aria-hidden />
         <p className="text-sm text-foreground leading-relaxed">
-          <span className="font-bold">{PAYMENT_WHATSAPP_NOTICE}</span> אחרי העגלה תעברו לשליחת
-          הזמנה בוואטסאפ.
+          <span className="font-bold">{PAYMENT_SECURE_NOTICE}</span> אחרי העגלה תעברו לרכישה
+          מאובטחת.
         </p>
       </div>
 
@@ -170,12 +169,12 @@ export function CartPage() {
           <span>₪{formatPrice(subtotal)}</span>
         </div>
         <p className="text-xs text-muted-foreground mb-4">
-          איסוף עצמי מהחנות ללא עלות · משלוח בתיאום בוואטסאפ · {PAYMENT_SUMMARY}
+          איסוף עצמי מהחנות ללא עלות · משלוח בתיאום · {PAYMENT_SUMMARY}
         </p>
         <Button asChild className="w-full h-12 text-base font-bold">
           <Link to="/checkout">
-            <MessageCircle size={18} />
-            המשך להזמנה בוואטסאפ
+            <CreditCard size={18} />
+            המשך ל{PAYMENT_SUMMARY}
           </Link>
         </Button>
         <Button asChild variant="outline" className="w-full h-11 mt-3 font-semibold">

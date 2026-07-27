@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { ChevronLeft, MapPin, MessageCircle, Plus, Smartphone } from "lucide-react";
+import { ChevronLeft, CreditCard, MapPin, Plus, Smartphone } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,15 +9,17 @@ import { ProductMedia } from "@/components/site/ProductMedia";
 import { useCart } from "@/context/CartContext";
 import { formatPrice } from "@/lib/cart";
 import { getCheckoutSuggestions } from "@/lib/checkout";
-import {
-  CONTACT_PHONE_DISPLAY,
-  getOrderWhatsAppUrl,
-} from "@/lib/contact";
+import { CONTACT_PHONE_DISPLAY } from "@/lib/contact";
 import { COMPANY } from "@/data/legal";
 import {
   PAYMENT_INSTALLMENTS_LABEL,
-  PAYMENT_WHATSAPP_NOTICE,
+  PAYMENT_SECURE_NOTICE,
+  PAYMENT_SUMMARY,
 } from "@/data/payment";
+import {
+  BOOST_PAYMENT_CTA,
+  getBoostPaymentUrlForCart,
+} from "@/data/boostPayments";
 import type { Product } from "@/data/products";
 
 type DeliveryMethod = "delivery" | "pickup";
@@ -54,14 +56,14 @@ function OrderSummary({
         </div>
         <div className="flex justify-between text-muted-foreground">
           <span>משלוח</span>
-          <span>{isPickup ? "איסוף עצמי" : "תיאום בוואטסאפ"}</span>
+          <span>{isPickup ? "איסוף עצמי" : "בתיאום אחרי הרכישה"}</span>
         </div>
         <div className="flex justify-between text-base font-bold text-foreground pt-2">
           <span>סה״כ מוצרים</span>
           <span>₪{formatPrice(subtotal)}</span>
         </div>
         <p className="text-xs text-muted-foreground pt-2 leading-relaxed">
-          {PAYMENT_WHATSAPP_NOTICE} {PAYMENT_INSTALLMENTS_LABEL}.
+          {PAYMENT_SECURE_NOTICE} {PAYMENT_INSTALLMENTS_LABEL}.
         </p>
       </div>
     </div>
@@ -109,11 +111,11 @@ function CheckoutSuccess() {
   return (
     <div className="max-w-lg mx-auto px-4 py-16 text-center">
       <div className="w-16 h-16 rounded-full bg-accent/10 flex items-center justify-center mx-auto mb-6">
-        <MessageCircle className="text-accent" size={28} />
+        <CreditCard className="text-accent" size={28} />
       </div>
-      <h1 className="text-2xl md:text-3xl font-black text-foreground">ההזמנה נשלחה לוואטסאפ</h1>
+      <h1 className="text-2xl md:text-3xl font-black text-foreground">עברתם לרכישה מאובטחת</h1>
       <p className="text-muted-foreground mt-3 leading-relaxed">
-        המשיכו בשיחה בוואטסאפ כדי לתאם תשלום, אספקה ופרטים נוספים. נחזור אליכם בהקדם.
+        השלימו את התשלום בדף המאובטח. לאחר הרכישה נחזור אליכם לתיאום אספקה במידת הצורך.
       </p>
       <p className="text-sm text-muted-foreground mt-4">
         מספר:{" "}
@@ -145,20 +147,7 @@ export function CheckoutPage() {
   });
 
   const suggestions = getCheckoutSuggestions(items.map((i) => i.productId));
-
-  const whatsappUrl = useMemo(
-    () =>
-      getOrderWhatsAppUrl({
-        items,
-        subtotal,
-        delivery,
-        firstName: form.firstName,
-        lastName: form.lastName,
-        phone: form.phone,
-        notes: form.notes,
-      }),
-    [items, subtotal, delivery, form],
-  );
+  const boostPaymentUrl = getBoostPaymentUrlForCart(items);
 
   useEffect(() => {
     if (items.length === 0 && !submitted) {
@@ -166,8 +155,14 @@ export function CheckoutPage() {
     }
   }, [items.length, submitted, navigate]);
 
-  function handleWhatsAppOrder() {
-    window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+  function handleSecurePayment() {
+    if (!boostPaymentUrl) {
+      toast.message("רכישה מאובטחת זמינה מעמוד המוצר", {
+        description: "חזרו לעמוד המוצר ולחצו על רכישה מאובטחת.",
+      });
+      return;
+    }
+    window.open(boostPaymentUrl, "_blank", "noopener,noreferrer");
     clearCart();
     setSubmitted(true);
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -179,6 +174,8 @@ export function CheckoutPage() {
 
   if (items.length === 0) return null;
 
+  const payLabel = `${BOOST_PAYMENT_CTA} · ₪${formatPrice(subtotal)}`;
+
   return (
     <div className="max-w-6xl mx-auto px-4 py-8 md:py-12">
       <Link
@@ -189,15 +186,17 @@ export function CheckoutPage() {
         חזרה לעגלה
       </Link>
 
-      <h1 className="text-2xl md:text-3xl font-black text-foreground mb-2">השלמת הזמנה בוואטסאפ</h1>
-      <p className="text-muted-foreground mb-6">{totalQuantity} פריטים · ללא תשלום באתר</p>
+      <h1 className="text-2xl md:text-3xl font-black text-foreground mb-2">השלמת רכישה</h1>
+      <p className="text-muted-foreground mb-6">
+        {totalQuantity} פריטים · {PAYMENT_SUMMARY}
+      </p>
 
       <div className="mb-8 rounded-xl border border-accent/40 bg-accent/5 p-4 md:p-5 flex gap-3">
-        <MessageCircle className="text-accent shrink-0 mt-0.5" size={22} aria-hidden />
+        <CreditCard className="text-accent shrink-0 mt-0.5" size={22} aria-hidden />
         <div>
-          <p className="font-bold text-foreground">{PAYMENT_WHATSAPP_NOTICE}</p>
+          <p className="font-bold text-foreground">{PAYMENT_SECURE_NOTICE}</p>
           <p className="text-sm text-muted-foreground mt-1 leading-relaxed">
-            בחרו אספקה, מלאו פרטים בקצרה ושלחו את ההזמנה בוואטסאפ - שם נשלים תשלום ותיאום.
+            לחצו על {PAYMENT_SUMMARY} כדי לעבור לדף הסליקה המאובטח. {PAYMENT_INSTALLMENTS_LABEL}.
           </p>
         </div>
       </div>
@@ -243,7 +242,7 @@ export function CheckoutPage() {
               </p>
             ) : (
               <p className="text-sm text-muted-foreground leading-relaxed">
-                עלויות משלוח וזמני אספקה נקבעים בתיאום בוואטסאפ אחרי שליחת ההזמנה.
+                עלויות משלוח וזמני אספקה יתואמו אחרי השלמת הרכישה.
               </p>
             )}
           </section>
@@ -290,18 +289,18 @@ export function CheckoutPage() {
                 value={form.notes}
                 onChange={(e) => setForm({ ...form, notes: e.target.value })}
                 className="w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-                placeholder="למשל: אגיע בשעות הערב…"
+                placeholder="למשל: אגיע בשעות הערב"
               />
             </div>
           </section>
 
           <Button
             type="button"
-            onClick={handleWhatsAppOrder}
+            onClick={handleSecurePayment}
             className="w-full h-12 text-base font-bold lg:hidden"
           >
-            <MessageCircle size={18} />
-            שליחת הזמנה בוואטסאפ · ₪{formatPrice(subtotal)}
+            <CreditCard size={18} />
+            {payLabel}
           </Button>
         </div>
 
@@ -309,18 +308,18 @@ export function CheckoutPage() {
           <OrderSummary subtotal={subtotal} delivery={delivery} />
           <Button
             type="button"
-            onClick={handleWhatsAppOrder}
+            onClick={handleSecurePayment}
             className="w-full h-12 text-base font-bold mt-4"
           >
-            <MessageCircle size={18} />
-            שליחת הזמנה בוואטסאפ · ₪{formatPrice(subtotal)}
+            <CreditCard size={18} />
+            {payLabel}
           </Button>
         </div>
       </div>
 
       {suggestions.length > 0 && (
         <section className="mt-14 pt-10 border-t border-border">
-          <h2 className="text-xl font-bold text-foreground mb-1">רגע לפני ששולחים…</h2>
+          <h2 className="text-xl font-bold text-foreground mb-1">רגע לפני הרכישה</h2>
           <p className="text-sm text-muted-foreground mb-6">
             מוצרים פופולריים שאולי שכחתם - הוסיפו בלחיצה אחת
           </p>
@@ -335,9 +334,9 @@ export function CheckoutPage() {
       )}
 
       <div className="lg:hidden fixed bottom-0 inset-x-0 z-40 p-4 bg-background/95 backdrop-blur border-t border-border">
-        <Button type="button" onClick={handleWhatsAppOrder} className="w-full h-12 text-base font-bold">
-          <MessageCircle size={18} />
-          שליחת הזמנה בוואטסאפ · ₪{formatPrice(subtotal)}
+        <Button type="button" onClick={handleSecurePayment} className="w-full h-12 text-base font-bold">
+          <CreditCard size={18} />
+          {payLabel}
         </Button>
       </div>
       <div className="lg:hidden h-20" aria-hidden />

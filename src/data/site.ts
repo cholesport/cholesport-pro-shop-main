@@ -20,8 +20,7 @@ export const SITE_SEO_TITLE =
   "CHOLE sport | cholesport.co.il - ציוד ספורט מקצועי";
 
 export const SITE_SEO_DESCRIPTION =
-  "CHOLE sport (cholesport.co.il) - חנות ציוד ספורט מקצועי: שולחנות טניס שולחן, אביזרי אימון, ג׳ימבורי, מזרני איירפלור ונחיתה. הזמנה ותשלום בוואטסאפ · בית השואבה 6, תל אביב.";
-
+  "CHOLE sport (cholesport.co.il) - חנות ציוד ספורט מקצועי: שולחנות טניס שולחן, אביזרי אימון, ג׳ימבורי, מזרני איירפלור ונחיתה. רכישה מאובטחת · בית השואבה 6, תל אביב.";
 export const SITE_KEYWORDS = [
   "CHOLE sport",
   "cholesport",

@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { PAYMENT_SUMMARY } from "@/data/payment";
-import { CONTACT_PHONE_DISPLAY, getShippingWhatsAppUrl, WHATSAPP_URL } from "@/lib/contact";
+import { CONTACT_PHONE_DISPLAY, getShippingWhatsAppUrl } from "@/lib/contact";
 import { COMPANY } from "@/data/legal";
 import { CLUB_PATH } from "@/data/club";
 import { FadeIn } from "@/components/site/FadeIn";
@@ -18,7 +18,6 @@ const ITEMS = [
   {
     title: "רכישה ותשלום",
     desc: PAYMENT_SUMMARY,
-    href: WHATSAPP_URL,
   },
   {
     title: "מתחם CHOLE TLV",

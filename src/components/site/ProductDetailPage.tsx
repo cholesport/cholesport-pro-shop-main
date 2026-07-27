@@ -1,11 +1,16 @@
 import { useState, Fragment } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { Star, Store } from "lucide-react";
+import { Star, Store, CreditCard } from "lucide-react";
 import { toast } from "sonner";
 import type { Product } from "@/data/products";
 import { getRelatedProducts } from "@/data/products";
 import { useCart } from "@/context/CartContext";
-import { PAYMENT_SUMMARY, PAYMENT_WHATSAPP_NOTICE } from "@/data/payment";
+import { PAYMENT_SECURE_NOTICE, PAYMENT_SUMMARY } from "@/data/payment";
+import {
+  BOOST_PAYMENT_CTA,
+  BOOST_PAYMENT_HINT,
+  getBoostPaymentUrl,
+} from "@/data/boostPayments";
 import { CLUB_PATH, CLUB_TEASER } from "@/data/club";
 import { SHOWROOM_SHORT, SHOWROOM_TITLE } from "@/data/showroom";
 import { COMPANY } from "@/data/legal";
@@ -191,6 +196,7 @@ export function ProductDetailPage({ product }: { product: Product }) {
   const hoverSwapImage = product.images.length > 1 ? product.images[1] : undefined;
   const showHoverSwap = Boolean(isGalleryHovered && activeImage === 0 && hoverSwapImage);
   const storeBrand = getStoreBrandByProductBrand(product.brand);
+  const boostPaymentUrl = getBoostPaymentUrl(product.id);
 
   function handleAddToCart() {
     if (product.outOfStock) return;
@@ -202,6 +208,11 @@ export function ProductDetailPage({ product }: { product: Product }) {
         onClick: () => navigate({ to: "/cart" }),
       },
     });
+  }
+
+  function handleBoostCheckout() {
+    if (!boostPaymentUrl || product.outOfStock) return;
+    window.open(boostPaymentUrl, "_blank", "noopener,noreferrer");
   }
 
   return (
@@ -367,7 +378,7 @@ export function ProductDetailPage({ product }: { product: Product }) {
             </p>
           )}
 
-          <p className="mt-2 text-sm text-muted-foreground">{PAYMENT_WHATSAPP_NOTICE}</p>
+          <p className="mt-2 text-sm text-muted-foreground">{PAYMENT_SECURE_NOTICE}</p>
 
           {product.reviews > 0 && (
             <div className="mt-3">
@@ -401,10 +412,29 @@ export function ProductDetailPage({ product }: { product: Product }) {
 
           {showBalancePitaColors && <BalancePitaColorOptions />}
 
+          {boostPaymentUrl && !product.outOfStock && (
+            <>
+              <Button
+                type="button"
+                onClick={handleBoostCheckout}
+                className="mt-6 w-full h-12 text-base font-bold rounded-none bg-foreground text-background hover:bg-sky-600 hover:text-white"
+              >
+                <CreditCard size={18} />
+                {BOOST_PAYMENT_CTA}
+              </Button>
+              <p className="mt-2 text-xs text-muted-foreground leading-relaxed">{BOOST_PAYMENT_HINT}</p>
+            </>
+          )}
+
           <Button
             onClick={handleAddToCart}
             disabled={product.outOfStock}
-            className="mt-6 w-full h-12 text-base font-bold rounded-none bg-foreground text-background hover:bg-foreground/90 disabled:opacity-50"
+            variant={boostPaymentUrl ? "outline" : "default"}
+            className={`w-full h-12 text-base font-bold rounded-none disabled:opacity-50 ${
+              boostPaymentUrl
+                ? "mt-3"
+                : "mt-6 bg-foreground text-background hover:bg-sky-600 hover:text-white"
+            }`}
           >
             {product.outOfStock ? "אזל מהמלאי" : "הוספה לסל"}
           </Button>

@@ -1,7 +1,7 @@
 import clubHeroImg from "@/assets/club-tt-serve.png";
 import tableTennisImg from "@/assets/club-tt-action.png";
 import kidsImg from "@/assets/club-kids-ninja.png";
-import eventsImg from "@/assets/club-tt-action.png";
+import eventsImg from "@/assets/club-events-climbing.png";
 import { COMPANY } from "@/data/legal";
 import { WHATSAPP_URL } from "@/lib/contact";
 
@@ -100,7 +100,7 @@ export const CLUB_PILLARS: ClubPillar[] = [
       "לתיאום תאריך והצעת מחיר - כתבו לנו בוואטסאפ.",
     ],
     image: eventsImg,
-    imageAlt: "מתחם CHOLE TLV - חלל לאימונים, ימי הולדת ואירועים",
+    imageAlt: "ילדים מטפסים במתחם CHOLE TLV - ימי הולדת והשכרת חלל",
     ctaLabel: "לתיאום יום הולדת / אירוע",
     whatsappIntent: "events",
   },

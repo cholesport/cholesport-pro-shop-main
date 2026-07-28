@@ -27,6 +27,10 @@ import {
   GTM_HEAD_SCRIPT,
   GTM_NOSCRIPT_IFRAME_SRC,
 } from "@/lib/gtm";
+import {
+  GOOGLE_ADS_GTAG_SRC,
+  GOOGLE_ADS_INIT_SCRIPT,
+} from "@/lib/googleAds";
 
 function NotFoundComponent() {
   return (
@@ -126,6 +130,12 @@ function RootShell({ children }: { children: ReactNode }) {
   return (
     <html lang="he" dir="rtl">
       <head>
+        <script async src={GOOGLE_ADS_GTAG_SRC} />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: GOOGLE_ADS_INIT_SCRIPT,
+          }}
+        />
         <script
           dangerouslySetInnerHTML={{
             __html: GTM_HEAD_SCRIPT,

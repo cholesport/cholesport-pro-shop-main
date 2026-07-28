@@ -23,6 +23,10 @@ import {
   buildWebsiteJsonLd,
   jsonLdScript,
 } from "@/lib/seo";
+import {
+  GTM_HEAD_SCRIPT,
+  GTM_NOSCRIPT_IFRAME_SRC,
+} from "@/lib/gtm";
 
 function NotFoundComponent() {
   return (
@@ -122,9 +126,23 @@ function RootShell({ children }: { children: ReactNode }) {
   return (
     <html lang="he" dir="rtl">
       <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: GTM_HEAD_SCRIPT,
+          }}
+        />
         <HeadContent />
       </head>
       <body>
+        <noscript>
+          <iframe
+            src={GTM_NOSCRIPT_IFRAME_SRC}
+            height="0"
+            width="0"
+            style={{ display: "none", visibility: "hidden" }}
+            title="Google Tag Manager"
+          />
+        </noscript>
         <script
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var s=JSON.parse(localStorage.getItem("chole-a11y-settings")||"{}");var r=document.documentElement;if(s.fontSize==="large")r.classList.add("a11y-font-large");if(s.fontSize==="xlarge")r.classList.add("a11y-font-xlarge");if(s.highContrast)r.classList.add("a11y-high-contrast");if(s.highlightLinks)r.classList.add("a11y-highlight-links");if(s.readableFont)r.classList.add("a11y-readable-font");if(s.reduceMotion)r.classList.add("a11y-reduce-motion");}catch(e){}})();`,

@@ -70,21 +70,8 @@ type PageFadeProps = {
 
 /** Soft enter animation when navigating between routes. */
 export function PageFade({ children, pageKey, className }: PageFadeProps) {
-  const config = FADE_PRESETS.page;
-
   return (
-    <div
-      key={pageKey}
-      className={cn("page-fade-motion", className)}
-      style={
-        {
-          "--fade-duration": `${config.duration}ms`,
-          "--fade-delay": `${config.delay}ms`,
-          "--fade-ease": config.ease,
-          "--fade-y": `${config.y}px`,
-        } as CSSProperties
-      }
-    >
+    <div key={pageKey} className={cn("page-fade-motion", className)}>
       {children}
     </div>
   );

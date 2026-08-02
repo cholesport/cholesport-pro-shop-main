@@ -17,11 +17,14 @@ export function HeroCarousel({ activeIndex, goToSlide, className = "" }: HeroCar
           transitionDuration: `${HERO_SLIDE_TRANSITION_MS}ms`,
         }}
       >
-        {HERO_SLIDES.map((slide) => (
+        {HERO_SLIDES.map((slide, index) => (
           <img
             key={slide.src}
             src={slide.src}
             alt=""
+            loading={index === 0 ? "eager" : "lazy"}
+            fetchPriority={index === 0 ? "high" : "low"}
+            decoding="async"
             className="min-w-full h-full shrink-0 object-cover bg-white"
             draggable={false}
           />

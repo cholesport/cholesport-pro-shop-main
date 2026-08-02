@@ -36,7 +36,14 @@ export function useInViewOnce<T extends Element>(
     );
 
     observer.observe(node);
-    return () => observer.disconnect();
+
+    // Mobile Safari can miss the first intersection pass — never leave sections hidden.
+    const fallback = window.setTimeout(() => setVisible(true), 1200);
+
+    return () => {
+      observer.disconnect();
+      window.clearTimeout(fallback);
+    };
   }, [immediate, visible, rootMargin, threshold]);
 
   return [ref, visible];

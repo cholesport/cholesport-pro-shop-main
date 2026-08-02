@@ -71,7 +71,7 @@ export function Hero() {
               />
               <Link
                 to="/categories"
-                className="inline-flex items-center justify-center gap-2 border-2 border-white/80 bg-white/10 px-8 py-3.5 text-sm font-bold tracking-wide text-white backdrop-blur-sm transition hover:bg-white hover:text-foreground sm:text-base"
+                className="inline-flex items-center justify-center gap-2 rounded-lg bg-white px-8 py-3.5 text-sm font-bold tracking-wide text-primary shadow-lg shadow-black/30 ring-2 ring-white/40 transition hover:bg-white/95 hover:shadow-xl sm:text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
               >
                 <ShoppingBag size={18} aria-hidden />
                 {BRAND_HERO_SHOP_CTA}

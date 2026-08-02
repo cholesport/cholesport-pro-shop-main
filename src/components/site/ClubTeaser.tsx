@@ -1,44 +1,34 @@
 import { ArrowLeft } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { FadeIn } from "@/components/site/FadeIn";
-import { ActivitiesRegisterCta } from "@/components/site/ActivitiesRegisterCta";
 import { CLUB_PATH, CLUB_TEASER } from "@/data/club";
-import { ACTIVITIES_SCHEDULE_HASH } from "@/data/activities";
 
-/** Compact strip - visible if relevant, never competing with the shop hero. */
+/** Compact strip linking to the CHOLE TLV venue page. */
 export function ClubTeaser() {
   return (
     <aside
       dir="rtl"
       aria-label={CLUB_TEASER.label}
-      className="border-b border-border bg-secondary/55"
+      className="border-b border-sky-800/40 bg-sky-600 text-white"
     >
-      <FadeIn preset="promo" immediate className="mx-auto max-w-7xl px-4 py-3 md:py-3.5">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
-          <Link
-            to={CLUB_PATH}
-            className="group flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-6 flex-1 min-w-0"
-          >
-            <div className="min-w-0">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-accent">
-                {CLUB_TEASER.label}
-              </p>
-              <p className="mt-0.5 text-sm text-foreground/85 group-hover:text-foreground transition">
-                {CLUB_TEASER.text}
-              </p>
-            </div>
-            <span className="inline-flex shrink-0 items-center gap-1.5 text-sm font-bold text-accent transition group-hover:gap-2.5">
-              {CLUB_TEASER.cta}
-              <ArrowLeft size={16} aria-hidden />
-            </span>
-          </Link>
-          <ActivitiesRegisterCta
-            hash={ACTIVITIES_SCHEDULE_HASH}
-            size="md"
-            short
-            className="w-full sm:w-auto"
-          />
-        </div>
+      <FadeIn preset="promo" immediate className="mx-auto max-w-7xl px-4 py-4 md:py-5">
+        <Link
+          to={CLUB_PATH}
+          className="group flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-6"
+        >
+          <div className="min-w-0">
+            <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-sky-100">
+              {CLUB_TEASER.label}
+            </p>
+            <p className="mt-1 text-sm font-medium text-white/95 md:text-base group-hover:text-white transition">
+              {CLUB_TEASER.text}
+            </p>
+          </div>
+          <span className="inline-flex shrink-0 items-center gap-1.5 text-sm font-bold text-white transition group-hover:gap-2.5">
+            {CLUB_TEASER.cta}
+            <ArrowLeft size={16} aria-hidden />
+          </span>
+        </Link>
       </FadeIn>
     </aside>
   );

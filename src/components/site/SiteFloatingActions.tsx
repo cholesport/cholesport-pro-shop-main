@@ -29,9 +29,9 @@ export function SiteFloatingActions() {
           to={ACTIVITIES_PATH}
           hash={ACTIVITIES_SCHEDULE_HASH}
           aria-label={ACTIVITIES_REGISTER_CTA_LABEL}
-          className={`${FLOAT_BTN} size-12 bg-accent text-accent-foreground shadow-lg shadow-accent/40 ring-2 ring-accent/50 focus-visible:ring-accent`}
+          className={`${FLOAT_BTN} bg-accent text-accent-foreground focus-visible:ring-accent`}
         >
-          <UserPlus size={22} aria-hidden />
+          <UserPlus size={20} aria-hidden />
         </Link>
       )}
       <a

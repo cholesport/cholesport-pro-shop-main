@@ -1,4 +1,4 @@
-import type { ActivityPass } from "@/data/passes";
+import type { ActivityPass, PassesStore } from "@/data/passes";
 import type { ActivityRegistration } from "@/data/registrations";
 import { isLateCancellation } from "@/lib/registrations/cancellation";
 import { getScheduleSlotById } from "@/lib/registrations/helpers";
@@ -11,7 +11,6 @@ import {
   getActivePassesForCustomer,
   loadPassesStore,
   savePassesStore,
-  type PassesStore,
 } from "@/lib/passes/store.server";
 import {
   loadRegistrationsStore,
@@ -102,7 +101,7 @@ export async function cancelActivityRegistrationInternal(input: {
     throw new Error("משבצת השיעור לא נמצאה.");
   }
 
-  const { pass, passAction } = applyPassPolicyForCancellation(
+  const { pass, passAction } = await applyPassPolicyForCancellation(
     passesStore,
     registration,
     input.cancelledBy,

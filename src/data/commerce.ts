@@ -1,4 +1,5 @@
-import type { ActivityCategoryId, ActivityRegistrationStatus } from "@/data/activities";
+import type { ActivityCategoryId } from "@/data/activities";
+import type { ActivityRegistrationStatus } from "@/data/registrations";
 import type { ShopDeliveryMethod, ShopOrderStatus } from "@/data/shopOrders";
 
 export type CommerceDomain = "shop" | "activities";

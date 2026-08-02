@@ -8,7 +8,7 @@ import {
 import { getScheduleSlotById } from "@/lib/registrations/helpers";
 import { loadRegistrationsStore, saveRegistrationsStore } from "@/lib/registrations/store.server";
 import { redeemPassForSession } from "@/lib/passes/redeem.server";
-import type { PassesStore } from "@/lib/passes/store.server";
+import type { PassesStore } from "@/data/passes";
 
 export async function registerStandingForNextSessionInternal(
   standing: StandingRegistration,

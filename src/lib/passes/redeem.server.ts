@@ -5,8 +5,8 @@ import { getActivityCategoryMeta, getActivityPlanMeta } from "@/lib/commerce/cat
 import { enrichActivityRegistration } from "@/lib/commerce/unified.server";
 import { loadRegistrationsStore, saveRegistrationsStore } from "@/lib/registrations/store.server";
 import { getScheduleSlotById } from "@/lib/registrations/helpers";
+import type { PassesStore } from "@/data/passes";
 import { findPassById, loadPassesStore, savePassesStore } from "@/lib/passes/store.server";
-import type { PassesStore } from "@/lib/passes/store.server";
 import { formatScheduleDateIso } from "@/lib/activitySchedule";
 
 export function isPunchCardPlanId(planId: string): boolean {

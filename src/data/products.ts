@@ -480,7 +480,7 @@ export const PRODUCTS: Product[] = [
         sku: variant.id,
         cat: LANDING_MAT_CATEGORY,
         price: variant.price,
-        was: variant.price,
+        was: variant.was ?? variant.price,
         rating: 0,
         reviews: 0,
       },

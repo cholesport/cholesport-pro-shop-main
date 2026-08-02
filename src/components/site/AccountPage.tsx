@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   User,
   Package,
@@ -9,8 +9,11 @@ import {
   EyeOff,
   Home,
   Briefcase,
+  Users,
+  ClipboardList,
+  Ticket,
 } from "lucide-react";
-import { Link } from "@tanstack/react-router";
+import { Link, useSearch } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,17 +22,23 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   ACCOUNT_PASSWORD_MIN_LENGTH,
-  MOCK_USER,
-  formatPrice,
+  isAdminAccountEmail,
   getAccountAddresses,
-  getAccountOrders,
   validateRegisterForm,
+  type AccountSession,
   type Address,
-  type Order,
-  type OrderStatus,
   type UserProfile,
 } from "@/data/account";
 import { useCart } from "@/context/CartContext";
+import { loginAccount } from "@/lib/api/auth.functions";
+import {
+  getCustomerProfile,
+  loginCustomer,
+  registerCustomer,
+  requestCustomerPasswordReset,
+  updateCustomerAvatar,
+  updateCustomerProfile,
+} from "@/lib/api/customers.functions";
 import { notifyNewCustomerSignup } from "@/lib/api/signup.functions";
 import {
   clearAccountSession,
@@ -37,32 +46,57 @@ import {
   resetClientShopData,
   saveAccountSession,
 } from "@/lib/accountSession";
+import { AccountAvatarBadge, AccountAvatarEditor } from "@/components/site/AccountAvatarEditor";
+import { AdminRegistrationsPanel } from "@/components/site/AdminRegistrationsPage";
+import { AdminOrdersPanel } from "@/components/site/AdminOrdersPanel";
+import { AdminCustomersPanel } from "@/components/site/AdminCustomersPanel";
+import { AdminPassesPanel } from "@/components/site/AdminPassesPanel";
+import { AdminReportsPanel } from "@/components/site/AdminReportsPanel";
+import {
+  CustomerCommerceOverview,
+  CustomerCommerceView,
+} from "@/components/site/CustomerCommerceView";
+import { CustomerPassesPanel } from "@/components/site/CustomerPassesPanel";
+import { CustomerActivityRegistrations } from "@/components/site/CustomerActivityRegistrations";
+import { getCustomerCommerceHistory } from "@/lib/api/commerce.functions";
+import { listCustomerPasses } from "@/lib/api/passes.functions";
+import { DEMO_CUSTOMER_HINT } from "@/data/demo";
+import type { CustomerCommerceHistory } from "@/data/commerce";
+import type { ActivityPass } from "@/data/passes";
 
-type Section = "overview" | "orders" | "profile" | "addresses";
+type Section =
+  | "overview"
+  | "orders"
+  | "passes"
+  | "profile"
+  | "addresses"
+  | "shop-orders"
+  | "registrations"
+  | "customers"
+  | "admin-passes"
+  | "reports";
 
-const NAV: { id: Section; label: string; icon: typeof User }[] = [
+const BASE_NAV: { id: Section; label: string; icon: typeof User }[] = [
   { id: "overview", label: "סקירה", icon: Home },
-  { id: "orders", label: "הזמנות", icon: Package },
+  { id: "passes", label: "כרטיסיות", icon: Ticket },
+  { id: "orders", label: "רכישות", icon: Package },
   { id: "profile", label: "פרטים אישיים", icon: User },
   { id: "addresses", label: "כתובות", icon: MapPin },
 ];
 
-function statusVariant(status: OrderStatus) {
-  switch (status) {
-    case "נמסר":
-      return "secondary" as const;
-    case "בדרך":
-      return "default" as const;
-    case "בטיפול":
-      return "outline" as const;
-    case "בוטל":
-      return "destructive" as const;
-  }
-}
+const ADMIN_NAV: { id: Section; label: string; icon: typeof User }[] = [
+  { id: "reports", label: "דוחות", icon: ClipboardList },
+  { id: "customers", label: "לקוחות", icon: Users },
+  { id: "admin-passes", label: "כרטיסיות", icon: Ticket },
+  { id: "shop-orders", label: "הזמנות מהאתר", icon: Package },
+  { id: "registrations", label: "לוח שיעורים", icon: Users },
+];
 
 type AuthSubmitResult = {
   profile: UserProfile;
   isRegister: boolean;
+  authToken?: string;
+  customerToken?: string;
 };
 
 function AuthForm({
@@ -74,6 +108,7 @@ function AuthForm({
 }) {
   const [mode, setMode] = useState<"login" | "register">("login");
   const [showPassword, setShowPassword] = useState(false);
+  const [resetSending, setResetSending] = useState(false);
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
@@ -85,6 +120,10 @@ function AuthForm({
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (mode === "register") {
+      if (isAdminAccountEmail(form.email)) {
+        toast.error("כתובת האימייל הזו מיועדת לחשבון המנהל בלבד.");
+        return;
+      }
       const error = validateRegisterForm(form);
       if (error) {
         toast.error(error);
@@ -93,28 +132,90 @@ function AuthForm({
       const registeredAt = new Date().toLocaleString("he-IL", {
         timeZone: "Asia/Jerusalem",
       });
-      await onSubmitAuth({
-        isRegister: true,
-        profile: {
-          firstName: form.firstName.trim(),
-          lastName: form.lastName.trim(),
-          email: form.email.trim(),
-          phone: form.phone.trim(),
-          isNew: true,
-          registeredAt,
-        },
-      });
+      try {
+        const result = await registerCustomer({
+          data: {
+            firstName: form.firstName.trim(),
+            lastName: form.lastName.trim(),
+            email: form.email.trim(),
+            phone: form.phone.trim(),
+            password: form.password,
+          },
+        });
+        await onSubmitAuth({
+          isRegister: true,
+          profile: { ...result.profile, registeredAt },
+          customerToken: result.customerToken,
+        });
+      } catch (error) {
+        toast.error(error instanceof Error ? error.message : "ההרשמה נכשלה.");
+      }
       return;
     }
 
-    await onSubmitAuth({
-      isRegister: false,
-      profile: {
-        ...MOCK_USER,
-        email: form.email.trim() || MOCK_USER.email,
-        isNew: false,
-      },
-    });
+    try {
+      const adminLogin = await loginAccount({
+        data: {
+          email: form.email.trim(),
+          password: form.password,
+        },
+      });
+
+      if (adminLogin.isAdmin) {
+        await onSubmitAuth({
+          isRegister: false,
+          profile: adminLogin.profile,
+          authToken: adminLogin.authToken,
+        });
+        return;
+      }
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "התחברות נכשלה.");
+      return;
+    }
+
+    if (isAdminAccountEmail(form.email)) {
+      toast.error("כתובת האימייל הזו מיועדת לחשבון המנהל בלבד.");
+      return;
+    }
+
+    try {
+      const customerLogin = await loginCustomer({
+        data: {
+          email: form.email.trim(),
+          password: form.password,
+        },
+      });
+      if (!customerLogin.found) {
+        toast.error("אימייל או סיסמה שגויים.");
+        return;
+      }
+      await onSubmitAuth({
+        isRegister: false,
+        profile: customerLogin.profile,
+        customerToken: customerLogin.customerToken,
+      });
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "התחברות נכשלה.");
+    }
+  }
+
+  async function handleForgotPassword() {
+    if (!form.email.trim()) {
+      toast.error("הזינו את האימייל שלכם ולחצו שוב על «שכחתם סיסמה?»");
+      return;
+    }
+    setResetSending(true);
+    try {
+      const result = await requestCustomerPasswordReset({
+        data: { email: form.email.trim() },
+      });
+      toast.success(result.message);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "שליחת הקישור נכשלה.");
+    } finally {
+      setResetSending(false);
+    }
   }
 
   return (
@@ -229,8 +330,13 @@ function AuthForm({
 
               {mode === "login" && (
                 <div className="text-end">
-                  <button type="button" className="text-sm text-accent hover:underline">
-                    שכחתם סיסמה?
+                  <button
+                    type="button"
+                    className="text-sm text-accent hover:underline disabled:opacity-50"
+                    disabled={isSubmitting || resetSending}
+                    onClick={() => void handleForgotPassword()}
+                  >
+                    {resetSending ? "שולח קישור..." : "שכחתם סיסמה?"}
                   </button>
                 </div>
               )}
@@ -247,6 +353,10 @@ function AuthForm({
         </Tabs>
 
         <p className="text-xs text-muted-foreground text-center mt-6">
+          {DEMO_CUSTOMER_HINT}
+        </p>
+
+        <p className="text-xs text-muted-foreground text-center mt-3">
           בהמשך תהליך ההתחברות אתם מסכימים ל
           <Link to="/terms" className="text-accent hover:underline mx-1">
             תנאי השימוש
@@ -257,48 +367,6 @@ function AuthForm({
           </Link>
         </p>
       </div>
-    </div>
-  );
-}
-
-function OrderCard({ order }: { order: Order }) {
-  const [expanded, setExpanded] = useState(false);
-
-  return (
-    <div className="bg-card border border-border rounded-xl p-5 hover:border-accent/40 transition">
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <p className="font-bold text-foreground">הזמנה #{order.id}</p>
-          <p className="text-sm text-muted-foreground mt-0.5">{order.date}</p>
-        </div>
-        <div className="flex items-center gap-3">
-          <Badge variant={statusVariant(order.status)}>{order.status}</Badge>
-          <p className="font-bold text-foreground">₪{formatPrice(order.total)}</p>
-        </div>
-      </div>
-
-      <button
-        type="button"
-        onClick={() => setExpanded(!expanded)}
-        className="text-sm text-accent hover:underline mt-3"
-      >
-        {expanded ? "הסתר פרטים" : `צפייה ב-${order.items.length} פריטים`}
-      </button>
-
-      {expanded && (
-        <ul className="mt-4 pt-4 border-t border-border space-y-2">
-          {order.items.map((item, i) => (
-            <li key={i} className="flex justify-between text-sm">
-              <span className="text-foreground">
-                {item.title} × {item.qty}
-              </span>
-              <span className="text-muted-foreground font-medium">
-                ₪{formatPrice(item.price * item.qty)}
-              </span>
-            </li>
-          ))}
-        </ul>
-      )}
     </div>
   );
 }
@@ -317,40 +385,127 @@ function EmptyState({ title, text }: { title: string; text: string }) {
 
 function Dashboard({
   profile,
-  orders,
+  commerceHistory,
+  commerceLoading,
+  passes,
+  passesLoading,
+  onPassesChange,
   addresses,
   section,
   onSectionChange,
   onLogout,
+  authToken,
+  customerToken,
+  onProfileUpdate,
 }: {
   profile: UserProfile;
-  orders: Order[];
+  commerceHistory: CustomerCommerceHistory | null;
+  commerceLoading: boolean;
+  passes: ActivityPass[];
+  passesLoading: boolean;
+  onPassesChange: (passes: ActivityPass[]) => void;
   addresses: Address[];
   section: Section;
   onSectionChange: (s: Section) => void;
   onLogout: () => void;
+  authToken?: string;
+  customerToken?: string;
+  onProfileUpdate: (profile: UserProfile) => void;
 }) {
   const [editedProfile, setEditedProfile] = useState(profile);
-  const activeOrders = orders.filter((o) => o.status !== "נמסר" && o.status !== "בוטל");
+  const [savingProfile, setSavingProfile] = useState(false);
+  const [resetSending, setResetSending] = useState(false);
+  const nav = useMemo(
+    () => (profile.isAdmin ? ADMIN_NAV : BASE_NAV),
+    [profile.isAdmin],
+  );
+
+  useEffect(() => {
+    setEditedProfile(profile);
+  }, [profile]);
+
+  async function refreshPasses() {
+    if (!customerToken) return;
+    try {
+      const result = await listCustomerPasses({ data: { customerToken } });
+      onPassesChange(result.passes);
+    } catch {
+      // Parent list may still be stale; cancel toast already shown.
+    }
+  }
+
+  async function handleSaveProfile() {
+    if (!customerToken) return;
+    setSavingProfile(true);
+    try {
+      const result = await updateCustomerProfile({
+        data: {
+          customerToken,
+          firstName: editedProfile.firstName,
+          lastName: editedProfile.lastName,
+          phone: editedProfile.phone,
+        },
+      });
+      onProfileUpdate(result.profile);
+      toast.success("הפרטים נשמרו.");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "שמירה נכשלה.");
+    } finally {
+      setSavingProfile(false);
+    }
+  }
+
+  async function handleAvatarChange(avatarUrl?: string) {
+    if (!customerToken) return;
+    const result = await updateCustomerAvatar({
+      data: { customerToken, avatarDataUrl: avatarUrl },
+    });
+    onProfileUpdate(result.profile);
+  }
+
+  async function handlePasswordResetRequest() {
+    setResetSending(true);
+    try {
+      const result = await requestCustomerPasswordReset({
+        data: { email: profile.email },
+      });
+      toast.success(result.message);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "שליחת הקישור נכשלה.");
+    } finally {
+      setResetSending(false);
+    }
+  }
 
   return (
     <div className="grid lg:grid-cols-[240px_1fr] gap-8">
       <aside className="space-y-2">
         <div className="bg-card border border-border rounded-xl p-5 mb-4">
-          <div className="w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold text-lg mb-3">
-            {profile.firstName.charAt(0)}
-            {profile.lastName.charAt(0)}
-          </div>
+          {profile.isAdmin ? (
+            <div className="w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold text-lg mb-3">
+              {profile.firstName.charAt(0)}
+              {profile.lastName.charAt(0)}
+            </div>
+          ) : (
+            <div className="mb-3">
+              <AccountAvatarBadge profile={profile} />
+            </div>
+          )}
           <p className="font-bold text-foreground">
             {profile.firstName} {profile.lastName}
           </p>
           <p className="text-sm text-muted-foreground truncate" dir="ltr">
             {profile.email}
           </p>
+          {profile.isAdmin && (
+            <Badge variant="secondary" className="mt-2 text-xs">
+              מנהל מערכת
+            </Badge>
+          )}
         </div>
 
         <nav className="hidden lg:block space-y-1">
-          {NAV.map(({ id, label, icon: Icon }) => (
+          {nav.map(({ id, label, icon: Icon }) => (
             <button
               key={id}
               type="button"
@@ -377,7 +532,7 @@ function Dashboard({
 
         <div className="lg:hidden overflow-x-auto pb-2 -mx-1 px-1">
           <div className="flex gap-2 min-w-max">
-            {NAV.map(({ id, label }) => (
+            {nav.map(({ id, label }) => (
               <button
                 key={id}
                 type="button"
@@ -396,7 +551,7 @@ function Dashboard({
       </aside>
 
       <div className="min-w-0">
-        {section === "overview" && (
+        {!profile.isAdmin && section === "overview" && (
           <div className="space-y-6">
             <div>
               <h2 className="text-2xl font-black text-foreground">שלום, {profile.firstName}</h2>
@@ -407,64 +562,95 @@ function Dashboard({
               </p>
             </div>
 
-            <div className="grid sm:grid-cols-3 gap-4">
-              {[
-                { label: "הזמנות פעילות", value: activeOrders.length },
-                { label: "סה״כ הזמנות", value: orders.length },
-                { label: "כתובות שמורות", value: addresses.length },
-              ].map(({ label, value }) => (
-                <div key={label} className="bg-card border border-border rounded-xl p-5 text-center">
-                  <p className="text-3xl font-black text-accent">{value}</p>
-                  <p className="text-sm text-muted-foreground mt-1">{label}</p>
-                </div>
-              ))}
-            </div>
+            {commerceLoading || passesLoading ? (
+              <p className="text-sm text-muted-foreground">טוען את הרכישות שלכם...</p>
+            ) : commerceHistory || passes.length > 0 ? (
+              <CustomerCommerceOverview
+                history={
+                  commerceHistory ?? {
+                    shopOrders: [],
+                    activities: [],
+                    categories: [],
+                    stats: {
+                      shopOrderCount: 0,
+                      activityCount: 0,
+                      subscriptionCount: 0,
+                    },
+                  }
+                }
+                passes={passes}
+                onViewAll={() => onSectionChange("orders")}
+                onViewPasses={() => onSectionChange("passes")}
+              />
+            ) : (
+              <EmptyState
+                title="עדיין אין רכישות"
+                text="החשבון ריק ומוכן - ברגע שתשלחו הזמנה או תירשמו לחוג היא תופיע כאן."
+              />
+            )}
 
-            <div>
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="font-bold text-lg text-foreground">הזמנה אחרונה</h3>
-                <button
-                  type="button"
-                  onClick={() => onSectionChange("orders")}
-                  className="text-sm text-accent hover:underline"
-                >
-                  כל ההזמנות
-                </button>
+            <div className="grid sm:grid-cols-1 gap-4 max-w-sm">
+              <div className="bg-card border border-border rounded-xl p-5 text-center">
+                <p className="text-3xl font-black text-accent">{addresses.length}</p>
+                <p className="text-sm text-muted-foreground mt-1">כתובות שמורות</p>
               </div>
-              {orders[0] ? (
-                <OrderCard order={orders[0]} />
-              ) : (
-                <EmptyState
-                  title="עדיין אין הזמנות"
-                  text="החשבון ריק ומוכן - ברגע שתשלחו הזמנה היא תופיע כאן."
-                />
-              )}
             </div>
           </div>
         )}
 
-        {section === "orders" && (
+        {!profile.isAdmin && section === "passes" && (
           <div className="space-y-6">
-            <h2 className="text-2xl font-black text-foreground">ההזמנות שלי</h2>
-            {orders.length === 0 ? (
-              <EmptyState
-                title="אין הזמנות עדיין"
-                text="ברגע שתושלם הזמנה ראשונה, תוכלו לעקוב אחריה מכאן."
-              />
+            <div>
+              <h2 className="text-2xl font-black text-foreground">הכרטיסיות שלי</h2>
+              <p className="text-muted-foreground mt-1 text-sm">
+                צפו בניקובים שנותרו והירשמו לשיעורים ישירות מהמערכת.
+              </p>
+            </div>
+            {passesLoading ? (
+              <p className="text-sm text-muted-foreground">טוען כרטיסיות...</p>
             ) : (
-              <div className="space-y-4">
-                {orders.map((order) => (
-                  <OrderCard key={order.id} order={order} />
-                ))}
-              </div>
+              <>
+                {customerToken && (
+                  <CustomerActivityRegistrations
+                    customerToken={customerToken}
+                    onPassUpdated={() => void refreshPasses()}
+                  />
+                )}
+                <CustomerPassesPanel
+                  passes={passes}
+                  customerToken={customerToken}
+                  onPassesChange={onPassesChange}
+                />
+              </>
             )}
           </div>
         )}
 
-        {section === "profile" && (
+        {!profile.isAdmin && section === "orders" && (
+          <div className="space-y-6">
+            <h2 className="text-2xl font-black text-foreground">הרכישות שלי</h2>
+            {commerceLoading ? (
+              <p className="text-sm text-muted-foreground">טוען...</p>
+            ) : commerceHistory ? (
+              <CustomerCommerceView history={commerceHistory} />
+            ) : (
+              <EmptyState
+                title="אין רכישות עדיין"
+                text="הזמנות מהחנות והרשמות לחוגים יופיעו כאן לפי קטגוריות."
+              />
+            )}
+          </div>
+        )}
+
+        {!profile.isAdmin && section === "profile" && (
           <div className="space-y-6">
             <h2 className="text-2xl font-black text-foreground">פרטים אישיים</h2>
             <div className="bg-card border border-border rounded-xl p-6 space-y-5 max-w-lg">
+              <AccountAvatarEditor
+                profile={profile}
+                onAvatarChange={handleAvatarChange}
+                disabled={!customerToken}
+              />
               <div className="grid sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="editFirstName">שם פרטי</Label>
@@ -495,9 +681,7 @@ function Dashboard({
                   dir="ltr"
                   className="text-start"
                   value={editedProfile.email}
-                  onChange={(e) =>
-                    setEditedProfile({ ...editedProfile, email: e.target.value })
-                  }
+                  disabled
                 />
               </div>
               <div className="space-y-2">
@@ -513,27 +697,33 @@ function Dashboard({
                   }
                 />
               </div>
-              <Button className="font-semibold">שמירת שינויים</Button>
+              <Button
+                className="font-semibold"
+                disabled={savingProfile || !customerToken}
+                onClick={() => void handleSaveProfile()}
+              >
+                {savingProfile ? "שומר..." : "שמירת שינויים"}
+              </Button>
             </div>
 
             <div className="bg-card border border-border rounded-xl p-6 max-w-lg">
-              <h3 className="font-bold text-foreground mb-4">שינוי סיסמה</h3>
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="currentPassword">סיסמה נוכחית</Label>
-                  <Input id="currentPassword" type="password" dir="ltr" className="text-start" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="newPassword">סיסמה חדשה</Label>
-                  <Input id="newPassword" type="password" dir="ltr" className="text-start" />
-                </div>
-                <Button variant="outline">עדכון סיסמה</Button>
-              </div>
+              <h3 className="font-bold text-foreground mb-2">שינוי סיסמה</h3>
+              <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
+                נשלח אליכם קישור מאומת למייל ({profile.email}) לבחירת סיסמה חדשה. הקישור תקף
+                לשעה אחת.
+              </p>
+              <Button
+                variant="outline"
+                disabled={resetSending}
+                onClick={() => void handlePasswordResetRequest()}
+              >
+                {resetSending ? "שולח קישור..." : "שליחת קישור לאיפוס סיסמה"}
+              </Button>
             </div>
           </div>
         )}
 
-        {section === "addresses" && (
+        {!profile.isAdmin && section === "addresses" && (
           <div className="space-y-6">
             <div className="flex items-center justify-between gap-4">
               <h2 className="text-2xl font-black text-foreground">כתובות למשלוח</h2>
@@ -597,6 +787,26 @@ function Dashboard({
           </div>
         )}
 
+        {section === "reports" && profile.isAdmin && authToken && (
+          <AdminReportsPanel authToken={authToken} />
+        )}
+
+        {section === "admin-passes" && profile.isAdmin && authToken && (
+          <AdminPassesPanel authToken={authToken} />
+        )}
+
+        {section === "customers" && profile.isAdmin && authToken && (
+          <AdminCustomersPanel authToken={authToken} />
+        )}
+
+        {section === "shop-orders" && profile.isAdmin && authToken && (
+          <AdminOrdersPanel authToken={authToken} />
+        )}
+
+        {section === "registrations" && profile.isAdmin && authToken && (
+          <AdminRegistrationsPanel authToken={authToken} />
+        )}
+
         <button
           type="button"
           onClick={onLogout}
@@ -612,15 +822,91 @@ function Dashboard({
 
 export function AccountPage() {
   const { clearCart } = useCart();
-  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const search = useSearch({ from: "/account" });
+  const [profile, setProfile] = useState<AccountSession | null>(null);
   const [section, setSection] = useState<Section>("overview");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [commerceHistory, setCommerceHistory] = useState<CustomerCommerceHistory | null>(null);
+  const [commerceLoading, setCommerceLoading] = useState(false);
+  const [passes, setPasses] = useState<ActivityPass[]>([]);
+  const [passesLoading, setPassesLoading] = useState(false);
 
   useEffect(() => {
-    setProfile(loadAccountSession());
-  }, []);
+    const saved = loadAccountSession();
+    setProfile(saved);
+    if (saved?.isAdmin) {
+      const adminSection =
+        search.section === "registrations"
+          ? "registrations"
+          : search.section === "customers"
+            ? "customers"
+            : search.section === "admin-passes"
+              ? "admin-passes"
+              : search.section === "reports"
+                ? "reports"
+                : "shop-orders";
+      setSection(adminSection);
+      return;
+    }
+    if (
+      search.section &&
+      search.section !== "registrations" &&
+      search.section !== "shop-orders" &&
+      search.section !== "customers" &&
+      search.section !== "admin-passes" &&
+      search.section !== "reports"
+    ) {
+      setSection(search.section);
+    }
 
-  async function handleAuthSubmit({ profile: nextProfile, isRegister }: AuthSubmitResult) {
+    if (saved?.customerToken && !saved.isAdmin) {
+      void getCustomerProfile({ data: { customerToken: saved.customerToken } })
+        .then((result) => {
+          setProfile((current) =>
+            current
+              ? { ...current, ...result.profile, customerToken: saved.customerToken }
+              : current,
+          );
+        })
+        .catch(() => {
+          clearAccountSession();
+          setProfile(null);
+        });
+    }
+  }, [search.section]);
+
+  useEffect(() => {
+    if (!profile?.customerToken || profile.isAdmin) {
+      setCommerceHistory(null);
+      return;
+    }
+
+    setCommerceLoading(true);
+    void getCustomerCommerceHistory({ data: { customerToken: profile.customerToken } })
+      .then((result) => setCommerceHistory(result.history))
+      .catch(() => setCommerceHistory(null))
+      .finally(() => setCommerceLoading(false));
+  }, [profile?.customerToken, profile?.isAdmin, profile?.email, profile?.phone]);
+
+  useEffect(() => {
+    if (!profile?.customerToken || profile.isAdmin) {
+      setPasses([]);
+      return;
+    }
+
+    setPassesLoading(true);
+    void listCustomerPasses({ data: { customerToken: profile.customerToken } })
+      .then((result) => setPasses(result.passes))
+      .catch(() => setPasses([]))
+      .finally(() => setPassesLoading(false));
+  }, [profile?.customerToken, profile?.isAdmin]);
+
+  async function handleAuthSubmit({
+    profile: nextProfile,
+    isRegister,
+    authToken,
+    customerToken,
+  }: AuthSubmitResult) {
     setIsSubmitting(true);
     try {
       if (isRegister) {
@@ -648,14 +934,30 @@ export function AccountPage() {
         toast.success("החשבון נוצר בהצלחה", {
           description: "התחלתם מדף נקי - בלי הזמנות או כתובות קודמות.",
         });
+      } else if (nextProfile.isAdmin) {
+        toast.success("ברוך הבא, מנהל המערכת");
       }
 
-      setProfile(nextProfile);
-      saveAccountSession(nextProfile);
-      setSection("overview");
+      const session: AccountSession = {
+        ...nextProfile,
+        ...(authToken ? { authToken } : {}),
+        ...(customerToken ? { customerToken } : {}),
+      };
+      setProfile(session);
+      saveAccountSession(session);
+      setSection(nextProfile.isAdmin ? "reports" : "overview");
     } finally {
       setIsSubmitting(false);
     }
+  }
+
+  function handleProfileUpdate(nextProfile: UserProfile) {
+    setProfile((current) => {
+      if (!current) return current;
+      const session: AccountSession = { ...current, ...nextProfile };
+      saveAccountSession(session);
+      return session;
+    });
   }
 
   function handleLogout() {
@@ -664,7 +966,6 @@ export function AccountPage() {
     setSection("overview");
   }
 
-  const orders = profile ? getAccountOrders(profile) : [];
   const addresses = profile ? getAccountAddresses(profile) : [];
 
   return (
@@ -682,11 +983,18 @@ export function AccountPage() {
       ) : (
         <Dashboard
           profile={profile}
-          orders={orders}
+          commerceHistory={commerceHistory}
+          commerceLoading={commerceLoading}
+          passes={passes}
+          passesLoading={passesLoading}
+          onPassesChange={setPasses}
           addresses={addresses}
           section={section}
           onSectionChange={setSection}
           onLogout={handleLogout}
+          authToken={profile.authToken}
+          customerToken={profile.customerToken}
+          onProfileUpdate={handleProfileUpdate}
         />
       )}
     </div>

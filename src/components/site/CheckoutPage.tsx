@@ -10,6 +10,8 @@ import { useCart } from "@/context/CartContext";
 import { formatPrice } from "@/lib/cart";
 import { getCheckoutSuggestions } from "@/lib/checkout";
 import { CONTACT_PHONE_DISPLAY } from "@/lib/contact";
+import { createShopOrder } from "@/lib/api/orders.functions";
+import { loadAccountSession } from "@/lib/accountSession";
 import { COMPANY } from "@/data/legal";
 import {
   PAYMENT_INSTALLMENTS_LABEL,
@@ -143,11 +145,26 @@ export function CheckoutPage() {
     firstName: "",
     lastName: "",
     phone: "",
+    email: "",
     notes: "",
   });
+  const [customerToken, setCustomerToken] = useState<string | undefined>();
 
   const suggestions = getCheckoutSuggestions(items.map((i) => i.productId));
   const boostPaymentUrl = getBoostPaymentUrlForCart(items);
+
+  useEffect(() => {
+    const session = loadAccountSession();
+    if (!session || session.isAdmin) return;
+    setCustomerToken(session.customerToken);
+    setForm((current) => ({
+      ...current,
+      firstName: session.firstName || current.firstName,
+      lastName: session.lastName || current.lastName,
+      phone: session.phone || current.phone,
+      email: session.email || current.email,
+    }));
+  }, []);
 
   useEffect(() => {
     if (items.length === 0 && !submitted) {
@@ -155,13 +172,53 @@ export function CheckoutPage() {
     }
   }, [items.length, submitted, navigate]);
 
-  function handleSecurePayment() {
+  async function handleSecurePayment() {
     if (!boostPaymentUrl) {
       toast.message("רכישה מאובטחת זמינה מעמוד המוצר", {
         description: "חזרו לעמוד המוצר ולחצו על רכישה מאובטחת.",
       });
       return;
     }
+
+    if (!form.firstName.trim() || !form.phone.trim()) {
+      toast.error("נא למלא שם פרטי וטלפון לפני הרכישה.");
+      return;
+    }
+
+    try {
+      const result = await createShopOrder({
+        data: {
+          customerToken,
+          customer: {
+            firstName: form.firstName.trim(),
+            lastName: form.lastName.trim(),
+            phone: form.phone.trim(),
+            email: form.email.trim() || undefined,
+          },
+          delivery,
+          notes: form.notes.trim() || undefined,
+          items: items.map((item) => ({
+            productId: item.productId,
+            title: item.title,
+            quantity: item.quantity,
+            price: item.price,
+          })),
+          subtotal,
+          paymentUrl: boostPaymentUrl,
+        },
+      });
+
+      if (!result.emailSent) {
+        toast.message("ההזמנה נשמרה במערכת", {
+          description: "לא הצלחנו לשלוח מייל כרגע — ההזמנה מתועדת בפאנל המנהל.",
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("לא הצלחנו לתעד את ההזמנה. נסו שוב או צרו קשר בוואטסאפ.");
+      return;
+    }
+
     window.open(boostPaymentUrl, "_blank", "noopener,noreferrer");
     clearCart();
     setSubmitted(true);
@@ -254,9 +311,10 @@ export function CheckoutPage() {
             </h2>
             <div className="grid sm:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="firstName">שם פרטי</Label>
+                <Label htmlFor="firstName">שם פרטי *</Label>
                 <Input
                   id="firstName"
+                  required
                   value={form.firstName}
                   onChange={(e) => setForm({ ...form, firstName: e.target.value })}
                 />
@@ -270,14 +328,26 @@ export function CheckoutPage() {
                 />
               </div>
               <div className="space-y-2 sm:col-span-2">
-                <Label htmlFor="phone">טלפון</Label>
+                <Label htmlFor="phone">טלפון *</Label>
                 <Input
                   id="phone"
                   type="tel"
+                  required
                   dir="ltr"
                   className="text-start"
                   value={form.phone}
                   onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                />
+              </div>
+              <div className="space-y-2 sm:col-span-2">
+                <Label htmlFor="email">אימייל (אופציונלי)</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  dir="ltr"
+                  className="text-start"
+                  value={form.email}
+                  onChange={(e) => setForm({ ...form, email: e.target.value })}
                 />
               </div>
             </div>

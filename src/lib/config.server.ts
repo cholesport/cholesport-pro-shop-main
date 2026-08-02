@@ -17,9 +17,20 @@ import process from "node:process";
 //     VITE_ prefix. Never put secrets here - they ship to the browser.
 
 export function getServerConfig() {
+  const adminAccountPassword = process.env.ADMIN_ACCOUNT_PASSWORD ?? "";
   return {
     nodeEnv: process.env.NODE_ENV,
     newCustomerNotifyEmail:
       process.env.NEW_CUSTOMER_NOTIFY_EMAIL ?? "hillelisaacs@gmail.com",
+    adminAccountEmail:
+      process.env.ADMIN_ACCOUNT_EMAIL ?? "hillelisaacs@gmail.com",
+    adminAccountPassword,
+    adminSessionSecret:
+      process.env.ADMIN_SESSION_SECRET ?? adminAccountPassword,
+    customerSessionSecret:
+      process.env.CUSTOMER_SESSION_SECRET ?? adminAccountPassword,
+    passwordResetSecret:
+      process.env.PASSWORD_RESET_SECRET ?? adminAccountPassword,
+    siteUrl: process.env.SITE_URL ?? "https://cholesport.co.il",
   };
 }

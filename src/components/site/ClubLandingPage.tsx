@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { ArrowLeft, Instagram, MapPin, MessageCircle } from "lucide-react";
 import { FadeIn } from "@/components/site/FadeIn";
+import { ActivitiesRegisterCta } from "@/components/site/ActivitiesRegisterCta";
 import {
   CLUB_BRAND,
   CLUB_FINAL_CTA,
@@ -10,9 +11,11 @@ import {
   CLUB_INTRO,
   CLUB_PILLARS,
   CLUB_PRACTICAL,
+  CLUB_WHATSAPP_GROUP_LABEL,
   CLUB_WHATSAPP_GROUP_URL,
   getClubInterestWhatsAppUrl,
 } from "@/data/club";
+import { ACTIVITIES_SCHEDULE_HASH } from "@/data/activities";
 import { COMPANY } from "@/data/legal";
 import { cn } from "@/lib/utils";
 
@@ -183,12 +186,18 @@ export function ClubLandingPage() {
                 index={3}
                 className="mt-8 flex flex-wrap items-center gap-3 sm:mt-10"
               >
+                <ActivitiesRegisterCta
+                  size="lg"
+                  hash={ACTIVITIES_SCHEDULE_HASH}
+                  className="shadow-lg shadow-black/20"
+                />
                 <a
                   href={getClubInterestWhatsAppUrl("general")}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 bg-accent px-7 py-3.5 text-sm font-bold tracking-wide text-accent-foreground transition hover:opacity-90 sm:text-base"
+                  className="inline-flex items-center justify-center gap-2 border border-white/35 bg-white/5 px-6 py-3.5 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/12 sm:text-base"
                 >
+                  <MessageCircle size={18} aria-hidden />
                   {CLUB_HERO.primaryCta}
                   <ArrowLeft size={18} aria-hidden />
                 </a>
@@ -275,7 +284,24 @@ export function ClubLandingPage() {
                       className="flex gap-3 text-sm leading-relaxed text-foreground md:text-base"
                     >
                       <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" aria-hidden />
-                      <span>{point}</span>
+                      <span>
+                        {pillar.id === "table-tennis" && point.includes(CLUB_WHATSAPP_GROUP_LABEL) ? (
+                          <>
+                            {point.split(CLUB_WHATSAPP_GROUP_LABEL)[0]}
+                            <a
+                              href={CLUB_WHATSAPP_GROUP_URL}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="font-semibold text-accent underline-offset-4 hover:underline"
+                            >
+                              {CLUB_WHATSAPP_GROUP_LABEL}
+                            </a>
+                            {point.split(CLUB_WHATSAPP_GROUP_LABEL)[1]}
+                          </>
+                        ) : (
+                          point
+                        )}
+                      </span>
                     </li>
                   ))}
                 </ul>
@@ -283,11 +309,18 @@ export function ClubLandingPage() {
                   href={getClubInterestWhatsAppUrl(pillar.whatsappIntent)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-8 inline-flex items-center gap-2 text-sm font-bold text-accent transition hover:underline"
+                  className="mt-6 inline-flex items-center gap-2 text-sm font-bold text-accent transition hover:underline"
                 >
                   <MessageCircle size={18} aria-hidden />
                   {pillar.ctaLabel}
                 </a>
+                <ActivitiesRegisterCta
+                  variant="outline"
+                  size="sm"
+                  hash={ACTIVITIES_SCHEDULE_HASH}
+                  short
+                  className="mt-3"
+                />
               </FadeIn>
             </div>
           </section>
@@ -338,7 +371,7 @@ export function ClubLandingPage() {
               className="inline-flex items-center gap-2 bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition hover:opacity-90"
             >
               <MessageCircle size={16} aria-hidden />
-              קבוצת וואטסאפ לטניס שולחן
+              קבוצת וואטסאפ {CLUB_WHATSAPP_GROUP_LABEL}
             </a>
             <a
               href={CLUB_INSTAGRAM_URL}
@@ -371,11 +404,16 @@ export function ClubLandingPage() {
             delay={120}
             className="mt-8 flex flex-wrap items-center justify-center gap-3"
           >
+            <ActivitiesRegisterCta
+              size="lg"
+              hash={ACTIVITIES_SCHEDULE_HASH}
+              className="shadow-lg"
+            />
             <a
               href={getClubInterestWhatsAppUrl("general")}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 bg-accent px-7 py-3.5 text-sm font-bold text-accent-foreground transition hover:opacity-90"
+              className="inline-flex items-center gap-2 border border-primary-foreground/30 px-6 py-3.5 text-sm font-semibold text-primary-foreground transition hover:bg-primary-foreground/10"
             >
               <MessageCircle size={18} aria-hidden />
               שלחו הודעה בוואטסאפ

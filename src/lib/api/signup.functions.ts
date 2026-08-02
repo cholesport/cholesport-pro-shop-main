@@ -19,7 +19,14 @@ const signupSchema = z.object({
 export const notifyNewCustomerSignup = createServerFn({ method: "POST" })
   .inputValidator(signupSchema)
   .handler(async ({ data }) => {
-    const to = getServerConfig().newCustomerNotifyEmail || NEW_CUSTOMER_NOTIFY_EMAIL;
+    const config = getServerConfig();
+    if (
+      data.email.trim().toLowerCase() === config.adminAccountEmail.trim().toLowerCase()
+    ) {
+      throw new Error("כתובת האימייל הזו מיועדת לחשבון המנהל בלבד.");
+    }
+
+    const to = config.newCustomerNotifyEmail || NEW_CUSTOMER_NOTIFY_EMAIL;
     const when =
       data.registeredAt ||
       new Date().toLocaleString("he-IL", { timeZone: "Asia/Jerusalem" });

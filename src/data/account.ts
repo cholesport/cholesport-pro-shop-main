@@ -24,13 +24,39 @@ export type UserProfile = {
   lastName: string;
   email: string;
   phone: string;
+  /** Data URL or remote URL for profile picture. */
+  avatarUrl?: string;
   /** True for freshly registered accounts - start with empty orders/addresses. */
   isNew?: boolean;
   registeredAt?: string;
+  /** Internal admin — unlocks class registration roster in account area. */
+  isAdmin?: boolean;
 };
 
-/** Owner notification inbox for new customer signups. */
+/** Inbox for owner alerts when new shoppers register (not a customer account). */
 export const NEW_CUSTOMER_NOTIFY_EMAIL = "hillelisaacs@gmail.com";
+
+/** Admin-only login — never used for customer shop account flows. */
+export const ADMIN_ACCOUNT_EMAIL = "hillelisaacs@gmail.com";
+
+export function isAdminAccountEmail(email: string): boolean {
+  return email.trim().toLowerCase() === ADMIN_ACCOUNT_EMAIL.toLowerCase();
+}
+
+export const ADMIN_ACCOUNT_PROFILE: UserProfile = {
+  firstName: "הלל",
+  lastName: "אייזקס",
+  email: ADMIN_ACCOUNT_EMAIL,
+  phone: "",
+  isAdmin: true,
+};
+
+export type AccountSession = UserProfile & {
+  /** Signed server token for admin-only API calls. */
+  authToken?: string;
+  /** Signed server token for customer account API calls. */
+  customerToken?: string;
+};
 
 export const ACCOUNT_SESSION_KEY = "chole-account-session";
 
@@ -144,9 +170,11 @@ export function formatPrice(n: number) {
 }
 
 export function getAccountOrders(profile: UserProfile): Order[] {
-  return profile.isNew ? [] : MOCK_ORDERS;
+  if (profile.isAdmin || profile.isNew) return [];
+  return MOCK_ORDERS;
 }
 
 export function getAccountAddresses(profile: UserProfile): Address[] {
-  return profile.isNew ? [] : MOCK_ADDRESSES;
+  if (profile.isAdmin || profile.isNew) return [];
+  return MOCK_ADDRESSES;
 }

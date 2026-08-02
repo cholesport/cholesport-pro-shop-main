@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { Phone } from "lucide-react";
+import { ActivitiesRegisterCta } from "@/components/site/ActivitiesRegisterCta";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { ACTIVITIES_SCHEDULE_HASH } from "@/data/activities";
 import { SHOWROOM_ACTIVITIES } from "@/data/showroom";
 import { COMPANY } from "@/data/legal";
 
@@ -24,13 +26,16 @@ export function ShowroomActivitiesSection() {
 
   return (
     <section dir="rtl" aria-labelledby="showroom-activities-heading" className="mb-12">
-      <div className="mb-6">
-        <h2 id="showroom-activities-heading" className="text-2xl font-black text-foreground">
-          חוגים במתחם
-        </h2>
-        <p className="mt-2 text-sm text-muted-foreground max-w-2xl">
-          לחצו על כל רובריקה כדי לפתוח פרטים, שעות והרשמה.
-        </p>
+      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <h2 id="showroom-activities-heading" className="text-2xl font-black text-foreground">
+            חוגים במתחם
+          </h2>
+          <p className="mt-2 text-sm text-muted-foreground max-w-2xl">
+            לחצו על כל רובריקה כדי לפתוח פרטים, שעות והרשמה.
+          </p>
+        </div>
+        <ActivitiesRegisterCta hash={ACTIVITIES_SCHEDULE_HASH} size="md" className="shrink-0" />
       </div>
 
       <Accordion
@@ -60,13 +65,20 @@ export function ShowroomActivitiesSection() {
                   </li>
                 ))}
               </ul>
-              <a
-                href={`tel:${COMPANY.phone.replace(/-/g, "")}`}
-                className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-accent hover:underline"
-              >
-                <Phone size={16} aria-hidden />
-                לפרטים והרשמה: {COMPANY.phone}
-              </a>
+              <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+                <ActivitiesRegisterCta
+                  hash={ACTIVITIES_SCHEDULE_HASH}
+                  size="sm"
+                  short
+                />
+                <a
+                  href={`tel:${COMPANY.phone.replace(/-/g, "")}`}
+                  className="inline-flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-accent"
+                >
+                  <Phone size={16} aria-hidden />
+                  טלפון: {COMPANY.phone}
+                </a>
+              </div>
             </AccordionContent>
           </AccordionItem>
         ))}

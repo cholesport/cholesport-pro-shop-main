@@ -1,15 +1,22 @@
 import { Link } from "@tanstack/react-router";
 import { PAYMENT_SUMMARY } from "@/data/payment";
 import logo from "@/assets/chole-sport-logo.png";
+import { ActivitiesRegisterCta } from "@/components/site/ActivitiesRegisterCta";
 import { COMPANY } from "@/data/legal";
 import { CONTACT_PHONE_DISPLAY, WHATSAPP_URL } from "@/lib/contact";
 import { BrandLogoRow } from "@/components/site/BrandLogos";
 import { FadeIn } from "@/components/site/FadeIn";
+import {
+  ACTIVITIES_REGISTER_CALLOUT_TEXT,
+  ACTIVITIES_REGISTER_CALLOUT_TITLE,
+  ACTIVITIES_REGISTER_CTA_LABEL,
+  ACTIVITIES_SCHEDULE_HASH,
+} from "@/data/activities";
 
 type FooterLink = {
   label: string;
   href?: string;
-  to?: "/privacy" | "/terms" | "/account" | "/categories" | "/club" | "/about";
+  to?: "/privacy" | "/terms" | "/account" | "/categories" | "/club" | "/about" | "/register";
 };
 
 const COLS: Record<string, FooterLink[]> = {
@@ -19,6 +26,7 @@ const COLS: Record<string, FooterLink[]> = {
     { label: "קטגוריות", to: "/categories" },
     { label: "SHOW ROOM", href: "/categories/show-room" },
     { label: "מתחם CHOLE TLV", to: "/club" },
+    { label: ACTIVITIES_REGISTER_CTA_LABEL, to: "/register" },
     { label: "אודות", to: "/about" },
   ],
   שירות: [
@@ -55,6 +63,17 @@ export function Footer() {
   return (
     <footer className="mt-20 border-t border-border bg-card">
       <div className="max-w-7xl mx-auto px-4 py-14">
+        <FadeIn preset="footer" className="mb-10 rounded-2xl border-2 border-accent/40 bg-accent/10 p-5 md:p-6">
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div>
+              <p className="text-lg font-black text-foreground">{ACTIVITIES_REGISTER_CALLOUT_TITLE}</p>
+              <p className="mt-1 text-sm text-muted-foreground max-w-xl">
+                {ACTIVITIES_REGISTER_CALLOUT_TEXT}
+              </p>
+            </div>
+            <ActivitiesRegisterCta hash={ACTIVITIES_SCHEDULE_HASH} size="lg" className="shrink-0" />
+          </div>
+        </FadeIn>
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10">
           <FadeIn preset="footer" className="md:col-span-5">
             <img src={logo} alt="CHOLE sport" className="h-14 w-auto mb-5" />

@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { ActivitiesRegisterBanner } from "@/components/site/ActivitiesRegisterBanner";
 import { Header } from "@/components/site/Header";
 import { Hero } from "@/components/site/Hero";
 import { ClubTeaser } from "@/components/site/ClubTeaser";
@@ -34,6 +35,7 @@ function Index() {
       <main id="main-content">
         <Hero />
         <ClubTeaser />
+        <ActivitiesRegisterBanner />
         <Products />
         <BrandsSection />
         <Promo />

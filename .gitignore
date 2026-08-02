@@ -32,3 +32,9 @@ dist-ssr
 *.sw?
 .vercel
 .env*
+
+# Private activity registration roster (admin-only data)
+data/registrations.json
+data/shop-orders.json
+data/customers.json
+data/passes.json

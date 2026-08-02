@@ -1,10 +1,18 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { z } from "zod";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { AccountPage } from "@/components/site/AccountPage";
 import { buildPageSeoHead } from "@/lib/seo";
 
+const accountSearchSchema = z.object({
+  section: z
+    .enum(["overview", "orders", "profile", "addresses", "shop-orders", "registrations"])
+    .optional(),
+});
+
 export const Route = createFileRoute("/account")({
+  validateSearch: accountSearchSchema,
   head: () => {
     const seo = buildPageSeoHead({
       title: "החשבון שלי - CHOLE sport",

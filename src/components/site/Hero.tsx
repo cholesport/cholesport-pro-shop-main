@@ -1,13 +1,15 @@
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ShoppingBag } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { HeroCarousel } from "@/components/site/HeroCarousel";
 import { FadeIn } from "@/components/site/FadeIn";
+import { ActivitiesRegisterCta } from "@/components/site/ActivitiesRegisterCta";
 import { useHeroCarousel } from "@/hooks/useHeroCarousel";
 import {
   BRAND_CORPORATE_TAGLINE,
-  BRAND_HERO_CTA,
+  BRAND_HERO_SHOP_CTA,
   BRAND_HERO_SUBHEADLINE,
 } from "@/data/brand";
+import { ACTIVITIES_SCHEDULE_HASH } from "@/data/activities";
 
 /**
  * Full-bleed dark veil graded top → bottom across the entire upper hero,
@@ -60,12 +62,19 @@ export function Hero() {
               {BRAND_HERO_SUBHEADLINE}
             </FadeIn>
 
-            <FadeIn preset="hero" immediate index={3} className="mt-8 sm:mt-10">
+            <FadeIn preset="hero" immediate index={3} className="mt-8 sm:mt-10 flex flex-col sm:flex-row flex-wrap gap-3">
+              <ActivitiesRegisterCta
+                variant="solid"
+                size="lg"
+                hash={ACTIVITIES_SCHEDULE_HASH}
+                className="shadow-lg shadow-black/20"
+              />
               <Link
                 to="/categories"
-                className="inline-flex items-center justify-center gap-2 bg-accent px-8 py-3.5 text-sm font-bold tracking-wide text-accent-foreground transition hover:opacity-90 sm:text-base"
+                className="inline-flex items-center justify-center gap-2 border-2 border-white/80 bg-white/10 px-8 py-3.5 text-sm font-bold tracking-wide text-white backdrop-blur-sm transition hover:bg-white hover:text-foreground sm:text-base"
               >
-                {BRAND_HERO_CTA}
+                <ShoppingBag size={18} aria-hidden />
+                {BRAND_HERO_SHOP_CTA}
                 <ArrowLeft size={18} aria-hidden />
               </Link>
             </FadeIn>

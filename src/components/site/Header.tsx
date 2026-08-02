@@ -2,8 +2,10 @@ import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { User, ShoppingCart, Menu, X, ChevronDown } from "lucide-react";
 import logo from "@/assets/chole-sport-logo.png";
+import { ActivitiesRegisterCta } from "@/components/site/ActivitiesRegisterCta";
 import { useCart } from "@/context/CartContext";
 import { CATEGORIES } from "@/data/categories";
+import { ACTIVITIES_SCHEDULE_HASH } from "@/data/activities";
 import { CONTACT_PHONE_DISPLAY } from "@/lib/contact";
 import { HeaderSearchBar } from "@/components/site/HeaderSearchBar";
 
@@ -15,7 +17,6 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-border/80 bg-background/90 backdrop-blur-md">
       <div className="relative max-w-7xl mx-auto px-4">
-        {/* Top bar: logo · actions (search icon like Bash Gal) */}
         <div className="flex items-center gap-3 md:gap-4 py-3 md:py-3.5">
           <a href="/" className="shrink-0">
             <img
@@ -25,7 +26,7 @@ export function Header() {
             />
           </a>
 
-          <div className="flex items-center gap-3 sm:gap-4 shrink-0 ms-auto">
+          <div className="flex items-center gap-2 sm:gap-3 ms-auto shrink-0">
             <a
               href={`tel:${CONTACT_PHONE_DISPLAY.replace(/-/g, "")}`}
               className="hidden xl:inline text-xs font-medium text-muted-foreground hover:text-accent transition"
@@ -64,7 +65,17 @@ export function Header() {
           </div>
         </div>
 
-        {/* Desktop nav */}
+        {/* Full-width register CTA — readable on all screen sizes */}
+        <div className="pb-3 md:pb-3.5">
+          <ActivitiesRegisterCta
+            header
+            hash={ACTIVITIES_SCHEDULE_HASH}
+            icon="calendar"
+            size="sm"
+            className="w-full whitespace-normal text-center leading-snug px-4 py-2.5 shadow-sm md:text-sm"
+          />
+        </div>
+
         <nav className="hidden lg:block border-t border-border/60">
           <ul
             className="flex items-center justify-between gap-1 py-1.5"

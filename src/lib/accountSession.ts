@@ -1,6 +1,6 @@
 import {
   ACCOUNT_SESSION_KEY,
-  type UserProfile,
+  type AccountSession,
 } from "@/data/account";
 import { CART_STORAGE_KEY } from "@/lib/cart";
 
@@ -13,12 +13,12 @@ export function resetClientShopData() {
   }
 }
 
-export function loadAccountSession(): UserProfile | null {
+export function loadAccountSession(): AccountSession | null {
   if (typeof window === "undefined") return null;
   try {
     const raw = sessionStorage.getItem(ACCOUNT_SESSION_KEY);
     if (!raw) return null;
-    const parsed = JSON.parse(raw) as UserProfile;
+    const parsed = JSON.parse(raw) as AccountSession;
     if (!parsed?.email) return null;
     return parsed;
   } catch {
@@ -26,7 +26,7 @@ export function loadAccountSession(): UserProfile | null {
   }
 }
 
-export function saveAccountSession(profile: UserProfile) {
+export function saveAccountSession(profile: AccountSession) {
   sessionStorage.setItem(ACCOUNT_SESSION_KEY, JSON.stringify(profile));
 }
 

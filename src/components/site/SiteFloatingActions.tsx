@@ -1,12 +1,18 @@
+import { UserPlus } from "lucide-react";
+import { Link, useRouterState } from "@tanstack/react-router";
 import whatsappIcon from "@/assets/whatsapp.png";
 import { AccessibilityWidget } from "@/components/site/AccessibilityWidget";
 import { FadeIn } from "@/components/site/FadeIn";
+import { ACTIVITIES_PATH, ACTIVITIES_REGISTER_CTA_LABEL, ACTIVITIES_SCHEDULE_HASH } from "@/data/activities";
 import { WHATSAPP_URL } from "@/lib/contact";
 
 const FLOAT_BTN =
   "pointer-events-auto flex items-center justify-center size-10 rounded-full shadow-md hover:scale-105 transition-transform focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 overflow-hidden";
 
 export function SiteFloatingActions() {
+  const pathname = useRouterState({ select: (state) => state.location.pathname });
+  const showRegisterCta = pathname !== ACTIVITIES_PATH;
+
   return (
     <FadeIn
       preset="floating"
@@ -18,6 +24,16 @@ export function SiteFloatingActions() {
       <div className="pointer-events-auto">
         <AccessibilityWidget />
       </div>
+      {showRegisterCta && (
+        <Link
+          to={ACTIVITIES_PATH}
+          hash={ACTIVITIES_SCHEDULE_HASH}
+          aria-label={ACTIVITIES_REGISTER_CTA_LABEL}
+          className={`${FLOAT_BTN} size-12 bg-accent text-accent-foreground shadow-lg shadow-accent/40 ring-2 ring-accent/50 focus-visible:ring-accent`}
+        >
+          <UserPlus size={22} aria-hidden />
+        </Link>
+      )}
       <a
         href={WHATSAPP_URL}
         target="_blank"

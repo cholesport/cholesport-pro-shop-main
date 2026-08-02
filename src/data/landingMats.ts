@@ -10,6 +10,7 @@ export type LandingMatVariant = {
   widthCm: number;
   thicknessCm: number;
   price: number;
+  was?: number;
   outOfStock?: boolean;
 };
 
@@ -20,7 +21,7 @@ export const LANDING_MAT_VARIANTS: LandingMatVariant[] = [
   { id: "landing-mat-250x120x30", lengthCm: 250, widthCm: 120, thicknessCm: 30, price: 1950 },
   { id: "landing-mat-250x150x20", lengthCm: 250, widthCm: 150, thicknessCm: 20, price: 2150 },
   { id: "landing-mat-250x150x30", lengthCm: 250, widthCm: 150, thicknessCm: 30, price: 2550 },
-  { id: "landing-mat-250x200x30", lengthCm: 250, widthCm: 200, thicknessCm: 30, price: 3250 },
+  { id: "landing-mat-250x200x30", lengthCm: 250, widthCm: 200, thicknessCm: 30, price: 2800, was: 3250 },
 ];
 
 export const LANDING_MAT_AIRFLOOR_ID = "landing-mat-250x200x30";

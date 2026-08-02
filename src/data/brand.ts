@@ -8,6 +8,8 @@ export const BRAND_HERO_SUBHEADLINE =
   "ב-CHOLE אנחנו לא רק מעצבים ומייבאים ציוד - אנחנו חיים אותו. הניסיון שלנו על המזרן, בשולחן הטניס ובמתקני הנינג'ה מתורגם לכל פרט ופרט במוצרים שלנו. אנו מחויבים להעניק לכם את אותו הדיוק והאיכות שאנחנו דורשים מעצמנו באימונים.";
 
 export const BRAND_HERO_CTA = "לצפייה בקולקציית המוצרים";
+export const BRAND_HERO_SHOP_CTA = "רכישת ציוד ומוצרים";
+export const BRAND_HERO_REGISTER_CTA = "רישום לחוגים, פעילויות ומתחם הפינגפונג";
 
 export const HOMEPAGE_FEATURED_TITLE = "נבחרת מוצרי CHOLE";
 export const HOMEPAGE_FEATURED_SUBTITLE =

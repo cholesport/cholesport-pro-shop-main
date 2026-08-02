@@ -121,6 +121,13 @@ function SizeRow({
                 {formatPrice(variant.price)} ₪
               </span>
             </p>
+            {variant.was != null && variant.was > variant.price && (
+              <p className="text-xs text-muted-foreground line-through">
+                <span dir="ltr" className="unicode-bidi-plaintext inline-block">
+                  {formatPrice(variant.was)} ₪
+                </span>
+              </p>
+            )}
             {isCurrent && (
               <span className="text-xs font-bold text-accent">המידה הנוכחית</span>
             )}
@@ -158,6 +165,13 @@ function SizeRow({
         <span dir="ltr" className="unicode-bidi-plaintext inline-block">
           {formatPrice(variant.price)} ₪
         </span>
+        {variant.was != null && variant.was > variant.price && (
+          <span className="block text-xs font-normal text-muted-foreground line-through">
+            <span dir="ltr" className="unicode-bidi-plaintext inline-block">
+              {formatPrice(variant.was)} ₪
+            </span>
+          </span>
+        )}
       </td>
       <td className="px-4 py-3">
         {!isCurrent && (

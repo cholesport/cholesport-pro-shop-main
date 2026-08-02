@@ -1,11 +1,17 @@
 import { Link } from "@tanstack/react-router";
 import { ChevronLeft } from "lucide-react";
+import { ActivitiesRegisterCta } from "@/components/site/ActivitiesRegisterCta";
 import {
   CATEGORIES,
   CATEGORIES_PAGE_SUBTITLE,
   CATEGORIES_PAGE_TITLE,
   type CategoryDefinition,
 } from "@/data/categories";
+import {
+  ACTIVITIES_REGISTER_CALLOUT_TEXT,
+  ACTIVITIES_REGISTER_CALLOUT_TITLE,
+  ACTIVITIES_SCHEDULE_HASH,
+} from "@/data/activities";
 import type { LucideIcon } from "lucide-react";
 import { FadeIn } from "@/components/site/FadeIn";
 
@@ -61,6 +67,18 @@ export function CategoriesIndexPage() {
       <FadeIn preset="section" immediate className="mb-10 pb-8 border-b border-border max-w-2xl">
         <h1 className="text-3xl md:text-4xl font-extrabold text-foreground">{CATEGORIES_PAGE_TITLE}</h1>
         <p className="text-muted-foreground mt-3 leading-relaxed">{CATEGORIES_PAGE_SUBTITLE}</p>
+      </FadeIn>
+
+      <FadeIn
+        preset="section"
+        immediate
+        className="mb-10 flex flex-col gap-4 rounded-2xl border-2 border-accent/40 bg-accent/10 p-5 md:flex-row md:items-center md:justify-between"
+      >
+        <div>
+          <p className="text-lg font-black text-foreground">{ACTIVITIES_REGISTER_CALLOUT_TITLE}</p>
+          <p className="mt-1 text-sm text-muted-foreground">{ACTIVITIES_REGISTER_CALLOUT_TEXT}</p>
+        </div>
+        <ActivitiesRegisterCta hash={ACTIVITIES_SCHEDULE_HASH} size="lg" className="shrink-0" />
       </FadeIn>
 
       <ul className="grid grid-cols-1 md:grid-cols-2 gap-px bg-border border border-border">

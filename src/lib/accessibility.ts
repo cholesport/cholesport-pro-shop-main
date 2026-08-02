@@ -1,3 +1,5 @@
+import { readLocalStorage, writeLocalStorage } from "@/lib/safeStorage";
+
 export type A11ySettings = {
   fontSize: "normal" | "large" | "xlarge";
   highContrast: boolean;
@@ -19,7 +21,7 @@ export const DEFAULT_A11Y: A11ySettings = {
 export function loadA11ySettings(): A11ySettings {
   if (typeof window === "undefined") return DEFAULT_A11Y;
   try {
-    const raw = localStorage.getItem(A11Y_STORAGE_KEY);
+    const raw = readLocalStorage(A11Y_STORAGE_KEY);
     if (!raw) return DEFAULT_A11Y;
     return { ...DEFAULT_A11Y, ...JSON.parse(raw) };
   } catch {
@@ -27,8 +29,8 @@ export function loadA11ySettings(): A11ySettings {
   }
 }
 
-export function saveA11ySettings(settings: A11ySettings) {
-  localStorage.setItem(A11Y_STORAGE_KEY, JSON.stringify(settings));
+export function saveA11ySettings(settings: A11ySettings): boolean {
+  return writeLocalStorage(A11Y_STORAGE_KEY, JSON.stringify(settings));
 }
 
 export function applyA11ySettings(settings: A11ySettings) {

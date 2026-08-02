@@ -12,10 +12,12 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { ErrorBoundary } from "@/components/site/ErrorBoundary";
 import { SiteFloatingActions, SkipToContent } from "@/components/site/SiteFloatingActions";
 import { PageFade } from "@/components/site/FadeIn";
 import { applyA11ySettings, loadA11ySettings } from "@/lib/accessibility";
 import { CartProvider } from "@/context/CartContext";
+import { useClientErrorReporting } from "@/hooks/useClientErrorReporting";
 import { Toaster } from "@/components/ui/sonner";
 import {
   buildOrganizationJsonLd,
@@ -65,10 +67,10 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
     <div id="main-content" className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
         <h1 className="text-xl font-semibold tracking-tight text-foreground">
-          This page didn't load
+          לא הצלחנו לטעון את העמוד
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Something went wrong on our end. You can try refreshing or head back home.
+          משהו השתבש בצד שלנו. אפשר לנסות שוב או לחזור לדף הבית.
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
@@ -78,13 +80,13 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
             }}
             className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
           >
-            Try again
+            נסו שוב
           </button>
           <a
             href="/"
             className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
           >
-            Go home
+            חזרה לדף הבית
           </a>
         </div>
       </div>
@@ -169,6 +171,8 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
+  useClientErrorReporting();
+
   useEffect(() => {
     applyA11ySettings(loadA11ySettings());
   }, []);
@@ -179,7 +183,9 @@ function RootComponent() {
         <SkipToContent />
         {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
         <PageFade pageKey={pathname}>
-          <Outlet />
+          <ErrorBoundary sectionLabel="העמוד">
+            <Outlet />
+          </ErrorBoundary>
         </PageFade>
         <SiteFloatingActions />
         <Toaster position="top-center" dir="rtl" richColors closeButton />

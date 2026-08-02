@@ -24,6 +24,7 @@ import {
 import type { ActivityPass } from "@/data/passes";
 import { loadAccountSession } from "@/lib/accountSession";
 import { listCustomerPasses } from "@/lib/api/passes.functions";
+import { safeAction } from "@/lib/safeAction";
 
 export function ActivitiesPage() {
   const [scheduleCategory, setScheduleCategory] = useState<ActivityCategoryId>("table-tennis");
@@ -130,9 +131,15 @@ export function ActivitiesPage() {
     }
     if (!session.customerToken) return;
     setCustomerToken(session.customerToken);
-    void listCustomerPasses({ data: { customerToken: session.customerToken } }).then((result) =>
-      setPasses(result.passes),
-    );
+    void safeAction(
+      () => listCustomerPasses({ data: { customerToken: session.customerToken! } }),
+      {
+        fallbackMessage: "לא הצלחנו לטעון כרטיסיות.",
+        notify: false,
+      },
+    ).then((result) => {
+      if (result) setPasses(result.passes);
+    });
   }, []);
 
   return (

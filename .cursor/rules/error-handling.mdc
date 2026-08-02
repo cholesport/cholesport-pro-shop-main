@@ -1,0 +1,56 @@
+---
+description: Error handling — actions must never crash the site
+alwaysApply: true
+---
+
+# Error Handling (CHOLE sport)
+
+User actions and risky operations must **fail gracefully**. Never let an error take down the whole site.
+
+## Rules
+
+1. **Async user actions** — wrap in `safeAction()` from `@/lib/safeAction` (or `try/catch` + `toast.error` + `getErrorMessage`).
+2. **Sync handlers** (onClick, onChange) — use `safeSyncAction()` if the handler can throw.
+3. **Browser storage** — use `@/lib/safeStorage`; never call `localStorage` / `sessionStorage` directly in app code.
+4. **Fire-and-forget promises** — always `.catch()` or use `safeAction({ notify: false })` for background loads.
+5. **Risky UI sections** — wrap with `<ErrorBoundary sectionLabel="…">` so one panel cannot crash the page.
+6. **Server functions** — throw clear Hebrew `Error` messages; the client shows them via `safeAction` / toast.
+
+## Patterns
+
+```tsx
+// ❌ BAD — unhandled rejection can crash UX
+void listCustomerPasses({ data: { customerToken } }).then((r) => setPasses(r.passes));
+
+// ✅ GOOD
+void safeAction(
+  () => listCustomerPasses({ data: { customerToken } }),
+  { fallbackMessage: "לא הצלחנו לטעון כרטיסיות.", notify: false },
+).then((result) => {
+  if (result) setPasses(result.passes);
+});
+```
+
+```tsx
+// ❌ BAD — storage throw in useEffect
+localStorage.setItem(key, JSON.stringify(data));
+
+// ✅ GOOD
+writeLocalStorage(key, JSON.stringify(data));
+```
+
+```tsx
+// ❌ BAD — one admin panel crash kills account page
+<AdminOrdersPanel />
+
+// ✅ GOOD
+<ErrorBoundary sectionLabel="ניהול הזמנות">
+  <AdminOrdersPanel />
+</ErrorBoundary>
+```
+
+## Do not
+
+- Rely only on the root error boundary for feature bugs.
+- Swallow errors silently without `console.error` (reporting is fine for background tasks).
+- Use empty `catch {}` in user-facing flows without a fallback state or toast.

@@ -1,4 +1,5 @@
 import type { Product } from "@/data/products";
+import { readLocalStorage, writeLocalStorage } from "@/lib/safeStorage";
 import {
   getPuzzleMatUnitPrice,
   isPuzzleMatProductId,
@@ -23,7 +24,7 @@ export const CART_STORAGE_KEY = "chole-cart";
 export function loadCart(): CartItem[] {
   if (typeof window === "undefined") return [];
   try {
-    const raw = localStorage.getItem(CART_STORAGE_KEY);
+    const raw = readLocalStorage(CART_STORAGE_KEY);
     if (!raw) return [];
     const parsed = JSON.parse(raw);
     if (!Array.isArray(parsed)) return [];
@@ -33,8 +34,8 @@ export function loadCart(): CartItem[] {
   }
 }
 
-export function saveCart(items: CartItem[]) {
-  localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
+export function saveCart(items: CartItem[]): boolean {
+  return writeLocalStorage(CART_STORAGE_KEY, JSON.stringify(items));
 }
 
 function normalizeCartItemShape(item: CartItem): CartItem {

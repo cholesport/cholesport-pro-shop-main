@@ -47,6 +47,7 @@ import {
   saveAccountSession,
 } from "@/lib/accountSession";
 import { AccountAvatarBadge, AccountAvatarEditor } from "@/components/site/AccountAvatarEditor";
+import { ErrorBoundary } from "@/components/site/ErrorBoundary";
 import { AdminRegistrationsPanel } from "@/components/site/AdminRegistrationsPage";
 import { AdminOrdersPanel } from "@/components/site/AdminOrdersPanel";
 import { AdminCustomersPanel } from "@/components/site/AdminCustomersPanel";
@@ -610,17 +611,19 @@ function Dashboard({
               <p className="text-sm text-muted-foreground">טוען כרטיסיות...</p>
             ) : (
               <>
-                {customerToken && (
-                  <CustomerActivityRegistrations
+                <ErrorBoundary sectionLabel="הרשמות וכרטיסיות">
+                  {customerToken && (
+                    <CustomerActivityRegistrations
+                      customerToken={customerToken}
+                      onPassUpdated={() => void refreshPasses()}
+                    />
+                  )}
+                  <CustomerPassesPanel
+                    passes={passes}
                     customerToken={customerToken}
-                    onPassUpdated={() => void refreshPasses()}
+                    onPassesChange={onPassesChange}
                   />
-                )}
-                <CustomerPassesPanel
-                  passes={passes}
-                  customerToken={customerToken}
-                  onPassesChange={onPassesChange}
-                />
+                </ErrorBoundary>
               </>
             )}
           </div>
@@ -788,23 +791,33 @@ function Dashboard({
         )}
 
         {section === "reports" && profile.isAdmin && authToken && (
-          <AdminReportsPanel authToken={authToken} />
+          <ErrorBoundary sectionLabel="דוחות">
+            <AdminReportsPanel authToken={authToken} />
+          </ErrorBoundary>
         )}
 
         {section === "admin-passes" && profile.isAdmin && authToken && (
-          <AdminPassesPanel authToken={authToken} />
+          <ErrorBoundary sectionLabel="ניהול כרטיסיות">
+            <AdminPassesPanel authToken={authToken} />
+          </ErrorBoundary>
         )}
 
         {section === "customers" && profile.isAdmin && authToken && (
-          <AdminCustomersPanel authToken={authToken} />
+          <ErrorBoundary sectionLabel="ניהול לקוחות">
+            <AdminCustomersPanel authToken={authToken} />
+          </ErrorBoundary>
         )}
 
         {section === "shop-orders" && profile.isAdmin && authToken && (
-          <AdminOrdersPanel authToken={authToken} />
+          <ErrorBoundary sectionLabel="ניהול הזמנות">
+            <AdminOrdersPanel authToken={authToken} />
+          </ErrorBoundary>
         )}
 
         {section === "registrations" && profile.isAdmin && authToken && (
-          <AdminRegistrationsPanel authToken={authToken} />
+          <ErrorBoundary sectionLabel="ניהול הרשמות">
+            <AdminRegistrationsPanel authToken={authToken} />
+          </ErrorBoundary>
         )}
 
         <button

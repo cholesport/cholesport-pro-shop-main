@@ -9,7 +9,12 @@ import { ACTIVITIES_SCHEDULE_HASH } from "@/data/activities";
 import { CONTACT_PHONE_DISPLAY } from "@/lib/contact";
 import { HeaderSearchBar } from "@/components/site/HeaderSearchBar";
 
-export function Header() {
+type HeaderProps = {
+  /** Slim header for gateway and area hub pages — no category nav or register banner. */
+  variant?: "full" | "minimal";
+};
+
+export function Header({ variant = "full" }: HeaderProps) {
   const [open, setOpen] = useState<string | null>(null);
   const [mobile, setMobile] = useState(false);
   const { totalQuantity } = useCart();
@@ -65,18 +70,20 @@ export function Header() {
           </div>
         </div>
 
-        {/* Full-width register CTA — readable on all screen sizes */}
-        <div className="pb-3 md:pb-3.5">
-          <ActivitiesRegisterCta
-            header
-            hash={ACTIVITIES_SCHEDULE_HASH}
-            icon="calendar"
-            size="sm"
-            className="w-full whitespace-normal text-center leading-snug px-4 py-2.5 shadow-sm md:text-sm"
-          />
-        </div>
+        {variant === "full" && (
+          <>
+            {/* Full-width register CTA — readable on all screen sizes */}
+            <div className="pb-3 md:pb-3.5">
+              <ActivitiesRegisterCta
+                header
+                hash={ACTIVITIES_SCHEDULE_HASH}
+                icon="calendar"
+                size="sm"
+                className="w-full whitespace-normal text-center leading-snug px-4 py-2.5 shadow-sm md:text-sm"
+              />
+            </div>
 
-        <nav className="hidden lg:block border-t border-border/60">
+            <nav className="hidden lg:block border-t border-border/60">
           <ul
             className="flex items-center justify-between gap-1 py-1.5"
             onMouseLeave={() => setOpen(null)}
@@ -138,9 +145,11 @@ export function Header() {
             })}
           </ul>
         </nav>
+          </>
+        )}
       </div>
 
-      {mobile && (
+      {mobile && variant === "full" && (
         <div className="lg:hidden border-t border-border bg-card">
           <div className="p-4">
             <ul>

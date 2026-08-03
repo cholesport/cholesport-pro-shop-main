@@ -1,20 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ActivitiesRegisterBanner } from "@/components/site/ActivitiesRegisterBanner";
 import { Header } from "@/components/site/Header";
-import { Hero } from "@/components/site/Hero";
-import { ClubTeaser } from "@/components/site/ClubTeaser";
-import { Categories } from "@/components/site/Categories";
-import { Promo } from "@/components/site/Promo";
-import { Products } from "@/components/site/Products";
-import { BrandsSection } from "@/components/site/BrandLogos";
+import { SiteGateway } from "@/components/site/SiteGateway";
 import { Footer } from "@/components/site/Footer";
-import { BRAND_HERO_HEADLINE, BRAND_NAME } from "@/data/brand";
+import { BRAND_NAME } from "@/data/brand";
 import { SITE_HOST, SITE_SEO_DESCRIPTION } from "@/data/site";
+import { SITE_GATEWAY_HEADLINE } from "@/data/siteGateway";
 import { buildPageSeoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/")({
   head: () => {
-    const title = `${BRAND_NAME} | ${SITE_HOST} - ${BRAND_HERO_HEADLINE}`;
+    const title = `${BRAND_NAME} | ${SITE_HOST} - ${SITE_GATEWAY_HEADLINE}`;
     const seo = buildPageSeoHead({
       title,
       description: SITE_SEO_DESCRIPTION,
@@ -31,15 +26,9 @@ export const Route = createFileRoute("/")({
 function Index() {
   return (
     <div className="min-h-screen bg-background">
-      <Header />
+      <Header variant="minimal" />
       <main id="main-content">
-        <Hero />
-        <ClubTeaser />
-        <ActivitiesRegisterBanner />
-        <Products />
-        <BrandsSection />
-        <Promo />
-        <Categories />
+        <SiteGateway />
       </main>
       <Footer />
     </div>

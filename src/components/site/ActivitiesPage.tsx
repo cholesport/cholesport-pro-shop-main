@@ -26,8 +26,14 @@ import { loadAccountSession } from "@/lib/accountSession";
 import { listCustomerPasses } from "@/lib/api/passes.functions";
 import { safeAction } from "@/lib/safeAction";
 
-export function ActivitiesPage() {
-  const [scheduleCategory, setScheduleCategory] = useState<ActivityCategoryId>("table-tennis");
+type ActivitiesPageProps = {
+  initialScheduleCategory?: ActivityCategoryId;
+};
+
+export function ActivitiesPage({ initialScheduleCategory }: ActivitiesPageProps = {}) {
+  const [scheduleCategory, setScheduleCategory] = useState<ActivityCategoryId>(
+    initialScheduleCategory ?? "table-tennis",
+  );
   const [passes, setPasses] = useState<ActivityPass[]>([]);
   const [customerToken, setCustomerToken] = useState<string | undefined>();
   const [isAdmin, setIsAdmin] = useState(false);
@@ -141,6 +147,11 @@ export function ActivitiesPage() {
       if (result) setPasses(result.passes);
     });
   }, []);
+
+  useEffect(() => {
+    if (!initialScheduleCategory) return;
+    setScheduleCategory(initialScheduleCategory);
+  }, [initialScheduleCategory]);
 
   return (
     <div dir="rtl">

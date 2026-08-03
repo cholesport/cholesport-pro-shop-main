@@ -10,8 +10,10 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TermsRouteImport } from './routes/terms'
+import { Route as TableTennisRouteImport } from './routes/table-tennis'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as KidsRouteImport } from './routes/kids'
 import { Route as ClubRouteImport } from './routes/club'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as CartRouteImport } from './routes/cart'
@@ -35,6 +37,11 @@ const TermsRoute = TermsRouteImport.update({
   path: '/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TableTennisRoute = TableTennisRouteImport.update({
+  id: '/table-tennis',
+  path: '/table-tennis',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RegisterRoute = RegisterRouteImport.update({
   id: '/register',
   path: '/register',
@@ -43,6 +50,11 @@ const RegisterRoute = RegisterRouteImport.update({
 const PrivacyRoute = PrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KidsRoute = KidsRouteImport.update({
+  id: '/kids',
+  path: '/kids',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ClubRoute = ClubRouteImport.update({
@@ -139,8 +151,10 @@ export interface FileRoutesByFullPath {
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
   '/club': typeof ClubRoute
+  '/kids': typeof KidsRoute
   '/privacy': typeof PrivacyRoute
   '/register': typeof RegisterRoute
+  '/table-tennis': typeof TableTennisRoute
   '/terms': typeof TermsRoute
   '/account/reset-password': typeof AccountResetPasswordRoute
   '/admin/customers': typeof AdminCustomersRoute
@@ -160,8 +174,10 @@ export interface FileRoutesByTo {
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
   '/club': typeof ClubRoute
+  '/kids': typeof KidsRoute
   '/privacy': typeof PrivacyRoute
   '/register': typeof RegisterRoute
+  '/table-tennis': typeof TableTennisRoute
   '/terms': typeof TermsRoute
   '/account/reset-password': typeof AccountResetPasswordRoute
   '/admin/customers': typeof AdminCustomersRoute
@@ -183,8 +199,10 @@ export interface FileRoutesById {
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
   '/club': typeof ClubRoute
+  '/kids': typeof KidsRoute
   '/privacy': typeof PrivacyRoute
   '/register': typeof RegisterRoute
+  '/table-tennis': typeof TableTennisRoute
   '/terms': typeof TermsRoute
   '/account/reset-password': typeof AccountResetPasswordRoute
   '/admin/customers': typeof AdminCustomersRoute
@@ -207,8 +225,10 @@ export interface FileRouteTypes {
     | '/cart'
     | '/checkout'
     | '/club'
+    | '/kids'
     | '/privacy'
     | '/register'
+    | '/table-tennis'
     | '/terms'
     | '/account/reset-password'
     | '/admin/customers'
@@ -228,8 +248,10 @@ export interface FileRouteTypes {
     | '/cart'
     | '/checkout'
     | '/club'
+    | '/kids'
     | '/privacy'
     | '/register'
+    | '/table-tennis'
     | '/terms'
     | '/account/reset-password'
     | '/admin/customers'
@@ -250,8 +272,10 @@ export interface FileRouteTypes {
     | '/cart'
     | '/checkout'
     | '/club'
+    | '/kids'
     | '/privacy'
     | '/register'
+    | '/table-tennis'
     | '/terms'
     | '/account/reset-password'
     | '/admin/customers'
@@ -273,8 +297,10 @@ export interface RootRouteChildren {
   CartRoute: typeof CartRoute
   CheckoutRoute: typeof CheckoutRoute
   ClubRoute: typeof ClubRoute
+  KidsRoute: typeof KidsRoute
   PrivacyRoute: typeof PrivacyRoute
   RegisterRoute: typeof RegisterRoute
+  TableTennisRoute: typeof TableTennisRoute
   TermsRoute: typeof TermsRoute
   CategoriesCategorySlugRoute: typeof CategoriesCategorySlugRoute
   ProductsProductIdRoute: typeof ProductsProductIdRoute
@@ -290,6 +316,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/table-tennis': {
+      id: '/table-tennis'
+      path: '/table-tennis'
+      fullPath: '/table-tennis'
+      preLoaderRoute: typeof TableTennisRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/register': {
       id: '/register'
       path: '/register'
@@ -302,6 +335,13 @@ declare module '@tanstack/react-router' {
       path: '/privacy'
       fullPath: '/privacy'
       preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/kids': {
+      id: '/kids'
+      path: '/kids'
+      fullPath: '/kids'
+      preLoaderRoute: typeof KidsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/club': {
@@ -465,8 +505,10 @@ const rootRouteChildren: RootRouteChildren = {
   CartRoute: CartRoute,
   CheckoutRoute: CheckoutRoute,
   ClubRoute: ClubRoute,
+  KidsRoute: KidsRoute,
   PrivacyRoute: PrivacyRoute,
   RegisterRoute: RegisterRoute,
+  TableTennisRoute: TableTennisRoute,
   TermsRoute: TermsRoute,
   CategoriesCategorySlugRoute: CategoriesCategorySlugRoute,
   ProductsProductIdRoute: ProductsProductIdRoute,

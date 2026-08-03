@@ -1,82 +1,122 @@
 import { Link } from "@tanstack/react-router";
-import { ChevronLeft, Sparkles, Zap } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import { ActivitiesRegisterCta } from "@/components/site/ActivitiesRegisterCta";
-import { CategoryCard } from "@/components/site/CategoryCard";
 import {
   CATEGORIES,
   CATEGORIES_PAGE_SUBTITLE,
   CATEGORIES_PAGE_TITLE,
+  type CategoryDefinition,
 } from "@/data/categories";
 import {
   ACTIVITIES_REGISTER_CALLOUT_TEXT,
   ACTIVITIES_REGISTER_CALLOUT_TITLE,
   ACTIVITIES_SCHEDULE_HASH,
 } from "@/data/activities";
+import type { LucideIcon } from "lucide-react";
 import { FadeIn } from "@/components/site/FadeIn";
+
+function CategoryIcon({
+  icon: Icon,
+  image,
+  imageDisplay = "mask",
+}: {
+  icon?: LucideIcon;
+  image?: string;
+  imageDisplay?: "mask" | "logo";
+}) {
+  if (image && imageDisplay === "logo") {
+    return <img src={image} alt="" aria-hidden className="size-9 object-contain" />;
+  }
+
+  if (image) {
+    return (
+      <span
+        aria-hidden
+        className="inline-block size-9 bg-primary group-hover:bg-accent transition [mask-size:contain] [mask-repeat:no-repeat] [mask-position:center] [-webkit-mask-size:contain] [-webkit-mask-repeat:no-repeat] [-webkit-mask-position:center]"
+        style={{ maskImage: `url(${image})`, WebkitMaskImage: `url(${image})` }}
+      />
+    );
+  }
+
+  if (Icon) {
+    return <Icon className="text-primary group-hover:text-accent transition" size={32} aria-hidden />;
+  }
+
+  return null;
+}
+
+function categorySummary(category: CategoryDefinition) {
+  if (category.description) return category.description;
+  if (category.subcategories.length > 0) {
+    return category.subcategories.slice(0, 3).join(" · ");
+  }
+  return "לחצו לצפייה במוצרים בקטגוריה זו.";
+}
 
 export function CategoriesIndexPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 md:py-12">
       <Link
         to="/"
-        className="inline-flex items-center gap-1 text-sm font-medium text-muted-foreground hover:text-accent transition mb-8"
+        className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-accent transition mb-8"
       >
         <ChevronLeft size={16} />
         חזרה לדף הבית
       </Link>
 
-      {/* Hero header */}
-      <FadeIn preset="section" immediate className="relative mb-10 overflow-hidden rounded-3xl">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary via-slate-800 to-sky-900" />
-        <div
-          className="absolute inset-0 opacity-30"
-          style={{
-            backgroundImage:
-              "radial-gradient(circle at 20% 80%, oklch(0.706 0.147 63.4) 0%, transparent 50%), radial-gradient(circle at 80% 20%, oklch(0.55 0.15 250) 0%, transparent 45%)",
-          }}
-        />
-        <div className="relative px-6 py-10 md:px-10 md:py-14 text-white">
-          <div className="flex items-center gap-2 text-accent mb-4">
-            <Zap size={18} aria-hidden className="fill-accent" />
-            <span className="text-xs font-bold uppercase tracking-[0.2em]">CHOLE sport Collection</span>
-          </div>
-          <h1 className="text-3xl md:text-5xl font-black leading-tight max-w-2xl">
-            {CATEGORIES_PAGE_TITLE}
-          </h1>
-          <p className="mt-4 text-base md:text-lg text-white/85 leading-relaxed max-w-xl">
-            {CATEGORIES_PAGE_SUBTITLE}
-          </p>
-        </div>
+      <FadeIn preset="section" immediate className="mb-10 pb-8 border-b border-border max-w-2xl">
+        <h1 className="text-3xl md:text-4xl font-extrabold text-foreground">{CATEGORIES_PAGE_TITLE}</h1>
+        <p className="text-muted-foreground mt-3 leading-relaxed">{CATEGORIES_PAGE_SUBTITLE}</p>
       </FadeIn>
 
-      {/* Registration CTA strip */}
       <FadeIn
         preset="section"
         immediate
-        className="relative mb-10 overflow-hidden rounded-2xl border-2 border-accent/60 shadow-lg shadow-accent/15"
+        className="mb-10 flex flex-col gap-4 rounded-2xl border-2 border-accent/40 bg-accent/10 p-5 md:flex-row md:items-center md:justify-between"
       >
-        <div className="absolute inset-0 bg-gradient-to-r from-accent/20 via-orange-100/80 to-sky-100/60" />
-        <div className="relative flex flex-col gap-4 p-5 md:flex-row md:items-center md:justify-between md:p-6">
-          <div className="flex items-start gap-3">
-            <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-accent text-accent-foreground shadow-md">
-              <Sparkles size={20} aria-hidden />
-            </span>
-            <div>
-              <p className="text-lg font-black text-foreground">{ACTIVITIES_REGISTER_CALLOUT_TITLE}</p>
-              <p className="mt-1 text-sm text-muted-foreground leading-relaxed">
-                {ACTIVITIES_REGISTER_CALLOUT_TEXT}
-              </p>
-            </div>
-          </div>
-          <ActivitiesRegisterCta hash={ACTIVITIES_SCHEDULE_HASH} size="lg" className="shrink-0 shadow-lg" />
+        <div>
+          <p className="text-lg font-black text-foreground">{ACTIVITIES_REGISTER_CALLOUT_TITLE}</p>
+          <p className="mt-1 text-sm text-muted-foreground">{ACTIVITIES_REGISTER_CALLOUT_TEXT}</p>
         </div>
+        <ActivitiesRegisterCta hash={ACTIVITIES_SCHEDULE_HASH} size="lg" className="shrink-0" />
       </FadeIn>
 
-      {/* Category grid */}
-      <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
+      <ul className="grid grid-cols-1 md:grid-cols-2 gap-px bg-border border border-border">
         {CATEGORIES.map((category, index) => (
           <FadeIn key={category.slug} as="li" preset="card" index={index}>
-            <CategoryCard category={category} variant="featured" />
+            <Link
+              to="/categories/$categorySlug"
+              params={{ categorySlug: category.slug }}
+              className="group flex h-full items-start gap-5 bg-background px-5 py-7 md:px-6 md:py-8 hover:bg-secondary/70 transition"
+            >
+              <div className="shrink-0 size-14 flex items-center justify-center border border-border bg-card group-hover:border-accent/50 transition">
+                <CategoryIcon
+                  icon={category.icon}
+                  image={category.image}
+                  imageDisplay={category.imageDisplay}
+                />
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="flex items-start justify-between gap-3">
+                  <h2 className="text-lg md:text-xl font-bold text-foreground group-hover:text-accent transition leading-snug">
+                    {category.name}
+                  </h2>
+                  <ChevronLeft
+                    size={18}
+                    className="shrink-0 mt-1 text-muted-foreground group-hover:text-accent transition"
+                    aria-hidden
+                  />
+                </div>
+                <p className="mt-2 text-sm text-muted-foreground leading-relaxed line-clamp-3">
+                  {categorySummary(category)}
+                </p>
+                {category.subcategories.length > 0 && (
+                  <p className="mt-3 text-xs font-medium text-muted-foreground/80">
+                    {category.subcategories.length} אפשרויות
+                  </p>
+                )}
+              </div>
+            </Link>
           </FadeIn>
         ))}
       </ul>

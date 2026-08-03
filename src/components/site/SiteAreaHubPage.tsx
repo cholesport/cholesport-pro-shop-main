@@ -77,14 +77,12 @@ export function SiteAreaHubPage({ hub }: SiteAreaHubPageProps) {
           </FadeIn>
 
           <ul className="mt-8 space-y-3">
-            {hub.links.map((link, index) => (
+            {hub.links.map((link) => (
               <li key={link.href}>
-                <FadeIn preset="card" index={index}>
-                  <HubLinkCard
-                    {...link}
-                    onNavigate={() => saveSiteGatewayPreference(hub.id)}
-                  />
-                </FadeIn>
+                <HubLinkCard
+                  {...link}
+                  onNavigate={() => saveSiteGatewayPreference(hub.id)}
+                />
               </li>
             ))}
           </ul>

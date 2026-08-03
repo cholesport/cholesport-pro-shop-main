@@ -1,17 +1,18 @@
 import tableTennisImg from "@/assets/club-tt-action.png";
 import kidsImg from "@/assets/club-kids-ninja.png";
-import shopImg from "@/assets/hero/slide-03.png";
 import eventsImg from "@/assets/club-events-climbing.png";
 import { ACTIVITIES_PATH, ACTIVITIES_SCHEDULE_HASH } from "@/data/activities";
-import { CLUB_PATH } from "@/data/club";
+import { CLUB_HERO_VIDEO_SRC, CLUB_PATH } from "@/data/club";
 
 export type SiteGatewayAreaId = "table-tennis" | "kids" | "shop";
+
+export type GatewayCardMediaType = "image" | "video" | "marquee";
 
 export const SITE_GATEWAY_STORAGE_KEY = "chole-site-area";
 
 export const SITE_GATEWAY_HEADLINE = "מה מחפשים היום?";
 export const SITE_GATEWAY_SUBHEADLINE =
-  "ב-CHOLE משלבים מועדון טניס שולחן, פעילויות לילדים וחנות ציוד מקצועית — במקום אחד. בחרו את האזור שמתאים לכם.";
+  "ב-CHOLE משלבים מועדון טניס שולחן, חוגי נינג'ה ואקרובטיקה לילדים וחנות ציוד מקצועית והכל במקום אחד. בחרו את האזור שמתאים לכם.";
 
 export type SiteGatewayCard = {
   id: SiteGatewayAreaId;
@@ -19,9 +20,9 @@ export type SiteGatewayCard = {
   subtitle: string;
   image: string;
   imageAlt: string;
-  /** Primary destination when the card is selected. */
   href: string;
-  accentClass: string;
+  mediaType: GatewayCardMediaType;
+  videoSrc?: string;
 };
 
 export const SITE_GATEWAY_CARDS: SiteGatewayCard[] = [
@@ -32,7 +33,8 @@ export const SITE_GATEWAY_CARDS: SiteGatewayCard[] = [
     image: tableTennisImg,
     imageAlt: "שחקני טניס שולחן במתחם CHOLE",
     href: "/table-tennis",
-    accentClass: "from-sky-600/80 to-sky-900/90",
+    mediaType: "video",
+    videoSrc: CLUB_HERO_VIDEO_SRC,
   },
   {
     id: "kids",
@@ -41,16 +43,16 @@ export const SITE_GATEWAY_CARDS: SiteGatewayCard[] = [
     image: kidsImg,
     imageAlt: "ילדים בחוג נינג'ה במתחם CHOLE",
     href: "/kids",
-    accentClass: "from-violet-600/75 to-violet-900/90",
+    mediaType: "image",
   },
   {
     id: "shop",
     title: "חנות ציוד",
     subtitle: "מוצרים מקצועיים לנינג'ה, טניס שולחן ואימון",
-    image: shopImg,
+    image: tableTennisImg,
     imageAlt: "ציוד ספורט מקצועי של CHOLE",
     href: "/categories",
-    accentClass: "from-accent/85 to-primary/90",
+    mediaType: "marquee",
   },
 ];
 
@@ -100,7 +102,7 @@ export const TABLE_TENNIS_HUB: SiteAreaHub = {
 
 export const KIDS_HUB: SiteAreaHub = {
   id: "kids",
-  eyebrow: "פעילויות לילדים",
+  eyebrow: "חוגי נינג'ה ואקרובטיקה לילדים",
   headline: "נינג'ה, קייטנות וימי הולדת",
   support:
     "חוגי נינג'ה ואקרובטיקה לילדים, קייטנות בעונות החופש והזמנת ימי הולדת במתחם. תנועה, אתגר וכיף — בבטיחות ובליווי מקצועי.",
@@ -130,6 +132,4 @@ export const KIDS_HUB: SiteAreaHub = {
   ],
 };
 
-/** Decorative image for shop gateway card fallback — hub uses categories directly. */
-export const SHOP_GATEWAY_IMAGE = shopImg;
 export const KIDS_EVENTS_IMAGE = eventsImg;

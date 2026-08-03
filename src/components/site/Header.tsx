@@ -6,6 +6,7 @@ import { ActivitiesRegisterCta } from "@/components/site/ActivitiesRegisterCta";
 import { useCart } from "@/context/CartContext";
 import { CATEGORIES } from "@/data/categories";
 import { ACTIVITIES_SCHEDULE_HASH } from "@/data/activities";
+import { SITE_GATEWAY_CARDS } from "@/data/siteGateway";
 import { CONTACT_PHONE_DISPLAY } from "@/lib/contact";
 import { HeaderSearchBar } from "@/components/site/HeaderSearchBar";
 
@@ -149,32 +150,65 @@ export function Header({ variant = "full" }: HeaderProps) {
         )}
       </div>
 
-      {mobile && variant === "full" && (
+      {mobile && (
         <div className="lg:hidden border-t border-border bg-card">
           <div className="p-4">
             <ul>
-              <li className="border-b border-border">
-                <Link
-                  to="/account"
-                  className="flex items-center gap-2 py-3 text-sm font-semibold text-accent"
-                  onClick={() => setMobile(false)}
-                >
-                  <User size={18} />
-                  החשבון שלי
-                </Link>
-              </li>
-              {CATEGORIES.map((cat) => (
-                <li key={cat.slug} className="border-b border-border last:border-0">
-                  <Link
-                    to="/categories/$categorySlug"
-                    params={{ categorySlug: cat.slug }}
-                    className="block py-3 text-sm font-semibold"
-                    onClick={() => setMobile(false)}
-                  >
-                    {cat.name}
-                  </Link>
-                </li>
-              ))}
+              {variant === "minimal" ? (
+                <>
+                  <li className="border-b border-border pb-2 mb-2">
+                    <p className="py-2 text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+                      בחרו אזור
+                    </p>
+                  </li>
+                  {SITE_GATEWAY_CARDS.map((card) => (
+                    <li key={card.id} className="border-b border-border last:border-0">
+                      <Link
+                        to={card.href}
+                        className="block py-3 text-sm font-semibold text-foreground"
+                        onClick={() => setMobile(false)}
+                      >
+                        {card.title}
+                      </Link>
+                    </li>
+                  ))}
+                  <li className="border-b border-border last:border-0">
+                    <Link
+                      to="/account"
+                      className="flex items-center gap-2 py-3 text-sm font-semibold text-accent"
+                      onClick={() => setMobile(false)}
+                    >
+                      <User size={18} />
+                      החשבון שלי
+                    </Link>
+                  </li>
+                </>
+              ) : (
+                <>
+                  <li className="border-b border-border">
+                    <Link
+                      to="/account"
+                      className="flex items-center gap-2 py-3 text-sm font-semibold text-accent"
+                      onClick={() => setMobile(false)}
+                    >
+                      <User size={18} />
+                      החשבון שלי
+                    </Link>
+                  </li>
+                  {CATEGORIES.map((cat) => (
+                    <li key={cat.slug} className="border-b border-border last:border-0">
+                      <Link
+                        to="/categories/$categorySlug"
+                        params={{ categorySlug: cat.slug }}
+                        className="block py-3 text-sm font-semibold"
+                        onClick={() => setMobile(false)}
+                      >
+                        {cat.name}
+                      </Link>
+                    </li>
+                  ))}
+                </>
+              )}
             </ul>
           </div>
         </div>

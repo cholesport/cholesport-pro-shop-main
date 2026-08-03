@@ -255,4 +255,37 @@
     animation: none !important;
     will-change: auto;
   }
+
+  /* Gateway cards must always be visible — critical path on mobile Safari. */
+  .site-gateway .gateway-card {
+    opacity: 1;
+    transform: none;
+    min-height: 200px;
+  }
+
+  @keyframes gateway-product-marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  .gateway-product-marquee {
+    animation: gateway-product-marquee 48s linear infinite;
+    will-change: transform;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .gateway-product-marquee {
+      animation: none;
+      transform: translateX(-12%);
+    }
+  }
+
+  html.a11y-reduce-motion .gateway-product-marquee {
+    animation: none !important;
+    transform: translateX(-12%);
+  }
 }

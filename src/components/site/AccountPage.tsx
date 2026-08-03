@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   User,
   Package,
@@ -8,9 +8,6 @@ import {
   Eye,
   EyeOff,
   Home,
-  Briefcase,
-  Users,
-  ClipboardList,
   Ticket,
 } from "lucide-react";
 import { Link, useSearch } from "@tanstack/react-router";
@@ -18,7 +15,6 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   ACCOUNT_PASSWORD_MIN_LENGTH,
@@ -29,8 +25,8 @@ import {
   type Address,
   type UserProfile,
 } from "@/data/account";
+import { getAdminPortalUrl, legacyAccountSectionToAdminPath } from "@/data/adminSite";
 import { useCart } from "@/context/CartContext";
-import { loginAccount } from "@/lib/api/auth.functions";
 import {
   getCustomerProfile,
   loginCustomer,
@@ -48,11 +44,6 @@ import {
 } from "@/lib/accountSession";
 import { AccountAvatarBadge, AccountAvatarEditor } from "@/components/site/AccountAvatarEditor";
 import { ErrorBoundary } from "@/components/site/ErrorBoundary";
-import { AdminRegistrationsPanel } from "@/components/site/AdminRegistrationsPage";
-import { AdminOrdersPanel } from "@/components/site/AdminOrdersPanel";
-import { AdminCustomersPanel } from "@/components/site/AdminCustomersPanel";
-import { AdminPassesPanel } from "@/components/site/AdminPassesPanel";
-import { AdminReportsPanel } from "@/components/site/AdminReportsPanel";
 import {
   CustomerCommerceOverview,
   CustomerCommerceView,
@@ -65,17 +56,7 @@ import { DEMO_CUSTOMER_HINT } from "@/data/demo";
 import type { CustomerCommerceHistory } from "@/data/commerce";
 import type { ActivityPass } from "@/data/passes";
 
-type Section =
-  | "overview"
-  | "orders"
-  | "passes"
-  | "profile"
-  | "addresses"
-  | "shop-orders"
-  | "registrations"
-  | "customers"
-  | "admin-passes"
-  | "reports";
+type Section = "overview" | "orders" | "passes" | "profile" | "addresses";
 
 const BASE_NAV: { id: Section; label: string; icon: typeof User }[] = [
   { id: "overview", label: "סקירה", icon: Home },
@@ -85,18 +66,9 @@ const BASE_NAV: { id: Section; label: string; icon: typeof User }[] = [
   { id: "addresses", label: "כתובות", icon: MapPin },
 ];
 
-const ADMIN_NAV: { id: Section; label: string; icon: typeof User }[] = [
-  { id: "reports", label: "דוחות", icon: ClipboardList },
-  { id: "customers", label: "לקוחות", icon: Users },
-  { id: "admin-passes", label: "כרטיסיות", icon: Ticket },
-  { id: "shop-orders", label: "הזמנות מהאתר", icon: Package },
-  { id: "registrations", label: "לוח שיעורים", icon: Users },
-];
-
 type AuthSubmitResult = {
   profile: UserProfile;
   isRegister: boolean;
-  authToken?: string;
   customerToken?: string;
 };
 
@@ -154,29 +126,8 @@ function AuthForm({
       return;
     }
 
-    try {
-      const adminLogin = await loginAccount({
-        data: {
-          email: form.email.trim(),
-          password: form.password,
-        },
-      });
-
-      if (adminLogin.isAdmin) {
-        await onSubmitAuth({
-          isRegister: false,
-          profile: adminLogin.profile,
-          authToken: adminLogin.authToken,
-        });
-        return;
-      }
-    } catch (error) {
-      toast.error(error instanceof Error ? error.message : "התחברות נכשלה.");
-      return;
-    }
-
     if (isAdminAccountEmail(form.email)) {
-      toast.error("כתובת האימייל הזו מיועדת לחשבון המנהל בלבד.");
+      window.location.href = getAdminPortalUrl("/admin/registrations");
       return;
     }
 
@@ -395,7 +346,6 @@ function Dashboard({
   section,
   onSectionChange,
   onLogout,
-  authToken,
   customerToken,
   onProfileUpdate,
 }: {
@@ -409,17 +359,13 @@ function Dashboard({
   section: Section;
   onSectionChange: (s: Section) => void;
   onLogout: () => void;
-  authToken?: string;
   customerToken?: string;
   onProfileUpdate: (profile: UserProfile) => void;
 }) {
   const [editedProfile, setEditedProfile] = useState(profile);
   const [savingProfile, setSavingProfile] = useState(false);
   const [resetSending, setResetSending] = useState(false);
-  const nav = useMemo(
-    () => (profile.isAdmin ? ADMIN_NAV : BASE_NAV),
-    [profile.isAdmin],
-  );
+  const nav = BASE_NAV;
 
   useEffect(() => {
     setEditedProfile(profile);
@@ -482,27 +428,15 @@ function Dashboard({
     <div className="grid lg:grid-cols-[240px_1fr] gap-8">
       <aside className="space-y-2">
         <div className="bg-card border border-border rounded-xl p-5 mb-4">
-          {profile.isAdmin ? (
-            <div className="w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold text-lg mb-3">
-              {profile.firstName.charAt(0)}
-              {profile.lastName.charAt(0)}
-            </div>
-          ) : (
-            <div className="mb-3">
-              <AccountAvatarBadge profile={profile} />
-            </div>
-          )}
+          <div className="mb-3">
+            <AccountAvatarBadge profile={profile} />
+          </div>
           <p className="font-bold text-foreground">
             {profile.firstName} {profile.lastName}
           </p>
           <p className="text-sm text-muted-foreground truncate" dir="ltr">
             {profile.email}
           </p>
-          {profile.isAdmin && (
-            <Badge variant="secondary" className="mt-2 text-xs">
-              מנהל מערכת
-            </Badge>
-          )}
         </div>
 
         <nav className="hidden lg:block space-y-1">
@@ -552,7 +486,7 @@ function Dashboard({
       </aside>
 
       <div className="min-w-0">
-        {!profile.isAdmin && section === "overview" && (
+        {section === "overview" && (
           <div className="space-y-6">
             <div>
               <h2 className="text-2xl font-black text-foreground">שלום, {profile.firstName}</h2>
@@ -599,7 +533,7 @@ function Dashboard({
           </div>
         )}
 
-        {!profile.isAdmin && section === "passes" && (
+        {section === "passes" && (
           <div className="space-y-6">
             <div>
               <h2 className="text-2xl font-black text-foreground">הכרטיסיות שלי</h2>
@@ -629,7 +563,7 @@ function Dashboard({
           </div>
         )}
 
-        {!profile.isAdmin && section === "orders" && (
+        {section === "orders" && (
           <div className="space-y-6">
             <h2 className="text-2xl font-black text-foreground">הרכישות שלי</h2>
             {commerceLoading ? (
@@ -645,7 +579,7 @@ function Dashboard({
           </div>
         )}
 
-        {!profile.isAdmin && section === "profile" && (
+        {section === "profile" && (
           <div className="space-y-6">
             <h2 className="text-2xl font-black text-foreground">פרטים אישיים</h2>
             <div className="bg-card border border-border rounded-xl p-6 space-y-5 max-w-lg">
@@ -726,7 +660,7 @@ function Dashboard({
           </div>
         )}
 
-        {!profile.isAdmin && section === "addresses" && (
+        {section === "addresses" && (
           <div className="space-y-6">
             <div className="flex items-center justify-between gap-4">
               <h2 className="text-2xl font-black text-foreground">כתובות למשלוח</h2>
@@ -790,36 +724,6 @@ function Dashboard({
           </div>
         )}
 
-        {section === "reports" && profile.isAdmin && authToken && (
-          <ErrorBoundary sectionLabel="דוחות">
-            <AdminReportsPanel authToken={authToken} />
-          </ErrorBoundary>
-        )}
-
-        {section === "admin-passes" && profile.isAdmin && authToken && (
-          <ErrorBoundary sectionLabel="ניהול כרטיסיות">
-            <AdminPassesPanel authToken={authToken} />
-          </ErrorBoundary>
-        )}
-
-        {section === "customers" && profile.isAdmin && authToken && (
-          <ErrorBoundary sectionLabel="ניהול לקוחות">
-            <AdminCustomersPanel authToken={authToken} />
-          </ErrorBoundary>
-        )}
-
-        {section === "shop-orders" && profile.isAdmin && authToken && (
-          <ErrorBoundary sectionLabel="ניהול הזמנות">
-            <AdminOrdersPanel authToken={authToken} />
-          </ErrorBoundary>
-        )}
-
-        {section === "registrations" && profile.isAdmin && authToken && (
-          <ErrorBoundary sectionLabel="ניהול הרשמות">
-            <AdminRegistrationsPanel authToken={authToken} />
-          </ErrorBoundary>
-        )}
-
         <button
           type="button"
           onClick={onLogout}
@@ -845,34 +749,28 @@ export function AccountPage() {
   const [passesLoading, setPassesLoading] = useState(false);
 
   useEffect(() => {
+    if (search.section) {
+      const adminPath = legacyAccountSectionToAdminPath(search.section);
+      if (adminPath) {
+        window.location.href = getAdminPortalUrl(adminPath);
+        return;
+      }
+    }
+
     const saved = loadAccountSession();
-    setProfile(saved);
     if (saved?.isAdmin) {
-      const adminSection =
-        search.section === "registrations"
-          ? "registrations"
-          : search.section === "customers"
-            ? "customers"
-            : search.section === "admin-passes"
-              ? "admin-passes"
-              : search.section === "reports"
-                ? "reports"
-                : "shop-orders";
-      setSection(adminSection);
+      clearAccountSession();
+      window.location.href = getAdminPortalUrl("/admin/registrations");
       return;
     }
-    if (
-      search.section &&
-      search.section !== "registrations" &&
-      search.section !== "shop-orders" &&
-      search.section !== "customers" &&
-      search.section !== "admin-passes" &&
-      search.section !== "reports"
-    ) {
+
+    setProfile(saved);
+
+    if (search.section) {
       setSection(search.section);
     }
 
-    if (saved?.customerToken && !saved.isAdmin) {
+    if (saved?.customerToken) {
       void getCustomerProfile({ data: { customerToken: saved.customerToken } })
         .then((result) => {
           setProfile((current) =>
@@ -889,7 +787,7 @@ export function AccountPage() {
   }, [search.section]);
 
   useEffect(() => {
-    if (!profile?.customerToken || profile.isAdmin) {
+    if (!profile?.customerToken) {
       setCommerceHistory(null);
       return;
     }
@@ -899,10 +797,10 @@ export function AccountPage() {
       .then((result) => setCommerceHistory(result.history))
       .catch(() => setCommerceHistory(null))
       .finally(() => setCommerceLoading(false));
-  }, [profile?.customerToken, profile?.isAdmin, profile?.email, profile?.phone]);
+  }, [profile?.customerToken, profile?.email, profile?.phone]);
 
   useEffect(() => {
-    if (!profile?.customerToken || profile.isAdmin) {
+    if (!profile?.customerToken) {
       setPasses([]);
       return;
     }
@@ -912,12 +810,11 @@ export function AccountPage() {
       .then((result) => setPasses(result.passes))
       .catch(() => setPasses([]))
       .finally(() => setPassesLoading(false));
-  }, [profile?.customerToken, profile?.isAdmin]);
+  }, [profile?.customerToken]);
 
   async function handleAuthSubmit({
     profile: nextProfile,
     isRegister,
-    authToken,
     customerToken,
   }: AuthSubmitResult) {
     setIsSubmitting(true);
@@ -947,18 +844,17 @@ export function AccountPage() {
         toast.success("החשבון נוצר בהצלחה", {
           description: "התחלתם מדף נקי - בלי הזמנות או כתובות קודמות.",
         });
-      } else if (nextProfile.isAdmin) {
-        toast.success("ברוך הבא, מנהל המערכת");
+      } else {
+        toast.success("ברוכים השבים!");
       }
 
       const session: AccountSession = {
         ...nextProfile,
-        ...(authToken ? { authToken } : {}),
         ...(customerToken ? { customerToken } : {}),
       };
       setProfile(session);
       saveAccountSession(session);
-      setSection(nextProfile.isAdmin ? "reports" : "overview");
+      setSection("overview");
     } finally {
       setIsSubmitting(false);
     }
@@ -1005,7 +901,6 @@ export function AccountPage() {
           section={section}
           onSectionChange={setSection}
           onLogout={handleLogout}
-          authToken={profile.authToken}
           customerToken={profile.customerToken}
           onProfileUpdate={handleProfileUpdate}
         />

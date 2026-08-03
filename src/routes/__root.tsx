@@ -16,6 +16,7 @@ import { ErrorBoundary } from "@/components/site/ErrorBoundary";
 import { SiteFloatingActions, SkipToContent } from "@/components/site/SiteFloatingActions";
 import { PageFade } from "@/components/site/FadeIn";
 import { applyA11ySettings, loadA11ySettings } from "@/lib/accessibility";
+import { isAdminHostname } from "@/data/adminSite";
 import { CartProvider } from "@/context/CartContext";
 import { useClientErrorReporting } from "@/hooks/useClientErrorReporting";
 import { Toaster } from "@/components/ui/sonner";
@@ -177,6 +178,13 @@ function RootComponent() {
     applyA11ySettings(loadA11ySettings());
   }, []);
 
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (isAdminHostname(window.location.hostname) && !pathname.startsWith("/admin")) {
+      window.location.replace("/admin/registrations");
+    }
+  }, [pathname]);
+
   return (
     <QueryClientProvider client={queryClient}>
       <CartProvider>
@@ -187,7 +195,7 @@ function RootComponent() {
             <Outlet />
           </ErrorBoundary>
         </PageFade>
-        <SiteFloatingActions />
+        {!pathname.startsWith("/admin") && <SiteFloatingActions />}
         <Toaster position="top-center" dir="rtl" richColors closeButton />
       </CartProvider>
     </QueryClientProvider>

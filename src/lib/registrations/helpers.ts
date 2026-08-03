@@ -5,6 +5,7 @@ import {
   type ActivityScheduleSlot,
 } from "@/data/activities";
 import {
+  PAYMENT_PENDING_SLOT_ID,
   REGISTRATION_SOURCE_LABELS,
   REGISTRATION_STATUS_LABELS,
   type ActivityRegistration,
@@ -36,6 +37,9 @@ export function getScheduleSlotsForCategory(
 export function formatRegistrationSlotLabel(
   registration: Pick<ActivityRegistration, "slotId" | "sessionDate">,
 ): string {
+  if (registration.slotId === PAYMENT_PENDING_SLOT_ID) {
+    return "שולם אונליין · ממתין לתיאום שיעור";
+  }
   const slot = getScheduleSlotById(registration.slotId);
   if (!slot) return registration.slotId;
   return `${slot.title} · ${slot.timeStart}–${slot.timeEnd}`;
@@ -71,8 +75,15 @@ export function filterRegistrations(
 
   return registrations
     .filter((row) => {
+      const isPaymentPending = row.slotId === PAYMENT_PENDING_SLOT_ID;
       if (filters.categoryId && row.categoryId !== filters.categoryId) return false;
-      if (filters.sessionDate && row.sessionDate !== filters.sessionDate) return false;
+      if (
+        filters.sessionDate &&
+        row.sessionDate !== filters.sessionDate &&
+        !isPaymentPending
+      ) {
+        return false;
+      }
       if (filters.slotId && row.slotId !== filters.slotId) return false;
       if (filters.status && row.status !== filters.status) return false;
       if (!q) return true;

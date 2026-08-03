@@ -53,6 +53,9 @@ export const REGISTRATION_STATUS_LABELS: Record<ActivityRegistrationStatus, stri
 /** Hours before session start — late customer cancellation may cost a punch. */
 export const LATE_CANCELLATION_HOURS = 4;
 
+/** Registrations created at checkout before a lesson slot is chosen. */
+export const PAYMENT_PENDING_SLOT_ID = "payment-pending";
+
 export const REGISTRATION_SOURCE_LABELS: Record<ActivityRegistrationSource, string> = {
   manual: "הזנה ידנית",
   whatsapp: "וואטסאפ",

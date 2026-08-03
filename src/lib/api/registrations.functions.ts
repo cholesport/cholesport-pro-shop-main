@@ -1,6 +1,8 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import { ACTIVITIES_EXTERNAL_PAYMENT_URL, ACTIVITIES_PRICING } from "@/data/activities";
 import type { ActivityRegistration } from "@/data/registrations";
+import { PAYMENT_PENDING_SLOT_ID } from "@/data/registrations";
 import { enrichActivityRegistration } from "@/lib/commerce/unified.server";
 import { ensureDemoCustomerData } from "@/lib/demo/seed.server";
 import { resolveCustomerId } from "@/lib/customers/match.server";
@@ -10,6 +12,7 @@ import { loadPassesStore } from "@/lib/passes/store.server";
 import { cancelActivityRegistrationInternal } from "@/lib/registrations/cancel.server";
 import { buildAdminRegistrationCustomerOptions } from "@/lib/registrations/customers.server";
 import { getScheduleSlotById } from "@/lib/registrations/helpers";
+import { notifyAdminActivityPayment } from "@/lib/registrations/notify.server";
 import { assertAdminRegistrationsAccess } from "@/lib/registrations/auth.server";
 import {
   loadRegistrationsStore,
@@ -80,6 +83,86 @@ const adminRegisterSchema = z.object({
   notes: z.string().optional(),
   status: z.enum(["confirmed", "pending"]).default("confirmed"),
 });
+
+const activityPaymentSchema = z.object({
+  customerToken: z.string().optional(),
+  planId: z.string().min(1),
+  participantName: z.string().min(1),
+  participantAge: z.string().optional(),
+  guardianName: z.string().optional(),
+  phone: z.string().min(1),
+  email: z.string().email().optional().or(z.literal("")),
+  notes: z.string().optional(),
+});
+
+export const createActivityPaymentRegistration = createServerFn({ method: "POST" })
+  .inputValidator(activityPaymentSchema)
+  .handler(async ({ data }) => {
+    const plan = ACTIVITIES_PRICING.find((row) => row.id === data.planId);
+    if (!plan) {
+      throw new Error("מסלול התשלום לא נמצא.");
+    }
+
+    const customersStore = await loadCustomersStore();
+    let customerId: string | undefined;
+
+    if (data.customerToken) {
+      try {
+        const { customer } = await getCustomerFromSessionToken(data.customerToken);
+        customerId = customer.id;
+      } catch {
+        customerId = undefined;
+      }
+    }
+
+    if (!customerId) {
+      customerId = resolveCustomerId(customersStore, {
+        email: data.email || undefined,
+        phone: data.phone,
+      });
+    }
+
+    const store = await loadRegistrationsStore();
+    const now = new Date().toISOString();
+    const sessionDate = formatScheduleDateIso(new Date());
+    const paymentUrl = plan.paymentUrl ?? ACTIVITIES_EXTERNAL_PAYMENT_URL;
+
+    const payload: ActivityRegistration = enrichActivityRegistration({
+      id: crypto.randomUUID(),
+      customerId,
+      categoryId: plan.categoryId,
+      slotId: PAYMENT_PENDING_SLOT_ID,
+      sessionDate,
+      participantName: data.participantName.trim(),
+      participantAge: data.participantAge?.trim() || undefined,
+      guardianName: data.guardianName?.trim() || undefined,
+      phone: data.phone.trim(),
+      email: data.email?.trim() || undefined,
+      planId: plan.id,
+      notes:
+        data.notes?.trim() ||
+        `נרשם לתשלום אונליין (${plan.name}) — ממתין לאישור ותיאום שיעור.`,
+      status: "pending",
+      source: "payment",
+      createdAt: now,
+      updatedAt: now,
+    });
+
+    store.registrations.unshift(payload);
+    await saveRegistrationsStore(store);
+
+    try {
+      await notifyAdminActivityPayment(payload);
+    } catch (error) {
+      console.error("Activity payment notify failed:", error);
+    }
+
+    return {
+      registration: payload,
+      paymentUrl,
+      updatedAt: store.updatedAt,
+    };
+  });
 
 export const listRegistrationCustomerOptions = createServerFn({ method: "POST" })
   .inputValidator(authTokenSchema)

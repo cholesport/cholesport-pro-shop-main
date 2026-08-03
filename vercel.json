@@ -10,6 +10,28 @@
       ],
       "destination": "https://cholesport.co.il/:path*",
       "permanent": true
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "admin.cholesport.co.il"
+        }
+      ],
+      "destination": "/admin/registrations",
+      "permanent": false
+    },
+    {
+      "source": "/admin/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "cholesport.co.il"
+        }
+      ],
+      "destination": "https://admin.cholesport.co.il/admin/:path*",
+      "permanent": false
     }
   ],
   "rewrites": [

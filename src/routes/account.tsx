@@ -6,9 +6,7 @@ import { AccountPage } from "@/components/site/AccountPage";
 import { buildPageSeoHead } from "@/lib/seo";
 
 const accountSearchSchema = z.object({
-  section: z
-    .enum(["overview", "orders", "profile", "addresses", "shop-orders", "registrations"])
-    .optional(),
+  section: z.enum(["overview", "orders", "profile", "addresses", "passes"]).optional(),
 });
 
 export const Route = createFileRoute("/account")({

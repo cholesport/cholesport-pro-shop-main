@@ -32,5 +32,6 @@ export function getServerConfig() {
     passwordResetSecret:
       process.env.PASSWORD_RESET_SECRET ?? adminAccountPassword,
     siteUrl: process.env.SITE_URL ?? "https://cholesport.co.il",
+    adminSiteUrl: process.env.ADMIN_SITE_URL ?? "https://admin.cholesport.co.il",
   };
 }

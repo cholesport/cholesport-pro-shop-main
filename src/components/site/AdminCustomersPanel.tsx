@@ -15,6 +15,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import type {
+  AdminCustomerAccountMeta,
   CommerceDomain,
   CustomerCommerceHistory,
   ServiceCustomerSummary,
@@ -26,11 +27,6 @@ import { SHOP_ORDER_STATUS_LABELS } from "@/data/shopOrders";
 import { REGISTRATION_STATUS_LABELS } from "@/data/registrations";
 import { getUnifiedCustomer, listUnifiedCustomers } from "@/lib/api/commerce.functions";
 import { formatShopOrderPrice } from "@/lib/orders/helpers";
-
-type CustomerDetail = {
-  history: CustomerCommerceHistory;
-  passes: ActivityPass[];
-};
 
 function filterShopCustomers(customers: ShopCustomerSummary[], query: string) {
   const q = query.trim().toLowerCase();
@@ -49,32 +45,105 @@ function filterServiceCustomers(customers: ServiceCustomerSummary[], query: stri
   if (!q) return customers;
 
   return customers.filter((customer) => {
-    const haystack = [customer.name, customer.email ?? "", customer.phone, ...customer.categoryNames]
+    const haystack = [
+      customer.name,
+      customer.email ?? "",
+      customer.phone,
+      ...customer.categoryNames,
+      ...(customer.interestLabels ?? []),
+    ]
       .join(" ")
       .toLowerCase();
     return haystack.includes(q);
   });
 }
 
+type CustomerDetail = {
+  history: CustomerCommerceHistory;
+  passes: ActivityPass[];
+  account?: AdminCustomerAccountMeta;
+};
+
+function CustomerInquiriesPanel({ account }: { account?: AdminCustomerAccountMeta }) {
+  if (!account?.inquiries?.length && !account?.interests?.length) return null;
+
+  return (
+    <div className="rounded-xl border bg-card p-4 space-y-4">
+      <div>
+        <p className="font-semibold text-sm">עניין ופניות מהאתר</p>
+        {account.accountType === "lead" && (
+          <Badge variant="outline" className="mt-2">
+            ליד — טרם השלים הרשמה מלאה
+          </Badge>
+        )}
+      </div>
+
+      {account.interests && account.interests.length > 0 && (
+        <div className="flex flex-wrap gap-2">
+          {account.interests.map((interest) => (
+            <Badge key={interest} variant="secondary">
+              {interest}
+            </Badge>
+          ))}
+        </div>
+      )}
+
+      {account.inquiries && account.inquiries.length > 0 && (
+        <div className="space-y-3">
+          {account.inquiries
+            .slice()
+            .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+            .map((inquiry) => (
+              <div key={inquiry.id} className="rounded-lg bg-secondary/40 p-3 text-sm">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <span className="font-medium">{inquiry.summary}</span>
+                  <span className="text-xs text-muted-foreground">
+                    {new Date(inquiry.createdAt).toLocaleString("he-IL", {
+                      timeZone: "Asia/Jerusalem",
+                    })}
+                  </span>
+                </div>
+                <p className="text-muted-foreground mt-1">{inquiry.source}</p>
+                {inquiry.details && (
+                  <ul className="mt-2 space-y-1 text-muted-foreground">
+                    {Object.entries(inquiry.details).map(([key, value]) => (
+                      <li key={key}>
+                        <span className="font-medium text-foreground">{key}:</span> {value}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function CustomerDetailPanel({
   history,
   passes = [],
   domain,
+  account,
 }: {
   history: CustomerCommerceHistory;
   passes?: ActivityPass[];
   domain: CommerceDomain;
+  account?: AdminCustomerAccountMeta;
 }) {
   const hasShop = history.shopOrders.length > 0;
   const hasActivities = history.activities.length > 0;
   const hasPasses = passes.length > 0;
+  const hasInquiries = Boolean(account?.inquiries?.length || account?.interests?.length);
 
-  if (!hasShop && !hasActivities && !hasPasses) {
+  if (!hasShop && !hasActivities && !hasPasses && !hasInquiries) {
     return <p className="text-sm text-muted-foreground">אין נתונים להצגה ללקוח זה.</p>;
   }
 
   return (
     <div className="space-y-4">
+      <CustomerInquiriesPanel account={account} />
       {domain === "shop" &&
         history.categories.map((group) => (
           <div key={`${group.domain}-${group.categoryKey}`} className="rounded-xl border bg-card p-4">
@@ -158,7 +227,21 @@ function CustomerDetailPanel({
   );
 }
 
-function AccountBadge({ hasAccount }: { hasAccount: boolean }) {
+function AccountBadge({
+  hasAccount,
+  isLeadAccount,
+}: {
+  hasAccount: boolean;
+  isLeadAccount?: boolean;
+}) {
+  if (isLeadAccount) {
+    return (
+      <Badge variant="outline" className="mt-1 border-accent/40 text-accent">
+        ליד מהאתר
+      </Badge>
+    );
+  }
+
   return hasAccount ? (
     <Badge variant="secondary" className="mt-1">
       חשבון רשום
@@ -234,7 +317,11 @@ export function AdminCustomersPanel({ authToken }: { authToken: string }) {
       });
       setDetails((prev) => ({
         ...prev,
-        [detailKey]: { history: result.history, passes: result.passes ?? [] },
+        [detailKey]: {
+          history: result.history,
+          passes: result.passes ?? [],
+          account: result.account,
+        },
       }));
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "טעינת פרטי הלקוח נכשלה.");
@@ -352,7 +439,10 @@ export function AdminCustomersPanel({ authToken }: { authToken: string }) {
                                 )}
                               </div>
                             </div>
-                            <AccountBadge hasAccount={customer.hasAccount} />
+                            <AccountBadge
+                              hasAccount={customer.hasAccount}
+                              isLeadAccount={customer.isLeadAccount}
+                            />
                           </TableCell>
                           <TableCell className="text-end hidden md:table-cell" dir="ltr">
                             {customer.phone}
@@ -376,6 +466,7 @@ export function AdminCustomersPanel({ authToken }: { authToken: string }) {
                                 <CustomerDetailPanel
                                   history={details[detailKey].history}
                                   domain="shop"
+                                  account={details[detailKey].account}
                                 />
                               ) : (
                                 <p className="text-sm text-muted-foreground py-4">
@@ -404,13 +495,14 @@ export function AdminCustomersPanel({ authToken }: { authToken: string }) {
                   <TableHead className="text-end hidden lg:table-cell">קטגוריות שירות</TableHead>
                   <TableHead className="text-end">הרשמות</TableHead>
                   <TableHead className="text-end">כרטיסיות</TableHead>
+                  <TableHead className="text-end">פניות</TableHead>
                   <TableHead className="text-end">מנויים</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filteredService.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={6} className="text-center py-10 text-muted-foreground">
+                    <TableCell colSpan={7} className="text-center py-10 text-muted-foreground">
                       {loading ? "טוען..." : "אין לקוחות שירות להצגה."}
                     </TableCell>
                   </TableRow>
@@ -436,7 +528,10 @@ export function AdminCustomersPanel({ authToken }: { authToken: string }) {
                                 )}
                               </div>
                             </div>
-                            <AccountBadge hasAccount={customer.hasAccount} />
+                            <AccountBadge
+                              hasAccount={customer.hasAccount}
+                              isLeadAccount={customer.isLeadAccount}
+                            />
                             {customer.standingCount > 0 && (
                               <Badge variant="outline" className="mt-1">
                                 רישום קבוע
@@ -457,11 +552,12 @@ export function AdminCustomersPanel({ authToken }: { authToken: string }) {
                               ? `${customer.activePassPunches} ניקובים`
                               : "—"}
                           </TableCell>
+                          <TableCell className="text-end">{customer.inquiryCount || "—"}</TableCell>
                           <TableCell className="text-end">{customer.subscriptionCount}</TableCell>
                         </TableRow>
                         {expanded && (
                           <TableRow>
-                            <TableCell colSpan={6} className="bg-secondary/30">
+                            <TableCell colSpan={7} className="bg-secondary/30">
                               {detailLoadingKey === detailKey ? (
                                 <p className="text-sm text-muted-foreground py-4">טוען פרטים...</p>
                               ) : details[detailKey] ? (
@@ -469,6 +565,7 @@ export function AdminCustomersPanel({ authToken }: { authToken: string }) {
                                   history={details[detailKey].history}
                                   passes={details[detailKey].passes}
                                   domain="activities"
+                                  account={details[detailKey].account}
                                 />
                               ) : (
                                 <p className="text-sm text-muted-foreground py-4">

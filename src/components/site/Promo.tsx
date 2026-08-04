@@ -3,12 +3,7 @@ import { PAYMENT_SUMMARY } from "@/data/payment";
 import { CONTACT_PHONE_DISPLAY, getShippingWhatsAppUrl } from "@/lib/contact";
 import { COMPANY } from "@/data/legal";
 import { CLUB_PATH } from "@/data/club";
-import {
-  ACTIVITIES_PATH,
-  ACTIVITIES_REGISTER_CALLOUT_TITLE,
-  ACTIVITIES_REGISTER_PROMO_DESC,
-  ACTIVITIES_SCHEDULE_HASH,
-} from "@/data/activities";
+import { SITE_GATEWAY_HEADLINE } from "@/data/siteGateway";
 import { FadeIn } from "@/components/site/FadeIn";
 
 const ITEMS = [
@@ -26,10 +21,9 @@ const ITEMS = [
     desc: PAYMENT_SUMMARY,
   },
   {
-    title: ACTIVITIES_REGISTER_CALLOUT_TITLE,
-    desc: ACTIVITIES_REGISTER_PROMO_DESC,
-    to: ACTIVITIES_PATH,
-    hash: ACTIVITIES_SCHEDULE_HASH,
+    title: "חוגים ומתחם הספורט",
+    desc: SITE_GATEWAY_HEADLINE,
+    to: "/",
     highlight: true,
   },
   {

@@ -1,15 +1,23 @@
+import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Phone } from "lucide-react";
-import { ActivitiesRegisterCta } from "@/components/site/ActivitiesRegisterCta";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { ACTIVITIES_SCHEDULE_HASH } from "@/data/activities";
 import { SHOWROOM_ACTIVITIES } from "@/data/showroom";
 import { COMPANY } from "@/data/legal";
+import { CLUB_PATH } from "@/data/club";
+
+const SHOWROOM_ACTIVITY_LINKS: Record<string, string> = {
+  "ninja-acrobatics-kids": "/kids",
+  "table-tennis-kids-youth": "/table-tennis",
+  "table-tennis-adults": "/table-tennis",
+  "open-table-tennis": "/table-tennis",
+  tournaments: `${CLUB_PATH}#events`,
+};
 
 export function ShowroomActivitiesSection() {
   const [openId, setOpenId] = useState<string>("");
@@ -35,7 +43,12 @@ export function ShowroomActivitiesSection() {
             לחצו על כל רובריקה כדי לפתוח פרטים, שעות והרשמה.
           </p>
         </div>
-        <ActivitiesRegisterCta hash={ACTIVITIES_SCHEDULE_HASH} size="md" className="shrink-0" />
+        <Link
+          to="/"
+          className="inline-flex shrink-0 items-center justify-center rounded-lg bg-accent px-5 py-2.5 text-sm font-bold text-accent-foreground transition hover:bg-accent/90"
+        >
+          בחרו אזור
+        </Link>
       </div>
 
       <Accordion
@@ -66,11 +79,12 @@ export function ShowroomActivitiesSection() {
                 ))}
               </ul>
               <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-                <ActivitiesRegisterCta
-                  hash={ACTIVITIES_SCHEDULE_HASH}
-                  size="sm"
-                  short
-                />
+                <Link
+                  to={SHOWROOM_ACTIVITY_LINKS[activity.id] ?? "/"}
+                  className="inline-flex items-center justify-center rounded-lg bg-accent px-4 py-2 text-sm font-bold text-accent-foreground transition hover:bg-accent/90"
+                >
+                  לפרטים, לו&quot;ז והרשמה
+                </Link>
                 <a
                   href={`tel:${COMPANY.phone.replace(/-/g, "")}`}
                   className="inline-flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-accent"

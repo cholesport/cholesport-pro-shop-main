@@ -1,17 +1,30 @@
-import { UserPlus } from "lucide-react";
 import { Link, useRouterState } from "@tanstack/react-router";
+import { UserPlus } from "lucide-react";
 import whatsappIcon from "@/assets/whatsapp.png";
 import { AccessibilityWidget } from "@/components/site/AccessibilityWidget";
 import { FadeIn } from "@/components/site/FadeIn";
-import { ACTIVITIES_PATH, ACTIVITIES_REGISTER_CTA_LABEL, ACTIVITIES_SCHEDULE_HASH } from "@/data/activities";
+import { SITE_GATEWAY_HEADLINE } from "@/data/siteGateway";
 import { WHATSAPP_URL } from "@/lib/contact";
 
 const FLOAT_BTN =
   "pointer-events-auto flex items-center justify-center size-10 rounded-full shadow-md hover:scale-105 transition-transform focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 overflow-hidden";
 
+const FOCUSED_AREA_PREFIXES = [
+  "/kids",
+  "/table-tennis",
+  "/functional",
+  "/categories",
+  "/products",
+  "/cart",
+  "/checkout",
+  "/club",
+];
+
 export function SiteFloatingActions() {
   const pathname = useRouterState({ select: (state) => state.location.pathname });
-  const showRegisterCta = pathname !== ACTIVITIES_PATH;
+  const showGatewayCta =
+    pathname !== "/" &&
+    !FOCUSED_AREA_PREFIXES.some((prefix) => pathname.startsWith(prefix));
 
   return (
     <FadeIn
@@ -24,11 +37,10 @@ export function SiteFloatingActions() {
       <div className="pointer-events-auto">
         <AccessibilityWidget />
       </div>
-      {showRegisterCta && (
+      {showGatewayCta && (
         <Link
-          to={ACTIVITIES_PATH}
-          hash={ACTIVITIES_SCHEDULE_HASH}
-          aria-label={ACTIVITIES_REGISTER_CTA_LABEL}
+          to="/"
+          aria-label={SITE_GATEWAY_HEADLINE}
           className={`${FLOAT_BTN} bg-accent text-accent-foreground focus-visible:ring-accent`}
         >
           <UserPlus size={20} aria-hidden />

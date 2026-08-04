@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { ArrowLeft, Instagram, MapPin, MessageCircle } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import { FadeIn } from "@/components/site/FadeIn";
-import { ActivitiesRegisterCta } from "@/components/site/ActivitiesRegisterCta";
 import {
   CLUB_BRAND,
   CLUB_FINAL_CTA,
@@ -15,9 +15,16 @@ import {
   CLUB_WHATSAPP_GROUP_URL,
   getClubInterestWhatsAppUrl,
 } from "@/data/club";
-import { ACTIVITIES_SCHEDULE_HASH } from "@/data/activities";
 import { COMPANY } from "@/data/legal";
+import { SITE_GATEWAY_HEADLINE } from "@/data/siteGateway";
 import { cn } from "@/lib/utils";
+
+function getPillarAreaLink(pillarId: string): { to: string; hash?: string } {
+  if (pillarId === "kids") return { to: "/kids" };
+  if (pillarId === "table-tennis") return { to: "/table-tennis" };
+  if (pillarId === "events") return { to: "/club", hash: "events" };
+  return { to: "/" };
+}
 
 /** Soft cinematic grade - muted, professional, never harsh. */
 const MEDIA_GRADE =
@@ -186,11 +193,12 @@ export function ClubLandingPage() {
                 index={3}
                 className="mt-8 flex flex-wrap items-center gap-3 sm:mt-10"
               >
-                <ActivitiesRegisterCta
-                  size="lg"
-                  hash={ACTIVITIES_SCHEDULE_HASH}
-                  className="shadow-lg shadow-black/20"
-                />
+                <Link
+                  to="/"
+                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-accent px-7 py-3.5 text-sm font-bold tracking-wide text-accent-foreground shadow-lg shadow-black/20 transition hover:bg-accent/90 sm:text-base"
+                >
+                  {SITE_GATEWAY_HEADLINE}
+                </Link>
                 <a
                   href={getClubInterestWhatsAppUrl("general")}
                   target="_blank"
@@ -314,13 +322,12 @@ export function ClubLandingPage() {
                   <MessageCircle size={18} aria-hidden />
                   {pillar.ctaLabel}
                 </a>
-                <ActivitiesRegisterCta
-                  variant="outline"
-                  size="sm"
-                  hash={ACTIVITIES_SCHEDULE_HASH}
-                  short
-                  className="mt-3"
-                />
+                <Link
+                  {...getPillarAreaLink(pillar.id)}
+                  className="mt-3 inline-flex items-center justify-center rounded-lg border-2 border-accent bg-accent/10 px-5 py-2.5 text-sm font-bold text-accent transition hover:bg-accent hover:text-accent-foreground"
+                >
+                  {pillar.id === "events" ? "לפרטים על אירועים" : 'לו"ז, מחירון והרשמה'}
+                </Link>
               </FadeIn>
             </div>
           </section>
@@ -404,11 +411,12 @@ export function ClubLandingPage() {
             delay={120}
             className="mt-8 flex flex-wrap items-center justify-center gap-3"
           >
-            <ActivitiesRegisterCta
-              size="lg"
-              hash={ACTIVITIES_SCHEDULE_HASH}
-              className="shadow-lg"
-            />
+            <Link
+              to="/"
+              className="inline-flex items-center justify-center gap-2 rounded-lg bg-accent px-7 py-3.5 text-sm font-bold tracking-wide text-accent-foreground shadow-lg transition hover:bg-accent/90"
+            >
+              {SITE_GATEWAY_HEADLINE}
+            </Link>
             <a
               href={getClubInterestWhatsAppUrl("general")}
               target="_blank"

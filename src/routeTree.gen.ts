@@ -14,6 +14,7 @@ import { Route as TableTennisRouteImport } from './routes/table-tennis'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as KidsRouteImport } from './routes/kids'
+import { Route as FunctionalRouteImport } from './routes/functional'
 import { Route as ClubRouteImport } from './routes/club'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as CartRouteImport } from './routes/cart'
@@ -55,6 +56,11 @@ const PrivacyRoute = PrivacyRouteImport.update({
 const KidsRoute = KidsRouteImport.update({
   id: '/kids',
   path: '/kids',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FunctionalRoute = FunctionalRouteImport.update({
+  id: '/functional',
+  path: '/functional',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ClubRoute = ClubRouteImport.update({
@@ -151,6 +157,7 @@ export interface FileRoutesByFullPath {
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
   '/club': typeof ClubRoute
+  '/functional': typeof FunctionalRoute
   '/kids': typeof KidsRoute
   '/privacy': typeof PrivacyRoute
   '/register': typeof RegisterRoute
@@ -174,6 +181,7 @@ export interface FileRoutesByTo {
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
   '/club': typeof ClubRoute
+  '/functional': typeof FunctionalRoute
   '/kids': typeof KidsRoute
   '/privacy': typeof PrivacyRoute
   '/register': typeof RegisterRoute
@@ -199,6 +207,7 @@ export interface FileRoutesById {
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
   '/club': typeof ClubRoute
+  '/functional': typeof FunctionalRoute
   '/kids': typeof KidsRoute
   '/privacy': typeof PrivacyRoute
   '/register': typeof RegisterRoute
@@ -225,6 +234,7 @@ export interface FileRouteTypes {
     | '/cart'
     | '/checkout'
     | '/club'
+    | '/functional'
     | '/kids'
     | '/privacy'
     | '/register'
@@ -248,6 +258,7 @@ export interface FileRouteTypes {
     | '/cart'
     | '/checkout'
     | '/club'
+    | '/functional'
     | '/kids'
     | '/privacy'
     | '/register'
@@ -272,6 +283,7 @@ export interface FileRouteTypes {
     | '/cart'
     | '/checkout'
     | '/club'
+    | '/functional'
     | '/kids'
     | '/privacy'
     | '/register'
@@ -297,6 +309,7 @@ export interface RootRouteChildren {
   CartRoute: typeof CartRoute
   CheckoutRoute: typeof CheckoutRoute
   ClubRoute: typeof ClubRoute
+  FunctionalRoute: typeof FunctionalRoute
   KidsRoute: typeof KidsRoute
   PrivacyRoute: typeof PrivacyRoute
   RegisterRoute: typeof RegisterRoute
@@ -342,6 +355,13 @@ declare module '@tanstack/react-router' {
       path: '/kids'
       fullPath: '/kids'
       preLoaderRoute: typeof KidsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/functional': {
+      id: '/functional'
+      path: '/functional'
+      fullPath: '/functional'
+      preLoaderRoute: typeof FunctionalRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/club': {
@@ -505,6 +525,7 @@ const rootRouteChildren: RootRouteChildren = {
   CartRoute: CartRoute,
   CheckoutRoute: CheckoutRoute,
   ClubRoute: ClubRoute,
+  FunctionalRoute: FunctionalRoute,
   KidsRoute: KidsRoute,
   PrivacyRoute: PrivacyRoute,
   RegisterRoute: RegisterRoute,

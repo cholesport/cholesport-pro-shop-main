@@ -1,11 +1,14 @@
 import tableTennisImg from "@/assets/club-tt-action.png";
+import tableTennisKidsImg from "@/assets/club-tt-kids.png";
 import kidsImg from "@/assets/club-kids-ninja.png";
 import eventsImg from "@/assets/club-events-climbing.png";
 import { COMPANY } from "@/data/legal";
 import { buildAllGroupLessonPricingPlans } from "@/data/groupLessonPricing";
+import { NINJA_KIDS_CATEGORY_LEAD } from "@/data/kids";
+import { TABLE_TENNIS_KIDS_AGE_LABEL, TABLE_TENNIS_KIDS_AGE_RANGE } from "@/data/tableTennis";
 import { WHATSAPP_URL } from "@/lib/contact";
 
-/** Public route for registration, pricing and schedule hub. */
+/** Legacy path — redirects to the relevant area page. */
 export const ACTIVITIES_PATH = "/register";
 
 export const ACTIVITIES_SEO_TITLE = "רישום לחוגים, פעילויות וכניסה למתחם | CHOLE sport";
@@ -22,6 +25,7 @@ export const ACTIVITIES_EXTERNAL_PAYMENT_URL =
 
 export type ActivityCategoryId =
   | "table-tennis"
+  | "table-tennis-kids"
   | "table-tennis-training"
   | "ninja-kids"
   | "functional-adults"
@@ -94,10 +98,9 @@ export const ACTIVITIES_WHATSAPP_RESERVE_HINT =
 export const ACTIVITIES_REGISTER_LESSON_LABEL = "הרשמה לשיעור";
 
 /** Shared copy for registration CTAs across the site. */
-export const ACTIVITIES_REGISTER_CTA_LABEL =
-  "רישום לחוגים, פעילויות ומתחם הפינגפונג";
-/** Header / compact surfaces — full wording, may wrap to two lines. */
-export const ACTIVITIES_REGISTER_CTA_HEADER = 'לו"ז חוגים וכניסה למתחם הפינגפונג';
+export const ACTIVITIES_REGISTER_CTA_LABEL = "בחרו אזור: חוגים · פינגפונג · חנות";
+/** Header / compact surfaces — gateway chooser. */
+export const ACTIVITIES_REGISTER_CTA_HEADER = "מה מחפשים היום?";
 export const ACTIVITIES_REGISTER_CTA_SHORT = ACTIVITIES_REGISTER_CTA_HEADER;
 export const ACTIVITIES_REGISTER_BANNER_TITLE =
   "רוצים להירשם לחוג, אימון או כניסה למתחם הפינגפונג?";
@@ -247,6 +250,34 @@ function buildTableTennisTrainingSlots(): ActivityScheduleSlot[] {
   }));
 }
 
+type TableTennisKidsSlotDef = {
+  id: string;
+  weekday: number;
+  timeStart: string;
+  timeEnd: string;
+};
+
+const TABLE_TENNIS_KIDS_SCHEDULE: TableTennisKidsSlotDef[] = [
+  { id: "tt-kids-tue", weekday: 2, timeStart: "15:30", timeEnd: "16:30" },
+  { id: "tt-kids-thu", weekday: 4, timeStart: "15:30", timeEnd: "16:30" },
+];
+
+function buildTableTennisKidsSlots(): ActivityScheduleSlot[] {
+  return TABLE_TENNIS_KIDS_SCHEDULE.map((def) => ({
+    id: def.id,
+    categoryId: "table-tennis-kids" as const,
+    title: "חוג טניס שולחן לילדים",
+    day: HEBREW_WEEKDAYS[def.weekday] ?? "",
+    timeStart: def.timeStart,
+    timeEnd: def.timeEnd,
+    scheduleType: "weekly" as const,
+    weekdays: [def.weekday],
+    ageRange: TABLE_TENNIS_KIDS_AGE_RANGE,
+    notes: "שיעורים אחרי הצהריים — ימי שלישי וחמישי.",
+    registrationUrl: ACTIVITIES_EXTERNAL_PAYMENT_URL,
+  }));
+}
+
 export const ACTIVITIES_CATEGORIES: ActivityCategory[] = [
   {
     id: "table-tennis",
@@ -255,6 +286,13 @@ export const ACTIVITIES_CATEGORIES: ActivityCategory[] = [
       "הרשמה לכניסה למועדון - משבצות של שעתיים בין 08:00 ל-22:00, כל יום. במתחם 6 שולחנות פעילים לכל המשחקים והאימונים.",
     image: tableTennisImg,
     imageAlt: "טניס שולחן במתחם CHOLE TLV",
+  },
+  {
+    id: "table-tennis-kids",
+    title: "חוג טניס שולחן לילדים",
+    lead: `חוג טניס שולחן לילדים ${TABLE_TENNIS_KIDS_AGE_LABEL} — ימי שלישי וחמישי בשעה 15:30, אחרי הצהריים. מהצעדים הראשונים ועד רמה מתקדמת יותר, באווירה חברתית ומקצועית.`,
+    image: tableTennisKidsImg,
+    imageAlt: "ילדים בחוג טניס שולחן במתחם CHOLE TLV",
   },
   {
     id: "table-tennis-training",
@@ -267,8 +305,7 @@ export const ACTIVITIES_CATEGORIES: ActivityCategory[] = [
   {
     id: "ninja-kids",
     title: "חוגי נינג'ה לילדים",
-    lead:
-      "חוגי נינג'ה לילדים שאוהבים לקפוץ, לרוץ ולהתגלגל - מסלולי נינג'ה ואקרובטיקה עם אתגרים מותאמים. קבוצות גיל: 3-4, 4-6 ו-7+.",
+    lead: NINJA_KIDS_CATEGORY_LEAD,
     image: kidsImg,
     imageAlt: "חוג נינג'ה לילדים במתחם CHOLE TLV",
   },
@@ -327,6 +364,7 @@ export const ACTIVITIES_PRICING: ActivityPricingPlan[] = [
 /** Representative schedule - update here or sync from Grow API later. */
 export const ACTIVITIES_SCHEDULE: ActivityScheduleSlot[] = [
   ...buildTableTennisScheduleSlots(),
+  ...buildTableTennisKidsSlots(),
   ...buildTableTennisTrainingSlots(),
   ...buildNinjaKidsScheduleSlots(),
   {

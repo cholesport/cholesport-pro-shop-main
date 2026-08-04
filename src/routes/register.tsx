@@ -1,17 +1,10 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { Header } from "@/components/site/Header";
-import { Footer } from "@/components/site/Footer";
-import { ActivitiesPage } from "@/components/site/ActivitiesPage";
-import {
-  ACTIVITIES_PATH,
-  ACTIVITIES_SEO_DESCRIPTION,
-  ACTIVITIES_SEO_TITLE,
-  type ActivityCategoryId,
-} from "@/data/activities";
-import { buildPageSeoHead } from "@/lib/seo";
+import { createFileRoute, redirect } from "@tanstack/react-router";
+import type { ActivityCategoryId } from "@/data/activities";
+import { resolveRegisterRedirect } from "@/lib/registerRedirects";
 
 const FOCUS_CATEGORIES: ActivityCategoryId[] = [
   "table-tennis",
+  "table-tennis-kids",
   "table-tennis-training",
   "ninja-kids",
   "functional-adults",
@@ -26,27 +19,18 @@ export const Route = createFileRoute("/register")({
         ? (search.focus as ActivityCategoryId)
         : undefined,
   }),
-  head: () => {
-    const seo = buildPageSeoHead({
-      title: ACTIVITIES_SEO_TITLE,
-      description: ACTIVITIES_SEO_DESCRIPTION,
-      path: ACTIVITIES_PATH,
+  beforeLoad: ({ search, location }) => {
+    const hash = location.hash.replace(/^#/, "") || undefined;
+    const target = resolveRegisterRedirect(search.focus, hash);
+    throw redirect({
+      to: target.to,
+      hash: target.hash,
+      replace: true,
     });
-    return { meta: seo.meta, links: seo.links };
   },
   component: RegisterRoute,
 });
 
 function RegisterRoute() {
-  const { focus } = Route.useSearch();
-
-  return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      <main id="main-content">
-        <ActivitiesPage initialScheduleCategory={focus} />
-      </main>
-      <Footer />
-    </div>
-  );
+  return null;
 }

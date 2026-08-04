@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import type { ActivityPass } from "@/data/passes";
 import { PASS_STATUS_LABELS } from "@/data/passes";
+import { TABLE_TENNIS_PRICING_SECTION_ID } from "@/data/tableTennis";
 import { redeemCustomerPass } from "@/lib/api/passes.functions";
 import { cn } from "@/lib/utils";
 
@@ -156,7 +157,9 @@ export function CustomerPassesPanel({
           לאחר רכישת כרטיסייה, תוכלו לראות כאן כמה ניקובים נותרו ולהירשם לשיעורים.
         </p>
         <Button asChild className="mt-5 font-semibold">
-          <Link to="/register">לרכישת כרטיסייה</Link>
+          <Link to="/table-tennis" hash={TABLE_TENNIS_PRICING_SECTION_ID}>
+            לרכישת כרטיסייה
+          </Link>
         </Button>
       </div>
     );

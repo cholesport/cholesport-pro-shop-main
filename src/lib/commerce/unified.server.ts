@@ -436,6 +436,7 @@ export function buildServiceCustomerSummaries(
       passCount: 0,
       activePassPunches: 0,
       standingCount: 0,
+      inquiryCount: 0,
       lastActivityAt: "",
       categoryNames: [],
     };
@@ -536,6 +537,72 @@ export function buildServiceCustomerSummaries(
   return [...summaries.values()].sort((a, b) =>
     b.lastActivityAt.localeCompare(a.lastActivityAt),
   );
+}
+
+export function mergeLeadCustomersIntoServiceSummaries(
+  customers: CustomerRecord[],
+  summaries: ServiceCustomerSummary[],
+): ServiceCustomerSummary[] {
+  const merged = new Map(summaries.map((summary) => [summary.key, { ...summary }]));
+
+  for (const customer of customers) {
+    const inquiries = customer.inquiries ?? [];
+    const interests = customer.interests ?? [];
+    if (inquiries.length === 0 && interests.length === 0) continue;
+
+    const key = buildSummaryKey({
+      customerId: customer.id,
+      email: customer.email,
+      phone: customer.phone,
+    });
+
+    const existing = merged.get(key);
+    const summary: ServiceCustomerSummary = existing ?? {
+      key,
+      customerId: customer.id,
+      email: customer.email,
+      phone: customer.phone,
+      name: getCustomerDisplayName(customer),
+      hasAccount: true,
+      isLeadAccount: customer.accountType === "lead",
+      activityCount: 0,
+      subscriptionCount: 0,
+      passCount: 0,
+      activePassPunches: 0,
+      standingCount: 0,
+      inquiryCount: 0,
+      lastActivityAt: "",
+      categoryNames: [],
+      interestLabels: [],
+    };
+
+    summary.customerId = customer.id;
+    summary.email = customer.email;
+    summary.phone = customer.phone;
+    summary.hasAccount = true;
+    summary.isLeadAccount = customer.accountType === "lead";
+    summary.inquiryCount = Math.max(summary.inquiryCount, inquiries.length);
+    summary.interestLabels = [...new Set([...(summary.interestLabels ?? []), ...interests])];
+
+    for (const interest of interests) {
+      if (!summary.categoryNames.includes(interest)) {
+        summary.categoryNames.push(interest);
+      }
+    }
+
+    const latestInquiryAt = inquiries
+      .map((inquiry) => inquiry.createdAt)
+      .sort()
+      .at(-1);
+    if (latestInquiryAt) {
+      summary.lastActivityAt =
+        [summary.lastActivityAt, latestInquiryAt].filter(Boolean).sort().at(-1) ?? latestInquiryAt;
+    }
+
+    merged.set(key, summary);
+  }
+
+  return [...merged.values()].sort((a, b) => b.lastActivityAt.localeCompare(a.lastActivityAt));
 }
 
 export function filterHistoryByDomain(
@@ -720,6 +787,9 @@ export async function getUnifiedCustomerDetail(
           email: account.email,
           phone: account.phone,
           name: getCustomerDisplayName(account),
+          accountType: account.accountType,
+          interests: account.interests,
+          inquiries: account.inquiries,
         }
       : undefined,
     history: filteredHistory,
@@ -739,10 +809,13 @@ export async function listUnifiedCustomersForAdmin() {
 
   return {
     shopCustomers: buildShopCustomerSummaries(ordersStore.orders),
-    serviceCustomers: buildServiceCustomerSummaries(
-      registrationsStore.registrations,
-      passesStore.passes,
-      passesStore.standingRegistrations,
+    serviceCustomers: mergeLeadCustomersIntoServiceSummaries(
+      customersStore.customers,
+      buildServiceCustomerSummaries(
+        registrationsStore.registrations,
+        passesStore.passes,
+        passesStore.standingRegistrations,
+      ),
     ),
     customers: buildUnifiedCustomerSummaries(
       customersStore.customers,

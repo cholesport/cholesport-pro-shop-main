@@ -92,13 +92,35 @@ export type ServiceCustomerSummary = {
   phone: string;
   name: string;
   hasAccount: boolean;
+  isLeadAccount?: boolean;
   activityCount: number;
   subscriptionCount: number;
   passCount: number;
   activePassPunches: number;
   standingCount: number;
+  inquiryCount: number;
   lastActivityAt: string;
   categoryNames: string[];
+  interestLabels?: string[];
+};
+
+export type AdminCustomerInquiry = {
+  id: string;
+  type: string;
+  source: string;
+  summary: string;
+  details?: Record<string, string>;
+  createdAt: string;
+};
+
+export type AdminCustomerAccountMeta = {
+  id: string;
+  email: string;
+  phone: string;
+  name: string;
+  accountType?: "registered" | "lead";
+  interests?: string[];
+  inquiries?: AdminCustomerInquiry[];
 };
 
 export type SegmentedAdminCustomers = {

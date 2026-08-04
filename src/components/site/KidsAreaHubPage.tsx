@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
+import { KidsAreaSubNav } from "@/components/site/KidsAreaSubNav";
 import { KidsCampsSection } from "@/components/site/KidsCampsSection";
+import { KidsFirstTimeInfoSection } from "@/components/site/KidsFirstTimeInfoSection";
 import { KidsNinjaPricingSection } from "@/components/site/KidsNinjaPricingSection";
 import { KidsNinjaScheduleSection } from "@/components/site/KidsNinjaScheduleSection";
-import { HubLinkCard } from "@/components/site/SiteAreaHubPage";
 import { KIDS_CAMPS_SECTION_ID } from "@/data/camps";
-import { KIDS_SCHEDULE_SECTION_ID } from "@/data/kids";
+import { KIDS_FIRST_TIME_SECTION_ID, KIDS_SCHEDULE_SECTION_ID } from "@/data/kids";
 import type { SiteAreaHub } from "@/data/siteGateway";
 import { saveSiteGatewayPreference } from "@/lib/siteGatewayPreference";
 
@@ -14,59 +15,70 @@ type KidsAreaHubPageProps = {
   hub: SiteAreaHub;
 };
 
-type KidsView = "schedule" | "camps";
+type KidsView = "schedule" | "camps" | "first-time";
 
 function resolveKidsView(hash: string): KidsView {
-  return hash === KIDS_CAMPS_SECTION_ID ? "camps" : "schedule";
+  if (hash === KIDS_CAMPS_SECTION_ID) return "camps";
+  if (hash === KIDS_FIRST_TIME_SECTION_ID) return "first-time";
+  return "schedule";
+}
+
+function syncKidsUrlHash(hash: string) {
+  if (typeof window === "undefined") return;
+  const nextUrl = hash ? `/kids#${hash}` : "/kids";
+  window.history.replaceState(null, "", nextUrl);
+}
+
+function scrollToSectionTop(sectionId: string) {
+  window.setTimeout(() => {
+    const section = document.getElementById(sectionId);
+    if (section) {
+      section.scrollIntoView({ behavior: "auto", block: "start" });
+      return;
+    }
+    window.scrollTo({ top: 0, behavior: "auto" });
+  }, 0);
 }
 
 export function KidsAreaHubPage({ hub }: KidsAreaHubPageProps) {
-  const navigate = useNavigate();
-  const routerHash = useRouterState({
-    select: (state) => state.location.hash.replace(/^#/, ""),
-  });
-  const [view, setView] = useState<KidsView>(() => resolveKidsView(routerHash));
-
-  const quickLinks = hub.links.filter(
-    (link) =>
-      !link.href.includes("focus=ninja-kids") &&
-      !link.href.includes(`#${KIDS_CAMPS_SECTION_ID}`) &&
-      !link.href.includes("focus=camps"),
-  );
+  const [view, setView] = useState<KidsView>("schedule");
 
   useEffect(() => {
-    const nextView = resolveKidsView(routerHash);
-    setView(nextView);
+    const hash = window.location.hash.replace(/^#/, "");
+    setView(resolveKidsView(hash));
+  }, []);
 
-    if (nextView === "camps") {
-      window.requestAnimationFrame(() => {
-        document.getElementById(KIDS_CAMPS_SECTION_ID)?.scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-        });
-      });
+  useEffect(() => {
+    if (view === "camps") {
+      scrollToSectionTop(KIDS_CAMPS_SECTION_ID);
       return;
     }
-
-    if (routerHash === KIDS_SCHEDULE_SECTION_ID) {
-      window.requestAnimationFrame(() => {
-        document.getElementById(KIDS_SCHEDULE_SECTION_ID)?.scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-        });
-      });
+    if (view === "first-time") {
+      scrollToSectionTop(KIDS_FIRST_TIME_SECTION_ID);
     }
-  }, [routerHash]);
+  }, [view]);
 
   function openCampsView() {
     saveSiteGatewayPreference(hub.id);
     setView("camps");
-    void navigate({ to: "/kids", hash: KIDS_CAMPS_SECTION_ID });
+    syncKidsUrlHash(KIDS_CAMPS_SECTION_ID);
+  }
+
+  function openFirstTimeView() {
+    saveSiteGatewayPreference(hub.id);
+    setView("first-time");
+    syncKidsUrlHash(KIDS_FIRST_TIME_SECTION_ID);
   }
 
   function openScheduleView() {
     setView("schedule");
-    void navigate({ to: "/kids", hash: KIDS_SCHEDULE_SECTION_ID });
+    syncKidsUrlHash(KIDS_SCHEDULE_SECTION_ID);
+    window.requestAnimationFrame(() => {
+      document.getElementById(KIDS_SCHEDULE_SECTION_ID)?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    });
   }
 
   return (
@@ -75,7 +87,7 @@ export function KidsAreaHubPage({ hub }: KidsAreaHubPageProps) {
         className="relative overflow-hidden border-b border-border"
         aria-labelledby={`${hub.id}-hub-heading`}
       >
-        <div className="relative min-h-[24vh] md:min-h-[28vh]">
+        <div className="relative min-h-[20vh] md:min-h-[24vh]">
           <img
             src={hub.image}
             alt=""
@@ -86,10 +98,10 @@ export function KidsAreaHubPage({ hub }: KidsAreaHubPageProps) {
             className="absolute inset-0 bg-gradient-to-t from-primary/95 via-primary/55 to-primary/25"
             aria-hidden
           />
-          <div className="relative z-10 mx-auto flex min-h-[24vh] max-w-7xl flex-col justify-end px-4 pb-8 pt-14 md:min-h-[28vh] md:pb-10 md:pt-16">
+          <div className="relative z-10 mx-auto flex min-h-[20vh] max-w-7xl flex-col justify-end px-4 pb-6 pt-12 md:min-h-[24vh] md:pb-8 md:pt-14">
             <Link
               to="/"
-              className="mb-4 inline-flex w-fit items-center gap-2 text-sm font-medium text-white/80 transition hover:text-white"
+              className="mb-3 inline-flex w-fit items-center gap-2 text-sm font-medium text-white/80 transition hover:text-white"
             >
               <ArrowRight size={16} aria-hidden />
               חזרה לבחירת אזור
@@ -99,67 +111,60 @@ export function KidsAreaHubPage({ hub }: KidsAreaHubPageProps) {
             </p>
             <h1
               id={`${hub.id}-hub-heading`}
-              className="mt-2 max-w-3xl text-balance text-2xl font-extrabold leading-tight text-white sm:text-3xl md:text-4xl"
+              className="mt-2 max-w-3xl text-balance text-xl font-extrabold leading-tight text-white sm:text-2xl md:text-3xl"
             >
               {hub.headline}
             </h1>
-            <p className="mt-3 max-w-2xl text-sm leading-relaxed text-white/90 md:text-base">
+            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-white/90">
               {hub.support}
             </p>
           </div>
         </div>
       </section>
 
+      <KidsAreaSubNav
+        view={view}
+        onOpenCamps={openCampsView}
+        onOpenFirstTime={openFirstTimeView}
+        onOpenSchedule={openScheduleView}
+      />
+
       {view === "schedule" ? (
         <>
-          <section
-            className="border-b border-border bg-background"
-            aria-labelledby="kids-quick-links-heading"
-          >
-            <div className="mx-auto max-w-7xl px-4 py-6 md:py-8">
-              <h2 id="kids-quick-links-heading" className="sr-only">
-                אפשרויות נוספות באזור הילדים
-              </h2>
-              <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                <li>
-                  <HubLinkCard
-                    label="קייטנות"
-                    description="קייטנת נינג'ה ואמנות — מחזורים, פעילויות והרשמה"
-                    href={`/kids#${KIDS_CAMPS_SECTION_ID}`}
-                    onNavigate={openCampsView}
-                  />
-                </li>
-                {quickLinks.map((link) => (
-                  <li key={link.href}>
-                    <HubLinkCard
-                      {...link}
-                      onNavigate={() => saveSiteGatewayPreference(hub.id)}
-                    />
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </section>
-
           <KidsNinjaScheduleSection />
           <KidsNinjaPricingSection />
         </>
-      ) : (
+      ) : view === "camps" ? (
         <>
-          <section className="border-b border-border bg-background">
+          <section className="hidden border-b border-border bg-background md:block">
             <div className="mx-auto max-w-7xl px-4 py-4">
-              <Link
-                to="/kids"
-                hash={KIDS_SCHEDULE_SECTION_ID}
+              <button
+                type="button"
                 onClick={openScheduleView}
                 className="inline-flex items-center gap-2 text-sm font-bold text-accent hover:underline"
               >
                 <ArrowRight size={16} aria-hidden />
                 חזרה ללו&quot;ז חוגים ומחירון
-              </Link>
+              </button>
             </div>
           </section>
           <KidsCampsSection />
+        </>
+      ) : (
+        <>
+          <section className="hidden border-b border-border bg-background md:block">
+            <div className="mx-auto max-w-7xl px-4 py-4">
+              <button
+                type="button"
+                onClick={openScheduleView}
+                className="inline-flex items-center gap-2 text-sm font-bold text-accent hover:underline"
+              >
+                <ArrowRight size={16} aria-hidden />
+                חזרה ללו&quot;ז חוגים ומחירון
+              </button>
+            </div>
+          </section>
+          <KidsFirstTimeInfoSection />
         </>
       )}
     </div>
@@ -168,4 +173,8 @@ export function KidsAreaHubPage({ hub }: KidsAreaHubPageProps) {
 
 export function kidsCampsHref() {
   return `/kids#${KIDS_CAMPS_SECTION_ID}`;
+}
+
+export function kidsFirstTimeHref() {
+  return `/kids#${KIDS_FIRST_TIME_SECTION_ID}`;
 }

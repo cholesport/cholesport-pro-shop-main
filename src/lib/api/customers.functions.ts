@@ -10,6 +10,7 @@ import {
   customerToProfile,
   getCustomerFromSessionToken,
 } from "@/lib/customers/helpers.server";
+import { isLeadCustomer } from "@/lib/customers/leads.server";
 import { sendPasswordResetEmail } from "@/lib/customers/notify.server";
 import {
   hashCustomerPassword,
@@ -71,7 +72,29 @@ export const registerCustomer = createServerFn({ method: "POST" })
     }
 
     const store = await loadCustomersStore();
-    if (findCustomerByEmail(store, data.email)) {
+    const existing = findCustomerByEmail(store, data.email);
+    if (existing) {
+      if (existing.accountType === "lead") {
+        if (!isValidAccountPhone(data.phone)) {
+          throw new Error("נא להזין מספר טלפון תקין.");
+        }
+
+        const now = new Date().toISOString();
+        existing.passwordHash = hashCustomerPassword(data.password);
+        existing.firstName = data.firstName.trim();
+        existing.lastName = data.lastName.trim();
+        existing.phone = data.phone.trim();
+        existing.accountType = "registered";
+        existing.updatedAt = now;
+        await saveCustomersStore(store);
+
+        const customerToken = createCustomerSessionToken(existing.id, existing.email);
+        return {
+          customerToken,
+          profile: customerToProfile(existing, true),
+        };
+      }
+
       throw new Error("כבר קיים חשבון עם האימייל הזה.");
     }
 
@@ -108,6 +131,9 @@ export const loginCustomer = createServerFn({ method: "POST" })
     const customer = findCustomerByEmail(store, data.email);
     if (!customer || !verifyCustomerPassword(data.password, customer.passwordHash)) {
       throw new Error("אימייל או סיסמה שגויים.");
+    }
+    if (isLeadCustomer(customer)) {
+      throw new Error("יש להשלים הרשמה מלאה באתר לפני התחברות. השתמשו באותו אימייל בהרשמה.");
     }
 
     const customerToken = createCustomerSessionToken(customer.id, customer.email);

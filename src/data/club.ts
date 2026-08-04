@@ -4,6 +4,7 @@ import kidsImg from "@/assets/club-kids-ninja.png";
 import eventsImg from "@/assets/club-events-climbing.png";
 import { COMPANY } from "@/data/legal";
 import { TABLE_TENNIS_TABLE_COUNT } from "@/data/activities";
+import { NINJA_KIDS_AGE_GROUPS_LABEL, NINJA_KIDS_AGE_UP_TO_LABEL } from "@/data/kids";
 import { WHATSAPP_URL } from "@/lib/contact";
 
 /** Instagram for the physical club / venue (@chole_tlv). */
@@ -22,7 +23,7 @@ export const CLUB_NAME = "מתחם CHOLE TLV";
 
 export const CLUB_SEO_TITLE = `${CLUB_BRAND} - מועדון טניס שולחן וחוגי נינג'ה לילדים בתל אביב`;
 export const CLUB_SEO_DESCRIPTION =
-  "מתחם ספורט בתל אביב שמשלב מועדון טניס שולחן לכל הרמות עם חוגי נינג'ה ואקרובטיקה לילדים מגיל 2.5 עד 12. בית השואבה 6 — ימי הולדת והשכרת חלל לאירועים.";
+  `מתחם ספורט בתל אביב שמשלב מועדון טניס שולחן לכל הרמות עם חוגי נינג'ה ואקרובטיקה לילדים ${NINJA_KIDS_AGE_UP_TO_LABEL}. בית השואבה 6 — ימי הולדת והשכרת חלל לאירועים.`;
 
 /** Hero background video - muted autoplay loop (served from /public). */
 export const CLUB_HERO_VIDEO_SRC = "/club/club-venue.mp4";
@@ -40,7 +41,7 @@ export const CLUB_HERO = {
 };
 
 export const CLUB_INTRO =
-  "CHOLE TLV הוא מתחם ספורט בתל אביב שמאחד בין שני עולמות: מועדון טניס שולחן קהילתי — מקום מפגש לפרוק אנרגיה, להתאמן ולשחק מול שחקנים ושחקניות בכל הרמות — ולצדו חוגי נינג'ה ואקרובטיקה לילדים מגיל 2.5 עד 12. שילוב של משחק, תנועה ואתגר תחת קורת גג אחת. בנוסף אפשר לקבוע ימי הולדת ולהשכיר את החלל לאירועים.";
+  `CHOLE TLV הוא מתחם ספורט בתל אביב שמאחד בין שני עולמות: מועדון טניס שולחן קהילתי — מקום מפגש לפרוק אנרגיה, להתאמן ולשחק מול שחקנים ושחקניות בכל הרמות — ולצדו חוגי נינג'ה ואקרובטיקה לילדים ${NINJA_KIDS_AGE_UP_TO_LABEL}. שילוב של משחק, תנועה ואתגר תחת קורת גג אחת. בנוסף אפשר לקבוע ימי הולדת ולהשכיר את החלל לאירועים.`;
 
 export type ClubPillar = {
   id: string;
@@ -79,9 +80,9 @@ export const CLUB_PILLARS: ClubPillar[] = [
   {
     id: "kids",
     title: "חוגי נינג'ה ואקרובטיקה לילדים",
-    lead: "חוגי נינג'ה לילדים באותו מתחם — תנועה, אתגר וביטחון עצמי לגילאי 2.5 עד 12.",
+    lead: `חוגי נינג'ה לילדים באותו מתחם — תנועה, אתגר וביטחון עצמי ל${NINJA_KIDS_AGE_GROUPS_LABEL}.`,
     points: [
-      "מתאים לגילאי 2.5-12, בקבוצות לפי גיל ורמה.",
+      `מתאים ל${NINJA_KIDS_AGE_GROUPS_LABEL}, בקבוצות לפי גיל ורמה.`,
       "מסלולי נינג'ה, אקרובטיקה, קואורדינציה וכושר.",
       "אווירה בטוחה ומלווה - לילדים שאוהבים לנוע ולהתנסות.",
       "פרטים על מערכת שעות והרשמה - בוואטסאפ או באינסטגרם.",
@@ -144,7 +145,7 @@ export const CLUB_WHATSAPP_MESSAGES: Record<ClubWhatsAppIntent, string> = {
     "שלום, הגעתי מעמוד המתחם באתר CHOLE - אשמח לשמוע פרטים על אימונים / חוגים במתחם CHOLE TLV.",
   "table-tennis":
     "שלום, אשמח לתאם הגעה למועדון טניס השולחן של CHOLE TLV (משחק / אימון).",
-  kids: "שלום, אשמח לקבל פרטים על חוגי נינג'ה ואקרובטיקה לילדים במתחם CHOLE TLV (גילאי 2.5-12).",
+  kids: `שלום, אשמח לקבל פרטים על חוגי נינג'ה ואקרובטיקה לילדים במתחם CHOLE TLV (${NINJA_KIDS_AGE_GROUPS_LABEL}).`,
   events:
     "שלום, אשמח לתאם יום הולדת / השכרת חלל במתחם CHOLE TLV - אשמח לפרטים ותאריכים פנויים.",
 };

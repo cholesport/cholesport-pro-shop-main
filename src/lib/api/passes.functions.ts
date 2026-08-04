@@ -59,6 +59,7 @@ const standingSchema = authTokenSchema.extend({
     customerId: z.string().optional(),
     categoryId: z.enum([
       "table-tennis",
+      "table-tennis-kids",
       "table-tennis-training",
       "ninja-kids",
       "functional-adults",

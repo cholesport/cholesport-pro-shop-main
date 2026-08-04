@@ -2,12 +2,12 @@ import { Link } from "@tanstack/react-router";
 import { Calendar, CreditCard, UserPlus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
-  ACTIVITIES_PATH,
   ACTIVITIES_PRICING_HASH,
   ACTIVITIES_REGISTER_CTA_HEADER,
   ACTIVITIES_REGISTER_CTA_LABEL,
   ACTIVITIES_SCHEDULE_HASH,
 } from "@/data/activities";
+import { SITE_GATEWAY_HEADLINE } from "@/data/siteGateway";
 
 type RegisterHash = typeof ACTIVITIES_SCHEDULE_HASH | typeof ACTIVITIES_PRICING_HASH;
 
@@ -29,6 +29,7 @@ const SIZE_CLASSES = {
 } as const;
 
 type ActivitiesRegisterCtaProps = {
+  to?: string;
   variant?: keyof typeof VARIANT_CLASSES;
   size?: keyof typeof SIZE_CLASSES;
   hash?: RegisterHash;
@@ -41,6 +42,7 @@ type ActivitiesRegisterCtaProps = {
 };
 
 export function ActivitiesRegisterCta({
+  to = "/",
   variant = "solid",
   size = "md",
   hash,
@@ -54,7 +56,7 @@ export function ActivitiesRegisterCta({
   const text =
     label ??
     (header
-      ? ACTIVITIES_REGISTER_CTA_HEADER
+      ? SITE_GATEWAY_HEADLINE
       : short
         ? ACTIVITIES_REGISTER_CTA_HEADER
         : ACTIVITIES_REGISTER_CTA_LABEL);
@@ -63,7 +65,7 @@ export function ActivitiesRegisterCta({
 
   return (
     <Link
-      to={ACTIVITIES_PATH}
+      to={to}
       hash={hash}
       className={cn(
         "inline-flex items-center justify-center font-bold tracking-wide transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2",

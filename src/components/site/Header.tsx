@@ -5,7 +5,6 @@ import logo from "@/assets/chole-sport-logo.png";
 import { ActivitiesRegisterCta } from "@/components/site/ActivitiesRegisterCta";
 import { useCart } from "@/context/CartContext";
 import { CATEGORIES } from "@/data/categories";
-import { ACTIVITIES_SCHEDULE_HASH } from "@/data/activities";
 import { SITE_GATEWAY_CARDS } from "@/data/siteGateway";
 import { ShopBrandStrip } from "@/components/site/ShopBrandStrip";
 import { CONTACT_PHONE_DISPLAY } from "@/lib/contact";
@@ -39,7 +38,14 @@ export function Header({ variant = "full" }: HeaderProps) {
 
           <div className="flex items-center gap-2 sm:gap-3 ms-auto shrink-0">
             <a
-              href={`tel:${CONTACT_PHONE_DISPLAY.replace(/-/g, "")}`}
+              href={`tel:${CONTACT_PHONE_DISPLAY.replace(/\D/g, "")}`}
+              className="inline-flex min-h-11 items-center text-xs font-medium text-muted-foreground hover:text-accent transition xl:hidden"
+              dir="ltr"
+            >
+              {CONTACT_PHONE_DISPLAY}
+            </a>
+            <a
+              href={`tel:${CONTACT_PHONE_DISPLAY.replace(/\D/g, "")}`}
               className="hidden xl:inline text-xs font-medium text-muted-foreground hover:text-accent transition"
               dir="ltr"
             >
@@ -82,7 +88,6 @@ export function Header({ variant = "full" }: HeaderProps) {
               <div className="pb-3 md:pb-3.5">
                 <ActivitiesRegisterCta
                   header
-                  hash={ACTIVITIES_SCHEDULE_HASH}
                   icon="calendar"
                   size="sm"
                   className="w-full whitespace-normal text-center leading-snug px-4 py-2.5 shadow-sm md:text-sm"

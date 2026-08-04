@@ -7,6 +7,7 @@ import {
 /** Categories that share the same group-lesson pricing tier. */
 export const GROUP_LESSON_CATEGORY_IDS = [
   "ninja-kids",
+  "table-tennis-kids",
   "table-tennis-training",
   "functional-adults",
 ] as const satisfies readonly ActivityCategoryId[];
@@ -38,6 +39,13 @@ const GROUP_LESSON_COPY: Record<GroupLessonCategoryId, GroupLessonPlanCopy> = {
     cardName: "כרטיסייה של 8 שיעורים",
     cardDescription: "8 שיעורים בחוג הנינג'ה לילדים — לשימוש גמיש לפי לוח הזמנים.",
   },
+  "table-tennis-kids": {
+    trialDescription: "שיעור ניסיון ראשון בחוג טניס השולחן לילדים.",
+    weeklyOnceDescription: "שיעור קבוע אחד בשבוע בחוג טניס שולחן לילדים.",
+    weeklyTwiceDescription: "שני שיעורים קבועים בשבוע בחוג טניס שולחן לילדים.",
+    cardName: "כרטיסייה של 8 שיעורים",
+    cardDescription: "8 שיעורי טניס שולחן לילדים — לשימוש גמיש לפי לוח הזמנים.",
+  },
   "table-tennis-training": {
     trialDescription: "שיעור ניסיון ראשון באימון טניס השולחן הקבוצתי.",
     weeklyOnceDescription: "אימון קבוע אחד בשבוע בטניס שולחן — מתאים לכל הרמות.",
@@ -56,6 +64,7 @@ const GROUP_LESSON_COPY: Record<GroupLessonCategoryId, GroupLessonPlanCopy> = {
 
 const PLAN_PREFIX: Record<GroupLessonCategoryId, string> = {
   "ninja-kids": "ninja",
+  "table-tennis-kids": "tt-kids",
   "table-tennis-training": "tt-training",
   "functional-adults": "functional",
 };

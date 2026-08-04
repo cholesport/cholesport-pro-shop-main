@@ -4,12 +4,7 @@ import { HeroCarousel } from "@/components/site/HeroCarousel";
 import { FadeIn } from "@/components/site/FadeIn";
 import { ActivitiesRegisterCta } from "@/components/site/ActivitiesRegisterCta";
 import { useHeroCarousel } from "@/hooks/useHeroCarousel";
-import {
-  BRAND_CORPORATE_TAGLINE,
-  BRAND_HERO_SHOP_CTA,
-  BRAND_HERO_SUBHEADLINE,
-} from "@/data/brand";
-import { ACTIVITIES_SCHEDULE_HASH } from "@/data/activities";
+import { BRAND_CORPORATE_TAGLINE, BRAND_HERO_SHOP_CTA, BRAND_HERO_SUBHEADLINE } from "@/data/brand";
 
 /**
  * Full-bleed dark veil graded top → bottom across the entire upper hero,
@@ -66,7 +61,6 @@ export function Hero() {
               <ActivitiesRegisterCta
                 variant="solid"
                 size="lg"
-                hash={ACTIVITIES_SCHEDULE_HASH}
                 className="shadow-lg shadow-black/20"
               />
               <Link

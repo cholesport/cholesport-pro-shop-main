@@ -47,6 +47,9 @@ type ActivityDailyScheduleProps = {
   onPassesChange?: (passes: ActivityPass[]) => void;
   adminMode?: boolean;
   onAdminRegisterSlot?: (slot: ActivityScheduleSlot, sessionDate: string) => void;
+  /** Override in-page pricing anchor (e.g. kids area uses #pricing). */
+  pricingHref?: string;
+  showCategoryNav?: boolean;
 };
 
 function CategoryNav({
@@ -123,6 +126,7 @@ function DailySessionCard({
   onPassRedeemed,
   adminMode = false,
   onAdminRegisterSlot,
+  pricingHref,
 }: {
   slot: ActivityScheduleSlot;
   date: Date;
@@ -133,9 +137,10 @@ function DailySessionCard({
   onPassRedeemed?: (pass: ActivityPass) => void;
   adminMode?: boolean;
   onAdminRegisterSlot?: (slot: ActivityScheduleSlot, sessionDate: string) => void;
+  pricingHref?: string;
 }) {
   const whatsappUrl = buildActivityReservationWhatsAppUrl(slot, date, categoryTitle);
-  const pricingHref = getActivityPricingHref(slot.categoryId);
+  const registerHref = pricingHref ?? getActivityPricingHref(slot.categoryId);
 
   return (
     <article className="rounded-xl border-2 border-border bg-card overflow-hidden hover:border-accent/40 transition">
@@ -195,7 +200,7 @@ function DailySessionCard({
             <>
               <div className="mt-4 flex flex-col sm:flex-row gap-2">
                 <Button asChild className="font-bold flex-1 sm:self-start">
-                  <a href={pricingHref}>
+                  <a href={registerHref}>
                     <UserPlus size={16} />
                     {ACTIVITIES_REGISTER_LESSON_LABEL}
                   </a>
@@ -233,11 +238,13 @@ function DailySessionCard({
 function SeasonalCard({
   slot,
   adminMode = false,
+  pricingHref,
 }: {
   slot: ActivityScheduleSlot;
   adminMode?: boolean;
+  pricingHref?: string;
 }) {
-  const pricingHref = getActivityPricingHref(slot.categoryId);
+  const registerHref = pricingHref ?? getActivityPricingHref(slot.categoryId);
   return (
     <article className="rounded-xl border border-border bg-card p-5">
       <p className="text-xs font-bold text-accent">{slot.day}</p>
@@ -251,7 +258,7 @@ function SeasonalCard({
       )}
       {!adminMode && (
         <Button asChild className="mt-4 font-bold">
-          <a href={pricingHref}>
+          <a href={registerHref}>
             <UserPlus size={16} />
             {ACTIVITIES_REGISTER_LESSON_LABEL}
           </a>
@@ -270,6 +277,8 @@ export function ActivityDailySchedule({
   onPassesChange,
   adminMode = false,
   onAdminRegisterSlot,
+  pricingHref,
+  showCategoryNav = true,
 }: ActivityDailyScheduleProps) {
   const today = useMemo(() => startOfDay(new Date()), []);
   const [selectedDate, setSelectedDate] = useState(today);
@@ -321,9 +330,11 @@ export function ActivityDailySchedule({
 
   return (
     <div>
-      <div className="sticky top-[72px] z-30 py-3 -mx-4 px-4 bg-secondary/95 backdrop-blur border-y border-border/60 lg:static lg:bg-transparent lg:border-0 lg:py-0 lg:mx-0 lg:px-0">
-        <CategoryNav activeId={categoryId} onSelect={onCategoryChange} ids={categoryIds} />
-      </div>
+      {showCategoryNav && categoryIds.length > 1 && (
+        <div className="sticky top-[72px] z-30 py-3 -mx-4 px-4 bg-secondary/95 backdrop-blur border-y border-border/60 lg:static lg:bg-transparent lg:border-0 lg:py-0 lg:mx-0 lg:px-0">
+          <CategoryNav activeId={categoryId} onSelect={onCategoryChange} ids={categoryIds} />
+        </div>
+      )}
 
       {activeCategory && (
         <div className="mt-6 rounded-xl border border-accent/30 bg-accent/5 p-4 md:p-5">
@@ -510,6 +521,7 @@ export function ActivityDailySchedule({
                   onPassRedeemed={handlePassRedeemed}
                   adminMode={adminMode}
                   onAdminRegisterSlot={onAdminRegisterSlot}
+                  pricingHref={pricingHref}
                 />
               ))
             )}
@@ -520,7 +532,7 @@ export function ActivityDailySchedule({
               <h4 className="font-bold text-foreground mb-4">קייטנות ואירועים עונתיים</h4>
               <div className="space-y-4">
                 {seasonalSlots.map((slot) => (
-                  <SeasonalCard key={slot.id} slot={slot} adminMode={adminMode} />
+                  <SeasonalCard key={slot.id} slot={slot} adminMode={adminMode} pricingHref={pricingHref} />
                 ))}
               </div>
             </div>

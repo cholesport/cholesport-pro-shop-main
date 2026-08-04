@@ -41,7 +41,7 @@ export function KidsCampsSection() {
   return (
     <section
       id={KIDS_CAMPS_SECTION_ID}
-      className="scroll-mt-24 border-b border-border bg-secondary/20"
+      className="scroll-mt-36 border-b border-border bg-secondary/20"
       aria-labelledby="kids-camps-heading"
     >
       <div className="mx-auto max-w-5xl px-4 py-12 md:py-16">

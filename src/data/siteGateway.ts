@@ -1,9 +1,14 @@
 import tableTennisImg from "@/assets/club-tt-action.png";
+import tableTennisKidsImg from "@/assets/club-tt-kids.png";
 import kidsImg from "@/assets/club-kids-ninja.png";
 import eventsImg from "@/assets/club-events-climbing.png";
-import { ACTIVITIES_PATH, ACTIVITIES_SCHEDULE_HASH } from "@/data/activities";
 import { CLUB_HERO_VIDEO_SRC, CLUB_PATH } from "@/data/club";
-import { NINJA_KIDS_AGE_FROM_LABEL, NINJA_KIDS_HUB_SUPPORT } from "@/data/kids";
+import {
+  KIDS_FIRST_TIME_INFO_LABEL,
+  KIDS_FIRST_TIME_SECTION_ID,
+  NINJA_KIDS_AGE_FROM_LABEL,
+  NINJA_KIDS_HUB_SUPPORT,
+} from "@/data/kids";
 
 export type SiteGatewayAreaId = "table-tennis" | "kids" | "shop";
 
@@ -79,19 +84,14 @@ export const TABLE_TENNIS_HUB: SiteAreaHub = {
   eyebrow: "מתחם הפינגפונג",
   headline: "טניס שולחן — מועדון, אימונים וכניסה למתחם",
   support:
-    "מועדון קהילתי בתל אביב עם שולחנות מקצועיים, שיעורי אימון, כניסה חופשית וקבוצת שחקנים פעילה. כל מה שצריך — במקום אחד.",
-  image: tableTennisImg,
-  imageAlt: "משחק טניס שולחן במתחם CHOLE TLV",
+    "מועדון קהילתי בתל אביב עם שולחנות מקצועיים, חוג טניס שולחן לילדים, אימונים קבוצתיים וכניסה חופשית. כל מה שצריך — במקום אחד.",
+  image: tableTennisKidsImg,
+  imageAlt: "ילדים בחוג טניס שולחן במתחם CHOLE TLV",
   links: [
     {
       label: "על המועדון והמתחם",
       description: "שעות פעילות, שולחנות, קהילה ופרטים מעשיים",
       href: `${CLUB_PATH}#table-tennis`,
-    },
-    {
-      label: "לו\"ז שיעורים והרשמה",
-      description: "בחירת תאריך, שריון מקום ומחירון טניס שולחן",
-      href: `${ACTIVITIES_PATH}?focus=table-tennis#${ACTIVITIES_SCHEDULE_HASH}`,
     },
     {
       label: "ציוד טניס שולחן",
@@ -122,9 +122,9 @@ export const KIDS_HUB: SiteAreaHub = {
       href: `${CLUB_PATH}#events`,
     },
     {
-      label: "על חוגי הילדים במתחם",
-      description: "גילאים, מה מחכה בחוג ופרטים נוספים",
-      href: `${CLUB_PATH}#kids`,
+      label: KIDS_FIRST_TIME_INFO_LABEL,
+      description: "נגישות, מה להביא, נוכחות הורים ועוד",
+      href: `/kids#${KIDS_FIRST_TIME_SECTION_ID}`,
     },
   ],
 };

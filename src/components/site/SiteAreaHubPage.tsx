@@ -101,7 +101,7 @@ function parseInternalHref(href: string) {
   return { pathname, searchParams, hash };
 }
 
-function HubLinkCard({
+export function HubLinkCard({
   label,
   description,
   href,

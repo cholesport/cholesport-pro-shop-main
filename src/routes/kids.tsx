@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
-import { SiteAreaHubPage } from "@/components/site/SiteAreaHubPage";
+import { KidsAreaHubPage } from "@/components/site/KidsAreaHubPage";
 import { KIDS_HUB, KIDS_HUB_HEADLINE } from "@/data/siteGateway";
 import { buildPageSeoHead } from "@/lib/seo";
 
@@ -22,7 +22,7 @@ function KidsRoute() {
     <div className="min-h-screen bg-background">
       <Header variant="minimal" />
       <main id="main-content">
-        <SiteAreaHubPage hub={KIDS_HUB} />
+        <KidsAreaHubPage hub={KIDS_HUB} />
       </main>
       <Footer />
     </div>

@@ -8,7 +8,7 @@ import { buildPageSeoHead } from "@/lib/seo";
 export const Route = createFileRoute("/kids")({
   head: () => {
     const seo = buildPageSeoHead({
-      title: "נינג'ה, קייטנות וימי הולדת | CHOLE sport",
+      title: "חוגי נינג'ה וימי הולדת | CHOLE sport",
       description: KIDS_HUB.support,
       path: "/kids",
     });

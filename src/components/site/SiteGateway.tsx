@@ -124,7 +124,7 @@ export function SiteGateway() {
             to="/about"
             className="text-sm font-medium text-muted-foreground underline-offset-4 transition hover:text-foreground hover:underline"
           >
-            על CHOLE sport
+            קצת עלינו ואיך הכל התחיל
           </Link>
         </div>
       </div>

@@ -38,7 +38,7 @@ export const SITE_GATEWAY_CARDS: SiteGatewayCard[] = [
   },
   {
     id: "kids",
-    title: "נינג'ה, קייטנות וימי הולדת",
+    title: "חוגי נינג'ה וימי הולדת",
     subtitle: "חוגים לילדים, קייטנות ואירועים במתחם",
     image: kidsImg,
     imageAlt: "ילדים בחוג נינג'ה במתחם CHOLE",
@@ -48,7 +48,7 @@ export const SITE_GATEWAY_CARDS: SiteGatewayCard[] = [
   {
     id: "shop",
     title: "חנות ציוד",
-    subtitle: "מוצרים מקצועיים לנינג'ה, טניס שולחן ואימון",
+    subtitle: "מוצרים מקצועיים לנינג'ה, אקרובטיקה, טניס שולחן וג'ימבורי",
     image: tableTennisImg,
     imageAlt: "ציוד ספורט מקצועי של CHOLE",
     href: "/categories",
@@ -103,7 +103,7 @@ export const TABLE_TENNIS_HUB: SiteAreaHub = {
 export const KIDS_HUB: SiteAreaHub = {
   id: "kids",
   eyebrow: "חוגי נינג'ה ואקרובטיקה לילדים",
-  headline: "נינג'ה, קייטנות וימי הולדת",
+  headline: "חוגי נינג'ה וימי הולדת",
   support:
     "חוגי נינג'ה ואקרובטיקה לילדים, קייטנות בעונות החופש והזמנת ימי הולדת במתחם. תנועה, אתגר וכיף — בבטיחות ובליווי מקצועי.",
   image: kidsImg,

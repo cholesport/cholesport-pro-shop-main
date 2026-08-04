@@ -101,11 +101,11 @@ function ProductRoute() {
 
   return (
     <div className="min-h-screen bg-white">
-      <Header />
+      <Header variant="shop" />
       <main id="main-content">
         <ProductDetailPage product={product} />
       </main>
-      <Footer />
+      <Footer variant="shop" />
     </div>
   );
 }

@@ -5,6 +5,7 @@ import { ActivitiesRegisterCta } from "@/components/site/ActivitiesRegisterCta";
 import { COMPANY } from "@/data/legal";
 import { CONTACT_PHONE_DISPLAY, WHATSAPP_URL } from "@/lib/contact";
 import { BrandLogoRow } from "@/components/site/BrandLogos";
+import { SiteAreaReminders } from "@/components/site/SiteAreaReminders";
 import { FadeIn } from "@/components/site/FadeIn";
 import {
   ACTIVITIES_REGISTER_CALLOUT_TEXT,
@@ -59,21 +60,27 @@ function FooterLinkItem({ link }: { link: FooterLink }) {
   );
 }
 
-export function Footer() {
+export function Footer({ variant = "full" }: { variant?: "full" | "shop" }) {
   return (
     <footer className="mt-20 border-t border-border bg-card">
       <div className="max-w-7xl mx-auto px-4 py-14">
-        <FadeIn preset="footer" className="mb-10 rounded-2xl border-2 border-accent/40 bg-accent/10 p-5 md:p-6">
-          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <div>
-              <p className="text-lg font-black text-foreground">{ACTIVITIES_REGISTER_CALLOUT_TITLE}</p>
-              <p className="mt-1 text-sm text-muted-foreground max-w-xl">
-                {ACTIVITIES_REGISTER_CALLOUT_TEXT}
-              </p>
+        {variant === "full" ? (
+          <FadeIn preset="footer" className="mb-10 rounded-2xl border-2 border-accent/40 bg-accent/10 p-5 md:p-6">
+            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+              <div>
+                <p className="text-lg font-black text-foreground">{ACTIVITIES_REGISTER_CALLOUT_TITLE}</p>
+                <p className="mt-1 text-sm text-muted-foreground max-w-xl">
+                  {ACTIVITIES_REGISTER_CALLOUT_TEXT}
+                </p>
+              </div>
+              <ActivitiesRegisterCta hash={ACTIVITIES_SCHEDULE_HASH} size="lg" className="shrink-0" />
             </div>
-            <ActivitiesRegisterCta hash={ACTIVITIES_SCHEDULE_HASH} size="lg" className="shrink-0" />
-          </div>
-        </FadeIn>
+          </FadeIn>
+        ) : (
+          <FadeIn preset="footer" className="mb-10">
+            <SiteAreaReminders />
+          </FadeIn>
+        )}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10">
           <FadeIn preset="footer" className="md:col-span-5">
             <img src={logo} alt="CHOLE sport" className="h-14 w-auto mb-5" />

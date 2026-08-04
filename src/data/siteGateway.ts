@@ -38,7 +38,7 @@ export const SITE_GATEWAY_CARDS: SiteGatewayCard[] = [
   },
   {
     id: "kids",
-    title: "חוגי נינג'ה וימי הולדת",
+    title: "חוגי נינג'ה לילדים ונוער",
     subtitle: "חוגים לילדים, קייטנות ואירועים במתחם",
     image: kidsImg,
     imageAlt: "ילדים בחוג נינג'ה במתחם CHOLE",
@@ -100,10 +100,13 @@ export const TABLE_TENNIS_HUB: SiteAreaHub = {
   ],
 };
 
+export const KIDS_HUB_HEADLINE =
+  "חוגי נינג'ה ואקרובטיקה לילדים מגיל 3-12 - בית השואבה 6 ת״א";
+
 export const KIDS_HUB: SiteAreaHub = {
   id: "kids",
-  eyebrow: "חוגי נינג'ה ואקרובטיקה לילדים",
-  headline: "חוגי נינג'ה וימי הולדת",
+  eyebrow: "CHOLE TLV",
+  headline: KIDS_HUB_HEADLINE,
   support:
     "חוגי נינג'ה ואקרובטיקה לילדים, קייטנות בעונות החופש והזמנת ימי הולדת במתחם. תנועה, אתגר וכיף — בבטיחות ובליווי מקצועי.",
   image: kidsImg,

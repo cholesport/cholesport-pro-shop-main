@@ -30,11 +30,11 @@ function CategoryRoute() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header />
+      <Header variant="shop" />
       <main id="main-content">
         <CategoryPage category={category} products={products} />
       </main>
-      <Footer />
+      <Footer variant="shop" />
     </div>
   );
 }

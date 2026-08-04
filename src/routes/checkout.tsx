@@ -20,11 +20,11 @@ export const Route = createFileRoute("/checkout")({
 function CheckoutRoute() {
   return (
     <div className="min-h-screen bg-background">
-      <Header />
+      <Header variant="shop" />
       <main id="main-content">
         <CheckoutPage />
       </main>
-      <Footer />
+      <Footer variant="shop" />
     </div>
   );
 }

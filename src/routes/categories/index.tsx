@@ -23,11 +23,11 @@ export const Route = createFileRoute("/categories/")({
 function CategoriesIndexRoute() {
   return (
     <div className="min-h-screen bg-background">
-      <Header />
+      <Header variant="shop" />
       <main id="main-content">
         <CategoriesIndexPage />
       </main>
-      <Footer />
+      <Footer variant="shop" />
     </div>
   );
 }

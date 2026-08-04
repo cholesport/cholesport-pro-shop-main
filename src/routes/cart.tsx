@@ -20,11 +20,11 @@ export const Route = createFileRoute("/cart")({
 function CartRoute() {
   return (
     <div className="min-h-screen bg-background">
-      <Header />
+      <Header variant="shop" />
       <main id="main-content">
         <CartPage />
       </main>
-      <Footer />
+      <Footer variant="shop" />
     </div>
   );
 }

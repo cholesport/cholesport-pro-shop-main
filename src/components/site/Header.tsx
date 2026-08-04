@@ -7,12 +7,17 @@ import { useCart } from "@/context/CartContext";
 import { CATEGORIES } from "@/data/categories";
 import { ACTIVITIES_SCHEDULE_HASH } from "@/data/activities";
 import { SITE_GATEWAY_CARDS } from "@/data/siteGateway";
+import { ShopBrandStrip } from "@/components/site/ShopBrandStrip";
 import { CONTACT_PHONE_DISPLAY } from "@/lib/contact";
 import { HeaderSearchBar } from "@/components/site/HeaderSearchBar";
 
 type HeaderProps = {
-  /** Slim header for gateway and area hub pages — no category nav or register banner. */
-  variant?: "full" | "minimal";
+  /**
+   * full — category nav + activity register banner
+   * shop — category nav + brand strip (no activity CTAs)
+   * minimal — logo and utilities only (gateway / area hubs)
+   */
+  variant?: "full" | "shop" | "minimal";
 };
 
 export function Header({ variant = "full" }: HeaderProps) {
@@ -71,18 +76,21 @@ export function Header({ variant = "full" }: HeaderProps) {
           </div>
         </div>
 
-        {variant === "full" && (
+        {(variant === "full" || variant === "shop") && (
           <>
-            {/* Full-width register CTA — readable on all screen sizes */}
-            <div className="pb-3 md:pb-3.5">
-              <ActivitiesRegisterCta
-                header
-                hash={ACTIVITIES_SCHEDULE_HASH}
-                icon="calendar"
-                size="sm"
-                className="w-full whitespace-normal text-center leading-snug px-4 py-2.5 shadow-sm md:text-sm"
-              />
-            </div>
+            {variant === "full" ? (
+              <div className="pb-3 md:pb-3.5">
+                <ActivitiesRegisterCta
+                  header
+                  hash={ACTIVITIES_SCHEDULE_HASH}
+                  icon="calendar"
+                  size="sm"
+                  className="w-full whitespace-normal text-center leading-snug px-4 py-2.5 shadow-sm md:text-sm"
+                />
+              </div>
+            ) : (
+              <ShopBrandStrip />
+            )}
 
             <nav className="hidden lg:block border-t border-border/60">
           <ul

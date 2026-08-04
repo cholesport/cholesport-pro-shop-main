@@ -2,13 +2,13 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { SiteAreaHubPage } from "@/components/site/SiteAreaHubPage";
-import { KIDS_HUB } from "@/data/siteGateway";
+import { KIDS_HUB, KIDS_HUB_HEADLINE } from "@/data/siteGateway";
 import { buildPageSeoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/kids")({
   head: () => {
     const seo = buildPageSeoHead({
-      title: "חוגי נינג'ה וימי הולדת | CHOLE sport",
+      title: `${KIDS_HUB_HEADLINE} | CHOLE sport`,
       description: KIDS_HUB.support,
       path: "/kids",
     });

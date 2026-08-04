@@ -1,19 +1,20 @@
+import { useEffect } from "react";
 import { Link } from "@tanstack/react-router";
-import { ChevronLeft } from "lucide-react";
-import { ActivitiesRegisterCta } from "@/components/site/ActivitiesRegisterCta";
+import { ArrowRight, ChevronLeft } from "lucide-react";
+import { Products } from "@/components/site/Products";
+import { SiteAreaReminders } from "@/components/site/SiteAreaReminders";
 import {
   CATEGORIES,
   CATEGORIES_PAGE_SUBTITLE,
-  CATEGORIES_PAGE_TITLE,
   type CategoryDefinition,
 } from "@/data/categories";
 import {
-  ACTIVITIES_REGISTER_CALLOUT_TEXT,
-  ACTIVITIES_REGISTER_CALLOUT_TITLE,
-  ACTIVITIES_SCHEDULE_HASH,
-} from "@/data/activities";
+  SHOP_BRAND_SUPPORT,
+  SHOP_BRAND_TAGLINE,
+  SHOP_HUB_TITLE,
+} from "@/data/shop";
+import { saveSiteGatewayPreference } from "@/lib/siteGatewayPreference";
 import type { LucideIcon } from "lucide-react";
-import { FadeIn } from "@/components/site/FadeIn";
 
 function CategoryIcon({
   icon: Icon,
@@ -54,72 +55,92 @@ function categorySummary(category: CategoryDefinition) {
 }
 
 export function CategoriesIndexPage() {
+  useEffect(() => {
+    saveSiteGatewayPreference("shop");
+  }, []);
+
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8 md:py-12">
-      <Link
-        to="/"
-        className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-accent transition mb-8"
-      >
-        <ChevronLeft size={16} />
-        חזרה לדף הבית
-      </Link>
+    <div>
+      <section className="border-b border-border bg-secondary/20">
+        <div className="mx-auto max-w-7xl px-4 py-8 md:py-12">
+          <Link
+            to="/"
+            className="mb-6 inline-flex items-center gap-1.5 text-sm text-muted-foreground transition hover:text-foreground"
+          >
+            <ArrowRight size={16} aria-hidden />
+            חזרה לבחירת אזור
+          </Link>
 
-      <FadeIn preset="section" immediate className="mb-10 pb-8 border-b border-border max-w-2xl">
-        <h1 className="text-3xl md:text-4xl font-extrabold text-foreground">{CATEGORIES_PAGE_TITLE}</h1>
-        <p className="text-muted-foreground mt-3 leading-relaxed">{CATEGORIES_PAGE_SUBTITLE}</p>
-      </FadeIn>
-
-      <FadeIn
-        preset="section"
-        immediate
-        className="mb-10 flex flex-col gap-4 rounded-2xl border-2 border-accent/40 bg-accent/10 p-5 md:flex-row md:items-center md:justify-between"
-      >
-        <div>
-          <p className="text-lg font-black text-foreground">{ACTIVITIES_REGISTER_CALLOUT_TITLE}</p>
-          <p className="mt-1 text-sm text-muted-foreground">{ACTIVITIES_REGISTER_CALLOUT_TEXT}</p>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-accent">
+            {SHOP_BRAND_TAGLINE}
+          </p>
+          <h1 className="mt-3 max-w-3xl text-balance text-3xl font-extrabold tracking-tight text-foreground md:text-4xl lg:text-5xl">
+            {SHOP_HUB_TITLE}
+          </h1>
+          <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted-foreground md:text-lg">
+            {SHOP_BRAND_SUPPORT}
+          </p>
+          <p className="mt-3 max-w-xl text-sm text-muted-foreground">{CATEGORIES_PAGE_SUBTITLE}</p>
         </div>
-        <ActivitiesRegisterCta hash={ACTIVITIES_SCHEDULE_HASH} size="lg" className="shrink-0" />
-      </FadeIn>
+      </section>
 
-      <ul className="grid grid-cols-1 md:grid-cols-2 gap-px bg-border border border-border">
-        {CATEGORIES.map((category, index) => (
-          <FadeIn key={category.slug} as="li" preset="card" index={index}>
-            <Link
-              to="/categories/$categorySlug"
-              params={{ categorySlug: category.slug }}
-              className="group flex h-full items-start gap-5 bg-background px-5 py-7 md:px-6 md:py-8 hover:bg-secondary/70 transition"
-            >
-              <div className="shrink-0 size-14 flex items-center justify-center border border-border bg-card group-hover:border-accent/50 transition">
-                <CategoryIcon
-                  icon={category.icon}
-                  image={category.image}
-                  imageDisplay={category.imageDisplay}
-                />
-              </div>
-              <div className="min-w-0 flex-1">
-                <div className="flex items-start justify-between gap-3">
-                  <h2 className="text-lg md:text-xl font-bold text-foreground group-hover:text-accent transition leading-snug">
-                    {category.name}
-                  </h2>
-                  <ChevronLeft
-                    size={18}
-                    className="shrink-0 mt-1 text-muted-foreground group-hover:text-accent transition"
-                    aria-hidden
+      <Products showCategoriesLink={false} />
+
+      <section
+        className="mx-auto max-w-7xl px-4 pb-12 md:pb-16"
+        aria-labelledby="shop-categories-heading"
+      >
+        <div className="mb-8 max-w-xl border-b border-border pb-6">
+          <h2 id="shop-categories-heading" className="text-2xl font-extrabold text-foreground md:text-3xl">
+            קטגוריות
+          </h2>
+          <p className="mt-2 text-sm leading-relaxed text-muted-foreground md:text-base">
+            בחרו תחום והמשיכו למוצרים.
+          </p>
+        </div>
+
+        <ul className="grid grid-cols-1 gap-px border border-border bg-border md:grid-cols-2">
+          {CATEGORIES.map((category) => (
+            <li key={category.slug}>
+              <Link
+                to="/categories/$categorySlug"
+                params={{ categorySlug: category.slug }}
+                className="group flex h-full items-start gap-5 bg-background px-5 py-7 transition hover:bg-secondary/50 md:px-6 md:py-8"
+              >
+                <div className="flex size-14 shrink-0 items-center justify-center border border-border bg-card transition group-hover:border-accent/50">
+                  <CategoryIcon
+                    icon={category.icon}
+                    image={category.image}
+                    imageDisplay={category.imageDisplay}
                   />
                 </div>
-                <p className="mt-2 text-sm text-muted-foreground leading-relaxed line-clamp-3">
-                  {categorySummary(category)}
-                </p>
-                {category.subcategories.length > 0 && (
-                  <p className="mt-3 text-xs font-medium text-muted-foreground/80">
-                    {category.subcategories.length} אפשרויות
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-start justify-between gap-3">
+                    <h3 className="text-lg font-bold leading-snug text-foreground transition group-hover:text-accent md:text-xl">
+                      {category.name}
+                    </h3>
+                    <ChevronLeft
+                      size={18}
+                      className="mt-1 shrink-0 text-muted-foreground transition group-hover:text-accent"
+                      aria-hidden
+                    />
+                  </div>
+                  <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-muted-foreground">
+                    {categorySummary(category)}
                   </p>
-                )}
-              </div>
-            </Link>
-          </FadeIn>
-        ))}
-      </ul>
+                  {category.subcategories.length > 0 && (
+                    <p className="mt-3 text-xs font-medium text-muted-foreground/80">
+                      {category.subcategories.length} אפשרויות
+                    </p>
+                  )}
+                </div>
+              </Link>
+            </li>
+          ))}
+        </ul>
+
+        <SiteAreaReminders className="mt-10" />
+      </section>
     </div>
   );
 }

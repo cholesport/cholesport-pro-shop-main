@@ -7,11 +7,17 @@ type UseInViewOnceOptions = {
   immediate?: boolean;
 };
 
+function isElementInViewport(node: Element, rootMargin = "0px") {
+  const margin = Number.parseFloat(rootMargin) || 0;
+  const rect = node.getBoundingClientRect();
+  return rect.top < window.innerHeight + margin && rect.bottom > -margin;
+}
+
 /** Fires once when the element enters the viewport. */
 export function useInViewOnce<T extends Element>(
   options: UseInViewOnceOptions = {},
 ): [RefObject<T | null>, boolean] {
-  const { rootMargin = "0px 0px -8% 0px", threshold = 0.12, immediate = false } = options;
+  const { rootMargin = "0px 0px -4% 0px", threshold = 0.05, immediate = false } = options;
   const ref = useRef<T | null>(null);
   const [visible, setVisible] = useState(immediate);
 
@@ -21,6 +27,11 @@ export function useInViewOnce<T extends Element>(
     if (!node) return;
 
     if (typeof IntersectionObserver === "undefined") {
+      setVisible(true);
+      return;
+    }
+
+    if (isElementInViewport(node, "48px")) {
       setVisible(true);
       return;
     }
@@ -38,7 +49,7 @@ export function useInViewOnce<T extends Element>(
     observer.observe(node);
 
     // Mobile Safari can miss the first intersection pass — never leave sections hidden.
-    const fallback = window.setTimeout(() => setVisible(true), 400);
+    const fallback = window.setTimeout(() => setVisible(true), 250);
 
     return () => {
       observer.disconnect();

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { HERO_SLIDES } from "@/data/heroSlides";
 import { CLUB_HERO_VIDEO_SRC } from "@/data/club";
 import { cn } from "@/lib/utils";
@@ -45,8 +45,39 @@ type GatewayCardVideoProps = {
 
 export function GatewayCardVideo({ poster, videoSrc = CLUB_HERO_VIDEO_SRC }: GatewayCardVideoProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [canPlayVideo, setCanPlayVideo] = useState(false);
 
   useEffect(() => {
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const coarsePointer = window.matchMedia("(pointer: coarse)");
+    const mobileViewport = window.matchMedia("(max-width: 767px)");
+    const saveData = window.matchMedia("(prefers-reduced-data: reduce)");
+
+    const syncVideoMode = () => {
+      const allowVideo =
+        !reduceMotion.matches &&
+        !coarsePointer.matches &&
+        !mobileViewport.matches &&
+        !saveData.matches;
+      setCanPlayVideo(allowVideo);
+    };
+
+    syncVideoMode();
+    reduceMotion.addEventListener("change", syncVideoMode);
+    coarsePointer.addEventListener("change", syncVideoMode);
+    mobileViewport.addEventListener("change", syncVideoMode);
+    saveData.addEventListener("change", syncVideoMode);
+
+    return () => {
+      reduceMotion.removeEventListener("change", syncVideoMode);
+      coarsePointer.removeEventListener("change", syncVideoMode);
+      mobileViewport.removeEventListener("change", syncVideoMode);
+      saveData.removeEventListener("change", syncVideoMode);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!canPlayVideo) return;
     const video = videoRef.current;
     if (!video) return;
 
@@ -71,7 +102,11 @@ export function GatewayCardVideo({ poster, videoSrc = CLUB_HERO_VIDEO_SRC }: Gat
     syncPlayback();
     reduceMotion.addEventListener("change", syncPlayback);
     return () => reduceMotion.removeEventListener("change", syncPlayback);
-  }, []);
+  }, [canPlayVideo]);
+
+  if (!canPlayVideo) {
+    return <GatewayCardImage src={poster} />;
+  }
 
   return (
     <video

@@ -12,4 +12,11 @@ export default defineConfig({
     // nitro/vite builds from this
     server: { entry: "server" },
   },
+  vite: {
+    server: {
+      // Allow opening the dev site from a phone on the same Wi‑Fi (not only localhost).
+      host: true,
+      port: 8080,
+    },
+  },
 });

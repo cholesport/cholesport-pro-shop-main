@@ -176,6 +176,7 @@ function RootComponent() {
 
   useEffect(() => {
     applyA11ySettings(loadA11ySettings());
+    document.documentElement.classList.add("motion-enhanced");
   }, []);
 
   useEffect(() => {

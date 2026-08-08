@@ -29,6 +29,7 @@ export function GatewayCardImage({ src, className }: GatewayCardImageProps) {
       aria-hidden
       className={cn(
         "absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-[1.02]",
+        "max-md:object-contain max-md:object-center",
         MEDIA_GRADE,
         className,
       )}
@@ -111,7 +112,10 @@ export function GatewayCardVideo({ poster, videoSrc = CLUB_HERO_VIDEO_SRC }: Gat
   return (
     <video
       ref={videoRef}
-      className={cn("absolute inset-0 h-full w-full object-cover", MEDIA_GRADE)}
+      className={cn(
+        "absolute inset-0 h-full w-full object-cover max-md:object-contain max-md:object-center",
+        MEDIA_GRADE,
+      )}
       autoPlay
       muted
       loop

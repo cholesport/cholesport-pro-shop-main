@@ -3,6 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { User, ShoppingCart, Menu, X, ChevronDown } from "lucide-react";
 import logo from "@/assets/chole-sport-logo.png";
 import { ActivitiesRegisterCta } from "@/components/site/ActivitiesRegisterCta";
+import { BackNavButton } from "@/components/site/BackNavButton";
 import { useCart } from "@/context/CartContext";
 import { CATEGORIES } from "@/data/categories";
 import { SITE_GATEWAY_CARDS } from "@/data/siteGateway";
@@ -27,26 +28,29 @@ export function Header({ variant = "full" }: HeaderProps) {
   return (
     <header className="sticky top-0 z-50 border-b border-border/80 bg-background/90 backdrop-blur-md">
       <div className="relative max-w-7xl mx-auto px-4">
-        <div className="flex items-center gap-3 md:gap-4 py-3 md:py-3.5">
-          <a href="/" className="shrink-0">
-            <img
-              src={logo}
-              alt="CHOLE sport"
-              className="h-12 sm:h-14 md:h-16 w-auto block"
-            />
-          </a>
+        <div className="flex items-center gap-2 md:gap-4 py-3 md:py-3.5">
+          <div className="flex min-w-0 items-center gap-2 md:gap-3">
+            <BackNavButton className="max-sm:px-2" />
+            <a href="/" className="shrink-0">
+              <img
+                src={logo}
+                alt="CHOLE sport"
+                className="block h-12 w-auto sm:h-14 md:h-16"
+              />
+            </a>
+          </div>
 
-          <div className="flex items-center gap-2 sm:gap-3 ms-auto shrink-0">
+          <div className="ms-auto flex shrink-0 items-center gap-2 sm:gap-3">
             <a
               href={`tel:${CONTACT_PHONE_DISPLAY.replace(/\D/g, "")}`}
-              className="inline-flex min-h-11 items-center text-xs font-medium text-muted-foreground hover:text-accent transition xl:hidden"
+              className="hidden min-h-11 items-center text-xs font-medium text-muted-foreground transition hover:text-accent sm:inline-flex xl:hidden"
               dir="ltr"
             >
               {CONTACT_PHONE_DISPLAY}
             </a>
             <a
               href={`tel:${CONTACT_PHONE_DISPLAY.replace(/\D/g, "")}`}
-              className="hidden xl:inline text-xs font-medium text-muted-foreground hover:text-accent transition"
+              className="hidden text-xs font-medium text-muted-foreground transition hover:text-accent xl:inline"
               dir="ltr"
             >
               {CONTACT_PHONE_DISPLAY}
@@ -61,18 +65,18 @@ export function Header({ variant = "full" }: HeaderProps) {
             </Link>
             <Link
               to="/cart"
-              className="relative text-foreground hover:text-sky-600 transition"
+              className="relative text-foreground transition hover:text-sky-600"
               aria-label={`עגלת קניות - ${totalQuantity} פריטים`}
             >
               <ShoppingCart size={21} />
               {totalQuantity > 0 && (
-                <span className="absolute -top-1.5 -end-2 bg-accent text-accent-foreground text-[10px] font-bold min-w-4 h-4 px-1 flex items-center justify-center">
+                <span className="absolute -top-1.5 -end-2 flex h-4 min-w-4 items-center justify-center bg-accent px-1 text-[10px] font-bold text-accent-foreground">
                   {totalQuantity}
                 </span>
               )}
             </Link>
             <button
-              className="lg:hidden text-foreground"
+              className="text-foreground lg:hidden"
               onClick={() => setMobile(!mobile)}
               aria-label={mobile ? "סגור תפריט" : "פתח תפריט"}
               aria-expanded={mobile}

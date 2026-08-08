@@ -3,6 +3,7 @@ import { ChevronLeft, MapPin, Phone } from "lucide-react";
 import type { CategoryDefinition } from "@/data/categories";
 import type { Product } from "@/data/products";
 import { ProductCard } from "@/components/site/ProductCard";
+import { ShopCategoriesNav } from "@/components/site/ShopCategoriesNav";
 import { COMPANY } from "@/data/legal";
 import { CLUB_PATH, CLUB_TEASER } from "@/data/club";
 import { SHOWROOM_PAGE_PARAGRAPHS } from "@/data/showroom";
@@ -59,10 +60,13 @@ export function CategoryPage({ category, products }: CategoryPageProps) {
         : null;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8 md:py-12">
+    <div>
+      <ShopCategoriesNav variant="sticky" activeSlug={category.slug} />
+
+      <div className="mx-auto max-w-7xl px-4 py-6 md:py-12">
       <Link
         to="/categories"
-        className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-accent transition mb-8"
+        className="mb-6 inline-flex items-center gap-1 text-sm text-muted-foreground transition hover:text-accent md:mb-8"
       >
         <ChevronLeft size={16} />
         חזרה לקטגוריות
@@ -200,6 +204,7 @@ export function CategoryPage({ category, products }: CategoryPageProps) {
           )}
         </section>
       )}
+      </div>
     </div>
   );
 }

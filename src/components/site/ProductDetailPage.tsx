@@ -70,7 +70,9 @@ import {
 import { Button } from "@/components/ui/button";
 import { BrandMark } from "@/components/site/BrandLogos";
 import { FadeIn } from "@/components/site/FadeIn";
+import { ShopCategoriesNav } from "@/components/site/ShopCategoriesNav";
 import { getStoreBrandByProductBrand } from "@/data/brands";
+import { getCategoryForProduct } from "@/lib/categories";
 
 function formatPrice(n: number) {
   return n.toLocaleString("he-IL", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -197,6 +199,7 @@ export function ProductDetailPage({ product }: { product: Product }) {
   const showHoverSwap = Boolean(isGalleryHovered && activeImage === 0 && hoverSwapImage);
   const storeBrand = getStoreBrandByProductBrand(product.brand);
   const boostPaymentUrl = getBoostPaymentUrl(product.id);
+  const storefrontCategory = getCategoryForProduct(product);
 
   function handleAddToCart() {
     if (product.outOfStock) return;
@@ -216,7 +219,10 @@ export function ProductDetailPage({ product }: { product: Product }) {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8 md:py-12">
+    <div>
+      <ShopCategoriesNav variant="sticky" activeSlug={storefrontCategory?.slug} />
+
+      <div className="mx-auto max-w-7xl px-4 py-6 md:py-12">
       {showLandingMatSizes && <LandingMatSizeBar currentProductId={product.id} />}
       {showAirfloorSizes && <AirfloorSizeBar currentProductId={product.id} />}
       {showFlexiRollSizes && <FlexiRollSizeBar currentProductId={product.id} />}
@@ -226,7 +232,7 @@ export function ProductDetailPage({ product }: { product: Product }) {
       )}
       {showHurdleHeights && <TrainingHurdleHeightBar currentProductId={product.id} />}
 
-      <FadeIn preset="detail" immediate className="grid lg:grid-cols-2 gap-10 lg:gap-16">
+      <FadeIn preset="detail" immediate className="grid gap-10 lg:grid-cols-2 lg:gap-16">
         {/* Gallery */}
         <div className="flex gap-4">
           <div
@@ -618,6 +624,7 @@ export function ProductDetailPage({ product }: { product: Product }) {
           prioritizeProductId={isGameTable ? PONG_BOT_NOVA_S_PRO_ID : undefined}
         />
       )}
+      </div>
     </div>
   );
 }

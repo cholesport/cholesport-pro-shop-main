@@ -3,6 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { ArrowRight, ChevronLeft } from "lucide-react";
 import { Products } from "@/components/site/Products";
 import { ShopCategoriesNav } from "@/components/site/ShopCategoriesNav";
+import { ShopProductImageSlide } from "@/components/site/ShopProductImageSlide";
 import { SiteAreaReminders } from "@/components/site/SiteAreaReminders";
 import {
   CATEGORIES,
@@ -15,37 +16,6 @@ import {
   SHOP_HUB_TITLE,
 } from "@/data/shop";
 import { saveSiteGatewayPreference } from "@/lib/siteGatewayPreference";
-import type { LucideIcon } from "lucide-react";
-
-function CategoryIcon({
-  icon: Icon,
-  image,
-  imageDisplay = "mask",
-}: {
-  icon?: LucideIcon;
-  image?: string;
-  imageDisplay?: "mask" | "logo";
-}) {
-  if (image && imageDisplay === "logo") {
-    return <img src={image} alt="" aria-hidden className="size-9 object-contain" />;
-  }
-
-  if (image) {
-    return (
-      <span
-        aria-hidden
-        className="inline-block size-9 bg-primary transition group-hover:bg-accent [mask-size:contain] [mask-repeat:no-repeat] [mask-position:center] [-webkit-mask-size:contain] [-webkit-mask-repeat:no-repeat] [-webkit-mask-position:center]"
-        style={{ maskImage: `url(${image})`, WebkitMaskImage: `url(${image})` }}
-      />
-    );
-  }
-
-  if (Icon) {
-    return <Icon className="text-primary transition group-hover:text-accent" size={32} aria-hidden />;
-  }
-
-  return null;
-}
 
 function categorySummary(category: CategoryDefinition) {
   if (category.description) return category.description;
@@ -62,18 +32,18 @@ export function CategoriesIndexPage() {
 
   return (
     <div className="max-md:flex max-md:min-h-0 max-md:flex-1 max-md:flex-col">
-      {/* Mobile: all categories on one screen, no scroll */}
-      <section className="flex min-h-0 flex-1 flex-col md:hidden">
-        <div className="shrink-0 px-3 pb-2 pt-1">
-          <h1 className="text-lg font-extrabold leading-tight text-foreground">{SHOP_HUB_TITLE}</h1>
-          <p className="mt-0.5 text-xs text-muted-foreground">בחרו קטגוריה — הכל במסך אחד.</p>
-        </div>
-        <div className="flex min-h-0 flex-1 flex-col px-3 pb-3">
-          <ShopCategoriesNav variant="hub" />
+      {/* Mobile: 2-col categories + product image slide (matches shop entry design) */}
+      <section className="flex min-h-0 flex-1 flex-col px-3 pb-3 pt-1 md:hidden">
+        <ShopCategoriesNav variant="hub" />
+        <div className="mt-3 shrink-0">
+          <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+            מבחר מהחנות
+          </p>
+          <ShopProductImageSlide />
         </div>
       </section>
 
-      {/* Desktop: existing rich layout */}
+      {/* Desktop */}
       <div className="hidden md:block">
         <section className="border-b border-border bg-secondary/20">
           <div className="mx-auto max-w-7xl px-4 py-8 md:py-12">
@@ -122,15 +92,8 @@ export function CategoriesIndexPage() {
                 <Link
                   to="/categories/$categorySlug"
                   params={{ categorySlug: category.slug }}
-                  className="group flex h-full items-start gap-5 bg-background px-5 py-7 transition hover:bg-secondary/50 md:px-6 md:py-8"
+                  className="group flex h-full items-start gap-4 bg-background px-5 py-7 transition hover:bg-secondary/50 md:px-6 md:py-8"
                 >
-                  <div className="flex size-14 shrink-0 items-center justify-center border border-border bg-card transition group-hover:border-accent/50">
-                    <CategoryIcon
-                      icon={category.icon}
-                      image={category.image}
-                      imageDisplay={category.imageDisplay}
-                    />
-                  </div>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-start justify-between gap-3">
                       <h3 className="text-lg font-bold leading-snug text-foreground transition group-hover:text-accent md:text-xl">

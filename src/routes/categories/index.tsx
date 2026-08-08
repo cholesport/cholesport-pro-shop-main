@@ -22,7 +22,7 @@ export const Route = createFileRoute("/categories/")({
 
 function CategoriesIndexRoute() {
   return (
-    <div className="min-h-screen bg-background max-md:flex max-md:min-h-dvh max-md:flex-col max-md:overflow-hidden">
+    <div className="min-h-screen bg-background max-md:flex max-md:min-h-dvh max-md:flex-col">
       <Header variant="shop" />
       <main id="main-content" className="max-md:flex max-md:min-h-0 max-md:flex-1 max-md:flex-col">
         <CategoriesIndexPage />

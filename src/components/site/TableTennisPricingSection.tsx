@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { DoorOpen, GraduationCap } from "lucide-react";
+import { ArrowRight, DoorOpen, Users } from "lucide-react";
 import { ActivityPricingCard } from "@/components/site/ActivityPricingCard";
 import { FadeIn } from "@/components/site/FadeIn";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { TableTennisTrainingMedia } from "@/components/site/TableTennisTrainingMedia";
 import { TABLE_TENNIS_CLUB_NOTICE } from "@/data/activities";
 import { buildGroupLessonPricingPlans } from "@/data/groupLessonPricing";
 import {
@@ -20,14 +20,16 @@ const openPlayPlans = getPricingByCategory("table-tennis");
 const kidsPlans = buildGroupLessonPricingPlans("table-tennis-kids");
 const trainingPlans = buildGroupLessonPricingPlans("table-tennis-training");
 
-const LESSON_PLANS: Record<(typeof TABLE_TENNIS_LESSON_PROGRAMS)[number]["id"], ActivityPricingPlan[]> = {
+type LessonProgramId = (typeof TABLE_TENNIS_LESSON_PROGRAMS)[number]["id"];
+
+const LESSON_PLANS: Record<LessonProgramId, ActivityPricingPlan[]> = {
   "table-tennis-kids": kidsPlans,
   "table-tennis-training": trainingPlans,
 };
 
 const PATH_ICONS = {
   "club-entry": DoorOpen,
-  lessons: GraduationCap,
+  lessons: Users,
 } as const;
 
 function PricingPlansGrid({
@@ -152,25 +154,88 @@ function ClubEntryPanel() {
   );
 }
 
-function LessonProgramBlock({
+function LessonAudienceSelector({
+  activeProgram,
+  onSelect,
+}: {
+  activeProgram: LessonProgramId | null;
+  onSelect: (programId: LessonProgramId) => void;
+}) {
+  return (
+    <div>
+      <h3 className="text-sm font-bold text-foreground md:text-base">למי מיועד החוג?</h3>
+      <p className="mt-1 text-xs text-muted-foreground md:text-sm">
+        בחרו את הקהל — ותגיעו ישר למחירון המתאים.
+      </p>
+      <div
+        className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2"
+        role="radiogroup"
+        aria-label="בחירת קהל יעד לחוג"
+      >
+        {TABLE_TENNIS_LESSON_PROGRAMS.map((program) => {
+          const isActive = activeProgram === program.id;
+
+          return (
+            <button
+              key={program.id}
+              type="button"
+              role="radio"
+              aria-checked={isActive}
+              onClick={() => onSelect(program.id)}
+              className={cn(
+                "rounded-xl border-2 p-3 text-start transition md:p-4",
+                isActive
+                  ? "border-accent bg-accent/10 shadow-sm"
+                  : "border-border bg-card hover:border-accent/40",
+              )}
+            >
+              <p className="text-sm font-black text-foreground md:text-base">{program.choiceLabel}</p>
+              <p className="mt-1 text-xs font-semibold text-muted-foreground">{program.audience}</p>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function LessonPricingBlock({
   programId,
   plans,
+  onBack,
 }: {
-  programId: (typeof TABLE_TENNIS_LESSON_PROGRAMS)[number]["id"];
+  programId: LessonProgramId;
   plans: ActivityPricingPlan[];
+  onBack: () => void;
 }) {
   const program = TABLE_TENNIS_LESSON_PROGRAMS.find((item) => item.id === programId);
   if (!program) return null;
 
   return (
-    <div>
-      <div className="flex flex-wrap items-center gap-2">
-        <h3 className="text-sm font-bold text-foreground md:text-lg">{program.tabLabel}</h3>
+    <div className="mt-4 md:mt-6">
+      <button
+        type="button"
+        onClick={onBack}
+        className="inline-flex items-center gap-1.5 text-xs font-bold text-accent hover:underline md:text-sm"
+      >
+        <ArrowRight size={14} aria-hidden />
+        חזרה לבחירת חוג
+      </button>
+
+      <div className="mt-3 flex flex-wrap items-center gap-2">
+        <h3 className="text-sm font-bold text-foreground md:text-lg">{program.choiceLabel}</h3>
         <span className="rounded-md bg-secondary px-2 py-0.5 text-[10px] font-semibold text-foreground md:text-xs">
           {program.audience}
         </span>
       </div>
       <p className="mt-1 text-xs text-muted-foreground md:text-sm">{program.scheduleHint}</p>
+
+      {programId === "table-tennis-training" && (
+        <div className="mt-3">
+          <TableTennisTrainingMedia compact />
+        </div>
+      )}
+
       <div className="mt-3 md:mt-4">
         <PricingPlansGrid plans={plans} />
       </div>
@@ -178,52 +243,32 @@ function LessonProgramBlock({
   );
 }
 
-function LessonsPanel() {
-  const [lessonProgram, setLessonProgram] = useState<
-    (typeof TABLE_TENNIS_LESSON_PROGRAMS)[number]["id"]
-  >("table-tennis-kids");
+function GroupTrainingPanel() {
+  const [lessonProgram, setLessonProgram] = useState<LessonProgramId | null>(null);
 
   return (
-    <div role="tabpanel" aria-label="שיעורים ואימונים">
+    <div role="tabpanel" aria-label="אימוני טניס שולחן קבוצתיים">
       <PathDetailsList pathId="lessons" />
 
-      <div className="mt-4 md:hidden">
-        <Tabs
-          value={lessonProgram}
-          onValueChange={(value) =>
-            setLessonProgram(value as (typeof TABLE_TENNIS_LESSON_PROGRAMS)[number]["id"])
-          }
-        >
-          <TabsList className="grid h-auto w-full grid-cols-2 gap-1 p-1">
-            {TABLE_TENNIS_LESSON_PROGRAMS.map((program) => (
-              <TabsTrigger key={program.id} value={program.id} className="px-1 py-2 text-xs font-bold">
-                {program.tabLabel}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-          {TABLE_TENNIS_LESSON_PROGRAMS.map((program) => (
-            <TabsContent key={program.id} value={program.id} className="mt-3">
-              <LessonProgramBlock programId={program.id} plans={LESSON_PLANS[program.id]} />
-            </TabsContent>
-          ))}
-        </Tabs>
-      </div>
+      <LessonAudienceSelector activeProgram={lessonProgram} onSelect={setLessonProgram} />
 
-      <div className="mt-6 hidden space-y-10 md:block">
-        {TABLE_TENNIS_LESSON_PROGRAMS.map((program) => (
-          <LessonProgramBlock
-            key={program.id}
-            programId={program.id}
-            plans={LESSON_PLANS[program.id]}
-          />
-        ))}
-      </div>
+      {lessonProgram && (
+        <LessonPricingBlock
+          programId={lessonProgram}
+          plans={LESSON_PLANS[lessonProgram]}
+          onBack={() => setLessonProgram(null)}
+        />
+      )}
     </div>
   );
 }
 
 export function TableTennisPricingSection() {
   const [activePath, setActivePath] = useState<TableTennisPricingPathId>("club-entry");
+
+  function handlePathSelect(path: TableTennisPricingPathId) {
+    setActivePath(path);
+  }
 
   return (
     <section
@@ -245,11 +290,11 @@ export function TableTennisPricingSection() {
         </FadeIn>
 
         <div className="mt-3 md:mt-8">
-          <PricingPathSelector activePath={activePath} onSelect={setActivePath} />
+          <PricingPathSelector activePath={activePath} onSelect={handlePathSelect} />
         </div>
 
         <div className="mt-4 md:mt-6">
-          {activePath === "club-entry" ? <ClubEntryPanel /> : <LessonsPanel />}
+          {activePath === "club-entry" ? <ClubEntryPanel /> : <GroupTrainingPanel />}
         </div>
       </div>
     </section>

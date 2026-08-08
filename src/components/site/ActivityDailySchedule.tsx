@@ -23,6 +23,7 @@ import {
 import { getScheduleByCategory, getActivityPricingHref } from "@/lib/activities";
 import type { ActivityPass } from "@/data/passes";
 import { CustomerPassQuickRegister } from "@/components/site/CustomerPassesPanel";
+import { TableTennisTrainingMedia } from "@/components/site/TableTennisTrainingMedia";
 import {
   addDays,
   buildActivityReservationWhatsAppUrl,
@@ -327,6 +328,7 @@ export function ActivityDailySchedule({
   );
 
   const isTableTennis = categoryId === "table-tennis";
+  const isTableTennisTraining = categoryId === "table-tennis-training";
   const sessionUnitLabel = isTableTennis ? "משבצות כניסה" : "שיעורים";
   const activeCategory = ACTIVITIES_CATEGORIES.find((c) => c.id === categoryId);
 
@@ -370,6 +372,12 @@ export function ActivityDailySchedule({
           <p className="mt-1 hidden text-sm leading-relaxed text-muted-foreground md:block">
             {activeCategory.lead}
           </p>
+        </div>
+      )}
+
+      {isTableTennisTraining && (
+        <div className="mt-2 md:mt-4">
+          <TableTennisTrainingMedia compact />
         </div>
       )}
 

@@ -1,5 +1,6 @@
 import tableTennisImg from "@/assets/club-tt-action.png";
 import tableTennisKidsImg from "@/assets/club-tt-kids.png";
+import tableTennisTrainingImg from "@/assets/club-tt-training.png";
 import kidsImg from "@/assets/club-kids-ninja.png";
 import eventsImg from "@/assets/club-events-climbing.png";
 import { COMPANY } from "@/data/legal";
@@ -296,11 +297,11 @@ export const ACTIVITIES_CATEGORIES: ActivityCategory[] = [
   },
   {
     id: "table-tennis-training",
-    title: "אימוני טניס שולחן",
+    title: "אימוני טניס שולחן לבוגרים ונוער",
     lead:
       "אימונים קבוצתיים בטניס שולחן - יום ראשון 18:15–19:15 ויום שלישי 18:30–19:30. מתאים לכל הרמות.",
-    image: tableTennisImg,
-    imageAlt: "אימון טניס שולחן במתחם CHOLE TLV",
+    image: tableTennisTrainingImg,
+    imageAlt: "אימון טניס שולחן לבוגרים במתחם CHOLE TLV",
   },
   {
     id: "ninja-kids",

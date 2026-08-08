@@ -1,4 +1,5 @@
 import type { ActivityCategoryId } from "@/data/activities";
+import clubTtTrainingImg from "@/assets/club-tt-training.png";
 
 export const TABLE_TENNIS_SCHEDULE_SECTION_ID = "schedule";
 export const TABLE_TENNIS_PRICING_SECTION_ID = "pricing";
@@ -33,13 +34,12 @@ export const TABLE_TENNIS_PRICING_PATHS = [
   },
   {
     id: "lessons" as const,
-    title: "שיעורים ואימונים",
+    title: "אימוני טניס שולחן קבוצתיים",
     tagline: "חוג קבוע עם מדריך",
-    whoIsItFor: "רוצים להירשם לחוג או אימון קבוצתי קבוע — עם מדריך וקבוצה קבועה.",
+    whoIsItFor: "רוצים להירשם לחוג קבוע — עם מדריך, קבוצה קבועה ולוח זמנים מסודר.",
     details: [
-      "חוג ילדים (גילאי 8–14) — ימי שלישי וחמישי",
-      "אימונים קבוצתיים לבוגרים ונוער — כל הרמות",
-      "אותם מחירים לכל סוגי השיעורים",
+      "אותם מחירים לחוג ילדים ולחוג מבוגרים",
+      "בחרו למי מיועד החוג — ותגיעו ישר למחירון",
     ],
   },
 ] as const;
@@ -47,14 +47,20 @@ export const TABLE_TENNIS_PRICING_PATHS = [
 export const TABLE_TENNIS_LESSON_PROGRAMS = [
   {
     id: "table-tennis-kids" as const,
-    tabLabel: "חוג ילדים",
+    choiceLabel: "חוג לילדים",
     scheduleHint: "ימי ג׳ וה׳ · 15:30–16:30",
     audience: "גילאי 8–14",
   },
   {
     id: "table-tennis-training" as const,
-    tabLabel: "אימונים קבוצתיים",
+    choiceLabel: "חוג למבוגרים",
     scheduleHint: "יום א׳ 18:15 · יום ג׳ 18:30",
     audience: "בוגרים ונוער · כל הרמות",
   },
 ] as const;
+
+/** Adult group training — hero media for schedule and pricing. */
+export const TABLE_TENNIS_TRAINING_VIDEO_SRC = "/table-tennis/tt-training.mp4";
+export const TABLE_TENNIS_TRAINING_IMAGE = clubTtTrainingImg;
+export const TABLE_TENNIS_TRAINING_IMAGE_ALT =
+  "אימון טניס שולחן לבוגרים במתחם CHOLE TLV";

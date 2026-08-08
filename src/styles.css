@@ -270,6 +270,12 @@
     min-height: 200px;
   }
 
+  @media (max-width: 767px) {
+    .site-gateway .gateway-card {
+      min-height: 0;
+    }
+  }
+
   @keyframes gateway-product-marquee {
     from {
       transform: translateX(0);

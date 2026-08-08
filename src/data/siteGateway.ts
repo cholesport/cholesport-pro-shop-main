@@ -19,11 +19,15 @@ export const SITE_GATEWAY_STORAGE_KEY = "chole-site-area";
 export const SITE_GATEWAY_HEADLINE = "מה מחפשים היום?";
 export const SITE_GATEWAY_SUBHEADLINE =
   "ב-CHOLE משלבים מועדון טניס שולחן, חוגי נינג'ה ואקרובטיקה לילדים וחנות ציוד מקצועית והכל במקום אחד. בחרו את האזור שמתאים לכם.";
+export const SITE_GATEWAY_SUBHEADLINE_MOBILE =
+  "טניס שולחן, חוגי נינג'ה לילדים וחנות ציוד — בחרו את האזור שלכם.";
 
 export type SiteGatewayCard = {
   id: SiteGatewayAreaId;
   title: string;
   subtitle: string;
+  /** Shorter line shown on phones so all areas fit on one screen. */
+  shortSubtitle: string;
   image: string;
   imageAlt: string;
   href: string;
@@ -36,6 +40,7 @@ export const SITE_GATEWAY_CARDS: SiteGatewayCard[] = [
     id: "table-tennis",
     title: "טניס שולחן",
     subtitle: "מועדון, לו\"ז שיעורים, כניסה למתחם והרשמה",
+    shortSubtitle: "מועדון, לו\"ז והרשמה",
     image: tableTennisImg,
     imageAlt: "שחקני טניס שולחן במתחם CHOLE",
     href: "/table-tennis",
@@ -46,6 +51,7 @@ export const SITE_GATEWAY_CARDS: SiteGatewayCard[] = [
     id: "kids",
     title: "חוגי נינג'ה לילדים ונוער",
     subtitle: `חוגים לילדים ונוער ${NINJA_KIDS_AGE_FROM_LABEL}, קייטנות ואירועים במתחם`,
+    shortSubtitle: `חוגים ${NINJA_KIDS_AGE_FROM_LABEL}, קייטנות ואירועים`,
     image: kidsImg,
     imageAlt: "ילדים בחוג נינג'ה במתחם CHOLE",
     href: "/kids",
@@ -55,6 +61,7 @@ export const SITE_GATEWAY_CARDS: SiteGatewayCard[] = [
     id: "shop",
     title: "חנות ציוד",
     subtitle: "מוצרים מקצועיים לנינג'ה, אקרובטיקה, טניס שולחן וג'ימבורי",
+    shortSubtitle: "ציוד מקצועי לספורט ואימון",
     image: tableTennisImg,
     imageAlt: "ציוד ספורט מקצועי של CHOLE",
     href: "/categories",

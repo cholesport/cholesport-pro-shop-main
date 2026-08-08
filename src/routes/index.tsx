@@ -25,12 +25,14 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background max-md:flex max-md:min-h-dvh max-md:flex-col max-md:overflow-hidden">
       <Header variant="minimal" />
-      <main id="main-content">
+      <main id="main-content" className="max-md:flex max-md:min-h-0 max-md:flex-1">
         <SiteGateway />
       </main>
-      <Footer />
+      <div className="max-md:hidden">
+        <Footer />
+      </div>
     </div>
   );
 }

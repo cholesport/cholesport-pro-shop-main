@@ -1,19 +1,34 @@
-import { ChevronDown } from "lucide-react";
+import { useState } from "react";
+import { DoorOpen, GraduationCap } from "lucide-react";
 import { ActivityPricingCard } from "@/components/site/ActivityPricingCard";
 import { FadeIn } from "@/components/site/FadeIn";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TABLE_TENNIS_CLUB_NOTICE } from "@/data/activities";
 import { buildGroupLessonPricingPlans } from "@/data/groupLessonPricing";
-import { TABLE_TENNIS_PRICING_SECTION_ID } from "@/data/tableTennis";
-import { getActivityCategoryById, getPricingByCategory } from "@/lib/activities";
+import {
+  TABLE_TENNIS_LESSON_PROGRAMS,
+  TABLE_TENNIS_PRICING_INTRO,
+  TABLE_TENNIS_PRICING_PATHS,
+  TABLE_TENNIS_PRICING_SECTION_ID,
+  type TableTennisPricingPathId,
+} from "@/data/tableTennis";
+import { getPricingByCategory } from "@/lib/activities";
 import type { ActivityPricingPlan } from "@/data/activities";
+import { cn } from "@/lib/utils";
 
 const openPlayPlans = getPricingByCategory("table-tennis");
 const kidsPlans = buildGroupLessonPricingPlans("table-tennis-kids");
 const trainingPlans = buildGroupLessonPricingPlans("table-tennis-training");
-const openPlayCategory = getActivityCategoryById("table-tennis");
-const kidsCategory = getActivityCategoryById("table-tennis-kids");
-const trainingCategory = getActivityCategoryById("table-tennis-training");
+
+const LESSON_PLANS: Record<(typeof TABLE_TENNIS_LESSON_PROGRAMS)[number]["id"], ActivityPricingPlan[]> = {
+  "table-tennis-kids": kidsPlans,
+  "table-tennis-training": trainingPlans,
+};
+
+const PATH_ICONS = {
+  "club-entry": DoorOpen,
+  lessons: GraduationCap,
+} as const;
 
 function PricingPlansGrid({
   plans,
@@ -33,74 +48,183 @@ function PricingPlansGrid({
   );
 }
 
-function PricingCategoryBlock({
-  title,
-  lead,
-  plans,
-  columns = "lg:grid-cols-4",
-  className = "",
+function PricingPathSelector({
+  activePath,
+  onSelect,
 }: {
-  title?: string;
-  lead?: string;
-  plans: ActivityPricingPlan[];
-  columns?: string;
-  className?: string;
+  activePath: TableTennisPricingPathId;
+  onSelect: (path: TableTennisPricingPathId) => void;
 }) {
   return (
-    <div className={className}>
-      {title && <h3 className="text-base font-bold text-foreground md:text-xl">{title}</h3>}
-      {lead && (
-        <p className="mt-1 hidden max-w-2xl text-sm text-muted-foreground md:mt-2 md:block md:text-base">
-          {lead}
-        </p>
-      )}
-      <div className="mt-3 md:mt-6">
-        <PricingPlansGrid plans={plans} columns={columns} />
-      </div>
+    <div
+      className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:gap-4"
+      role="tablist"
+      aria-label="סוג הרשמה"
+    >
+      {TABLE_TENNIS_PRICING_PATHS.map((path) => {
+        const Icon = PATH_ICONS[path.id];
+        const isActive = activePath === path.id;
+
+        return (
+          <button
+            key={path.id}
+            type="button"
+            role="tab"
+            aria-selected={isActive}
+            onClick={() => onSelect(path.id)}
+            className={cn(
+              "rounded-xl border-2 p-3 text-start transition md:p-5",
+              isActive
+                ? "border-accent bg-accent/10 shadow-sm"
+                : "border-border bg-card hover:border-accent/40",
+            )}
+          >
+            <div className="flex items-start gap-3">
+              <span
+                className={cn(
+                  "flex size-9 shrink-0 items-center justify-center rounded-lg md:size-11",
+                  isActive ? "bg-accent text-accent-foreground" : "bg-secondary text-foreground",
+                )}
+                aria-hidden
+              >
+                <Icon size={20} />
+              </span>
+              <div className="min-w-0 flex-1">
+                <p className="text-sm font-black text-foreground md:text-lg">{path.title}</p>
+                <p className="mt-0.5 text-xs font-semibold text-accent md:text-sm">{path.tagline}</p>
+                <p className="mt-1.5 text-xs leading-snug text-muted-foreground md:mt-2 md:text-sm md:leading-relaxed">
+                  {path.whoIsItFor}
+                </p>
+              </div>
+            </div>
+          </button>
+        );
+      })}
     </div>
   );
 }
 
-function ClubNotice({ compact = false }: { compact?: boolean }) {
-  if (compact) {
-    return (
-      <details className="group rounded-lg border border-accent/30 bg-accent/5 p-3 open:pb-3">
-        <summary className="flex cursor-pointer list-none items-center justify-between gap-2 text-sm font-bold text-foreground [&::-webkit-details-marker]:hidden">
+function PathDetailsList({ pathId }: { pathId: TableTennisPricingPathId }) {
+  const path = TABLE_TENNIS_PRICING_PATHS.find((item) => item.id === pathId);
+  if (!path) return null;
+
+  return (
+    <ul className="mt-3 space-y-1.5 rounded-lg border border-border bg-secondary/30 p-3 md:mt-4 md:p-4">
+      {path.details.map((detail) => (
+        <li key={detail} className="flex gap-2 text-xs leading-snug text-foreground md:text-sm">
+          <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-accent" aria-hidden />
+          {detail}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function ClubEntryPanel() {
+  return (
+    <div role="tabpanel" aria-label="כניסה למועדון">
+      <PathDetailsList pathId="club-entry" />
+
+      <div className="mt-3 rounded-lg border border-accent/30 bg-accent/5 p-3 md:mt-6 md:rounded-xl md:p-5">
+        <h3 className="text-sm font-bold text-foreground md:text-base">
           {TABLE_TENNIS_CLUB_NOTICE.title}
-          <ChevronDown
-            size={16}
-            className="shrink-0 text-muted-foreground transition group-open:rotate-180"
-            aria-hidden
-          />
-        </summary>
+        </h3>
         <ul className="mt-2 space-y-1.5">
           {TABLE_TENNIS_CLUB_NOTICE.points.map((point) => (
-            <li key={point} className="flex gap-2 text-xs leading-snug text-foreground">
+            <li key={point} className="flex gap-2 text-xs leading-snug text-foreground md:text-sm">
               <span className="mt-1.5 size-1 shrink-0 rounded-full bg-accent" aria-hidden />
               {point}
             </li>
           ))}
         </ul>
-      </details>
-    );
-  }
+      </div>
+
+      <div className="mt-4 md:mt-6">
+        <h3 className="text-sm font-bold text-foreground md:text-lg">בחרו אופן תשלום</h3>
+        <p className="mt-1 text-xs text-muted-foreground md:text-sm">
+          כניסה חד-פעמית, כרטיסייה או מנוי חודשי — לפי מה שנוח לכם.
+        </p>
+        <div className="mt-3 md:mt-4">
+          <PricingPlansGrid plans={openPlayPlans} columns="lg:grid-cols-3" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function LessonProgramBlock({
+  programId,
+  plans,
+}: {
+  programId: (typeof TABLE_TENNIS_LESSON_PROGRAMS)[number]["id"];
+  plans: ActivityPricingPlan[];
+}) {
+  const program = TABLE_TENNIS_LESSON_PROGRAMS.find((item) => item.id === programId);
+  if (!program) return null;
 
   return (
-    <div className="rounded-xl border border-accent/30 bg-accent/5 p-5 md:p-6">
-      <h3 className="text-lg font-bold text-foreground">{TABLE_TENNIS_CLUB_NOTICE.title}</h3>
-      <ul className="mt-3 space-y-2">
-        {TABLE_TENNIS_CLUB_NOTICE.points.map((point) => (
-          <li key={point} className="flex gap-2.5 text-sm leading-relaxed text-foreground">
-            <span className="mt-2 size-1.5 shrink-0 rounded-full bg-accent" aria-hidden />
-            {point}
-          </li>
+    <div>
+      <div className="flex flex-wrap items-center gap-2">
+        <h3 className="text-sm font-bold text-foreground md:text-lg">{program.tabLabel}</h3>
+        <span className="rounded-md bg-secondary px-2 py-0.5 text-[10px] font-semibold text-foreground md:text-xs">
+          {program.audience}
+        </span>
+      </div>
+      <p className="mt-1 text-xs text-muted-foreground md:text-sm">{program.scheduleHint}</p>
+      <div className="mt-3 md:mt-4">
+        <PricingPlansGrid plans={plans} />
+      </div>
+    </div>
+  );
+}
+
+function LessonsPanel() {
+  const [lessonProgram, setLessonProgram] = useState<
+    (typeof TABLE_TENNIS_LESSON_PROGRAMS)[number]["id"]
+  >("table-tennis-kids");
+
+  return (
+    <div role="tabpanel" aria-label="שיעורים ואימונים">
+      <PathDetailsList pathId="lessons" />
+
+      <div className="mt-4 md:hidden">
+        <Tabs
+          value={lessonProgram}
+          onValueChange={(value) =>
+            setLessonProgram(value as (typeof TABLE_TENNIS_LESSON_PROGRAMS)[number]["id"])
+          }
+        >
+          <TabsList className="grid h-auto w-full grid-cols-2 gap-1 p-1">
+            {TABLE_TENNIS_LESSON_PROGRAMS.map((program) => (
+              <TabsTrigger key={program.id} value={program.id} className="px-1 py-2 text-xs font-bold">
+                {program.tabLabel}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+          {TABLE_TENNIS_LESSON_PROGRAMS.map((program) => (
+            <TabsContent key={program.id} value={program.id} className="mt-3">
+              <LessonProgramBlock programId={program.id} plans={LESSON_PLANS[program.id]} />
+            </TabsContent>
+          ))}
+        </Tabs>
+      </div>
+
+      <div className="mt-6 hidden space-y-10 md:block">
+        {TABLE_TENNIS_LESSON_PROGRAMS.map((program) => (
+          <LessonProgramBlock
+            key={program.id}
+            programId={program.id}
+            plans={LESSON_PLANS[program.id]}
+          />
         ))}
-      </ul>
+      </div>
     </div>
   );
 }
 
 export function TableTennisPricingSection() {
+  const [activePath, setActivePath] = useState<TableTennisPricingPathId>("club-entry");
+
   return (
     <section
       id={TABLE_TENNIS_PRICING_SECTION_ID}
@@ -115,87 +239,17 @@ export function TableTennisPricingSection() {
           >
             מחירון והרשמה
           </h2>
-          <p className="mt-1 hidden max-w-2xl text-muted-foreground md:mt-2 md:block">
-            כניסה למועדון, חוג לילדים ואימונים קבוצתיים — כל אחד בנפרד, בלי בלבול.
+          <p className="mt-1 max-w-2xl text-xs leading-snug text-muted-foreground md:mt-2 md:text-base md:leading-relaxed">
+            {TABLE_TENNIS_PRICING_INTRO}
           </p>
         </FadeIn>
 
         <div className="mt-3 md:mt-8">
-          <div className="md:hidden">
-            <ClubNotice compact />
-          </div>
-          <div className="hidden md:block">
-            <ClubNotice />
-          </div>
+          <PricingPathSelector activePath={activePath} onSelect={setActivePath} />
         </div>
 
-        <div className="mt-4 md:hidden">
-          <Tabs defaultValue="open-play">
-            <TabsList className="grid h-auto w-full grid-cols-3 gap-1 p-1">
-              <TabsTrigger value="open-play" className="px-1 py-2 text-xs font-bold">
-                כניסה למועדון
-              </TabsTrigger>
-              <TabsTrigger value="kids" className="px-1 py-2 text-xs font-bold">
-                חוג ילדים
-              </TabsTrigger>
-              <TabsTrigger value="training" className="px-1 py-2 text-xs font-bold">
-                אימונים
-              </TabsTrigger>
-            </TabsList>
-            <TabsContent value="open-play" className="mt-3">
-              <PricingCategoryBlock plans={openPlayPlans} columns="lg:grid-cols-3" />
-            </TabsContent>
-            <TabsContent value="kids" className="mt-3">
-              <PricingCategoryBlock plans={kidsPlans} />
-            </TabsContent>
-            <TabsContent value="training" className="mt-3">
-              <PricingCategoryBlock plans={trainingPlans} />
-            </TabsContent>
-          </Tabs>
-        </div>
-
-        <div className="hidden md:block">
-          <div className="mt-10">
-            <FadeIn preset="section" immediate index={1}>
-              <h3 className="text-xl font-bold text-foreground">{openPlayCategory?.title}</h3>
-              {openPlayCategory?.lead && (
-                <p className="mt-2 max-w-2xl text-sm text-muted-foreground md:text-base">
-                  {openPlayCategory.lead}
-                </p>
-              )}
-            </FadeIn>
-            <div className="mt-6">
-              <PricingPlansGrid plans={openPlayPlans} columns="lg:grid-cols-3" />
-            </div>
-          </div>
-
-          <div className="mt-12">
-            <FadeIn preset="section" immediate index={2}>
-              <h3 className="text-xl font-bold text-foreground">{kidsCategory?.title}</h3>
-              {kidsCategory?.lead && (
-                <p className="mt-2 max-w-2xl text-sm text-muted-foreground md:text-base">
-                  {kidsCategory.lead}
-                </p>
-              )}
-            </FadeIn>
-            <div className="mt-6">
-              <PricingPlansGrid plans={kidsPlans} />
-            </div>
-          </div>
-
-          <div className="mt-12">
-            <FadeIn preset="section" immediate index={3}>
-              <h3 className="text-xl font-bold text-foreground">{trainingCategory?.title}</h3>
-              {trainingCategory?.lead && (
-                <p className="mt-2 max-w-2xl text-sm text-muted-foreground md:text-base">
-                  {trainingCategory.lead}
-                </p>
-              )}
-            </FadeIn>
-            <div className="mt-6">
-              <PricingPlansGrid plans={trainingPlans} />
-            </div>
-          </div>
+        <div className="mt-4 md:mt-6">
+          {activePath === "club-entry" ? <ClubEntryPanel /> : <LessonsPanel />}
         </div>
       </div>
     </section>

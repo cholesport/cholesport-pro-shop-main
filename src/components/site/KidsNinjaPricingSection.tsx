@@ -11,20 +11,25 @@ export function KidsNinjaPricingSection() {
   return (
     <section
       id={KIDS_PRICING_SECTION_ID}
-      className="scroll-mt-36 border-b border-border bg-background"
+      className="scroll-mt-28 border-b border-border bg-background md:scroll-mt-36"
       aria-labelledby="kids-pricing-heading"
     >
-      <div className="mx-auto max-w-7xl px-4 py-10 md:py-14">
+      <div className="mx-auto max-w-7xl px-3 py-4 md:px-4 md:py-14">
         <FadeIn preset="section" immediate>
-          <h2 id="kids-pricing-heading" className="text-2xl font-black text-foreground md:text-3xl">
+          <h2
+            id="kids-pricing-heading"
+            className="text-lg font-black text-foreground md:text-3xl"
+          >
             מחירון והרשמה
           </h2>
           {ninjaCategory?.lead && (
-            <p className="mt-2 max-w-2xl text-muted-foreground">{ninjaCategory.lead}</p>
+            <p className="mt-1 hidden max-w-2xl text-muted-foreground md:mt-2 md:block">
+              {ninjaCategory.lead}
+            </p>
           )}
         </FadeIn>
 
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4 md:gap-6">
+        <div className="mt-3 grid grid-cols-2 gap-2 md:mt-8 md:gap-6 lg:grid-cols-4">
           {ninjaPlans.map((plan, index) => (
             <FadeIn key={plan.id} preset="card" index={index}>
               <ActivityPricingCard plan={plan} />

@@ -42,23 +42,23 @@ export function TableTennisScheduleSection() {
   return (
     <section
       id={TABLE_TENNIS_SCHEDULE_SECTION_ID}
-      className="scroll-mt-36 border-b border-border bg-secondary/30"
+      className="scroll-mt-28 border-b border-border bg-secondary/30 md:scroll-mt-36"
       aria-labelledby="table-tennis-schedule-heading"
     >
-      <div className="mx-auto max-w-7xl px-4 py-10 md:py-14">
+      <div className="mx-auto max-w-7xl px-3 py-4 md:px-4 md:py-14">
         <FadeIn preset="section" immediate>
-          <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
+          <div className="mb-2 flex flex-wrap items-end justify-between gap-2 md:mb-6 md:gap-4">
             <div>
-              <div className="mb-2 flex items-center gap-2">
-                <Calendar size={24} className="text-accent" aria-hidden />
+              <div className="flex items-center gap-1.5 md:mb-2 md:gap-2">
+                <Calendar size={18} className="text-accent md:size-6" aria-hidden />
                 <h2
                   id="table-tennis-schedule-heading"
-                  className="text-2xl font-black text-foreground md:text-3xl"
+                  className="text-lg font-black text-foreground md:text-3xl"
                 >
                   לו&quot;ז השיעורים
                 </h2>
               </div>
-              <p className="max-w-2xl text-base text-muted-foreground md:text-lg">
+              <p className="hidden max-w-2xl text-base text-muted-foreground md:block md:text-lg">
                 בחרו סוג פעילות, תאריך מהלוח וראו מה מתקיים באותו יום — Open Play, חוג ילדים
                 או אימון קבוצתי.
               </p>

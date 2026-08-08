@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   CalendarDays,
+  ChevronDown,
   ChevronLeft,
   ChevronRight,
   Clock,
@@ -75,7 +76,7 @@ function CategoryNav({
             aria-selected={isActive}
             onClick={() => onSelect(id)}
             className={cn(
-              "px-4 py-2.5 text-sm font-semibold transition rounded-lg",
+              "rounded-lg px-2.5 py-2 text-xs font-semibold transition md:px-4 md:py-2.5 md:text-sm",
               isActive
                 ? "bg-accent text-accent-foreground shadow-sm"
                 : "bg-card border border-border text-foreground hover:border-accent/40 hover:text-accent",
@@ -92,27 +93,54 @@ function CategoryNav({
 function TableTennisClubNotice() {
   const privateTableUrl = getTableTennisPrivateTableWhatsAppUrl();
 
-  return (
-    <div className="mt-6 rounded-xl border-2 border-accent/35 bg-card p-4 md:p-5 space-y-4">
-      <h4 className="font-bold text-foreground text-base md:text-lg">{TABLE_TENNIS_CLUB_NOTICE.title}</h4>
-      <ul className="space-y-2 text-sm text-muted-foreground leading-relaxed list-disc list-inside">
+  const noticeBody = (
+    <>
+      <ul className="space-y-1.5 text-xs leading-snug text-muted-foreground md:space-y-2 md:text-sm md:leading-relaxed">
         {TABLE_TENNIS_CLUB_NOTICE.points.map((point) => (
-          <li key={point}>{point}</li>
+          <li key={point} className="flex gap-2 md:list-item md:list-disc md:list-inside">
+            <span className="mt-1.5 size-1 shrink-0 rounded-full bg-accent md:hidden" aria-hidden />
+            {point}
+          </li>
         ))}
       </ul>
-      <div className="rounded-lg border border-border bg-secondary/40 p-4">
-        <p className="text-sm text-muted-foreground leading-relaxed">
+      <div className="rounded-lg border border-border bg-secondary/40 p-3 md:p-4">
+        <p className="text-xs leading-snug text-muted-foreground md:text-sm md:leading-relaxed">
           {TABLE_TENNIS_CLUB_NOTICE.privateTableLead}
         </p>
-        <Button asChild variant="outline" className="mt-3 font-semibold w-full sm:w-auto">
+        <Button asChild variant="outline" size="sm" className="mt-2 w-full font-semibold md:mt-3 sm:w-auto">
           <a href={privateTableUrl} target="_blank" rel="noopener noreferrer">
-            <MessageCircle size={16} />
+            <MessageCircle size={14} className="md:size-4" />
             {TABLE_TENNIS_CLUB_NOTICE.privateTableCta}
           </a>
         </Button>
-        <p className="mt-2 text-xs text-muted-foreground">{ACTIVITIES_WHATSAPP_RESERVE_HINT}</p>
+        <p className="mt-1.5 hidden text-xs text-muted-foreground md:block">
+          {ACTIVITIES_WHATSAPP_RESERVE_HINT}
+        </p>
       </div>
-    </div>
+    </>
+  );
+
+  return (
+    <>
+      <details className="group mt-3 rounded-lg border-2 border-accent/35 bg-card p-3 open:pb-3 md:hidden">
+        <summary className="flex cursor-pointer list-none items-center justify-between gap-2 text-sm font-bold text-foreground [&::-webkit-details-marker]:hidden">
+          {TABLE_TENNIS_CLUB_NOTICE.title}
+          <ChevronDown
+            size={16}
+            className="shrink-0 text-muted-foreground transition group-open:rotate-180"
+            aria-hidden
+          />
+        </summary>
+        <div className="mt-2 space-y-3">{noticeBody}</div>
+      </details>
+
+      <div className="mt-6 hidden space-y-4 rounded-xl border-2 border-accent/35 bg-card p-4 md:block md:p-5">
+        <h4 className="text-base font-bold text-foreground md:text-lg">
+          {TABLE_TENNIS_CLUB_NOTICE.title}
+        </h4>
+        {noticeBody}
+      </div>
+    </>
   );
 }
 
@@ -331,22 +359,24 @@ export function ActivityDailySchedule({
   return (
     <div>
       {showCategoryNav && categoryIds.length > 1 && (
-        <div className="sticky top-[72px] z-30 py-3 -mx-4 px-4 bg-secondary/95 backdrop-blur border-y border-border/60 lg:static lg:bg-transparent lg:border-0 lg:py-0 lg:mx-0 lg:px-0">
+        <div className="sticky top-[72px] z-30 -mx-3 border-y border-border/60 bg-secondary/95 px-3 py-2 backdrop-blur md:static md:mx-0 md:border-0 md:bg-transparent md:px-0 md:py-0 lg:static">
           <CategoryNav activeId={categoryId} onSelect={onCategoryChange} ids={categoryIds} />
         </div>
       )}
 
-      {activeCategory && (
-        <div className="mt-6 rounded-xl border border-accent/30 bg-accent/5 p-4 md:p-5">
-          <h3 className="font-bold text-foreground text-lg">{activeCategory.title}</h3>
-          <p className="mt-1 text-sm text-muted-foreground leading-relaxed">{activeCategory.lead}</p>
+      {activeCategory && categoryIds.length > 1 && (
+        <div className="mt-2 hidden rounded-lg border border-accent/30 bg-accent/5 p-2 md:mt-6 md:block md:rounded-xl md:p-5">
+          <h3 className="text-sm font-bold text-foreground md:text-lg">{activeCategory.title}</h3>
+          <p className="mt-1 hidden text-sm leading-relaxed text-muted-foreground md:block">
+            {activeCategory.lead}
+          </p>
         </div>
       )}
 
       {isTableTennis && !adminMode && <TableTennisClubNotice />}
 
       {isSeasonalOnly ? (
-        <div className="mt-6 space-y-4">
+        <div className="mt-4 space-y-4 md:mt-6">
           <p className="text-sm text-muted-foreground">
             קייטנות ואירועים עונתיים - תאריכים מדויקים יפורסמו לפני כל חופשה.
           </p>
@@ -357,18 +387,18 @@ export function ActivityDailySchedule({
       ) : (
         <>
           {/* Selected date header */}
-          <div className="mt-6 rounded-xl border-2 border-accent/40 bg-card p-4 md:p-5">
-            <div className="flex flex-wrap items-center justify-between gap-4">
-              <div className="flex items-start gap-3">
-                <CalendarDays className="text-accent shrink-0 mt-0.5" size={22} aria-hidden />
+          <div className="mt-3 rounded-xl border-2 border-accent/40 bg-card p-3 md:mt-6 md:p-5">
+            <div className="flex flex-wrap items-center justify-between gap-3 md:gap-4">
+              <div className="flex items-start gap-2 md:gap-3">
+                <CalendarDays className="mt-0.5 shrink-0 text-accent md:size-[22px]" size={18} aria-hidden />
                 <div>
-                  <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                  <p className="hidden text-xs font-bold uppercase tracking-wider text-muted-foreground md:block">
                     {isTableTennis ? "אתם שוריינים כניסה לתאריך" : "אתם נרשמים לתאריך"}
                   </p>
-                  <p className="text-xl md:text-2xl font-black text-foreground mt-0.5">
+                  <p className="text-base font-black text-foreground md:mt-0.5 md:text-2xl">
                     {formatScheduleDateLong(selectedDate)}
                   </p>
-                  <p className="text-sm text-muted-foreground mt-1">
+                  <p className="mt-0.5 text-xs text-muted-foreground md:mt-1 md:text-sm">
                     {daySessions.length === 0
                       ? `אין ${sessionUnitLabel} ביום זה - בחרו יום אחר מהלוח`
                       : `${daySessions.length} ${sessionUnitLabel} ביום שנבחר`}
@@ -389,8 +419,9 @@ export function ActivityDailySchedule({
                 <Button
                   type="button"
                   variant="secondary"
+                  size="sm"
                   onClick={() => setSelectedDate(today)}
-                  className="font-semibold text-sm"
+                  className="text-xs font-semibold md:text-sm"
                 >
                   היום
                 </Button>
@@ -409,7 +440,7 @@ export function ActivityDailySchedule({
           </div>
 
           {/* Day strip */}
-          <div className="mt-4 relative">
+          <div className="relative mt-2 md:mt-4">
             <div
               ref={stripRef}
               className="flex gap-2 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-thin"

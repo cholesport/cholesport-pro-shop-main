@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 import {
   TABLE_TENNIS_TRAINING_IMAGE,
   TABLE_TENNIS_TRAINING_IMAGE_ALT,
@@ -8,11 +8,28 @@ import { cn } from "@/lib/utils";
 
 const MEDIA_GRADE = "brightness-[0.92] contrast-[1.04] saturate-[0.9]";
 
-type TableTennisTrainingMediaProps = {
-  /** Tighter banner for schedule / pricing views. */
+type MediaFrameProps = {
   compact?: boolean;
+  /** When false, no own border/radius (used inside a shared desktop grid). */
+  framed?: boolean;
   className?: string;
+  children: ReactNode;
 };
+
+function MediaFrame({ compact = false, framed = true, className, children }: MediaFrameProps) {
+  return (
+    <figure
+      className={cn(
+        "relative overflow-hidden bg-secondary",
+        framed && "rounded-xl border border-border",
+        compact ? "aspect-[16/9] max-md:aspect-[2/1]" : "aspect-[4/3] md:aspect-video",
+        className,
+      )}
+    >
+      {children}
+    </figure>
+  );
+}
 
 function TrainingVideo({ className }: { className?: string }) {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -63,37 +80,65 @@ function TrainingVideo({ className }: { className?: string }) {
   );
 }
 
+function TrainingImage() {
+  return (
+    <img
+      src={TABLE_TENNIS_TRAINING_IMAGE}
+      alt={TABLE_TENNIS_TRAINING_IMAGE_ALT}
+      className={cn("absolute inset-0 h-full w-full object-cover object-center", MEDIA_GRADE)}
+      loading="lazy"
+      decoding="async"
+    />
+  );
+}
+
+export type TableTennisTrainingMediaLayout = "side-by-side" | "video-only" | "image-only";
+
+type TableTennisTrainingMediaProps = {
+  /** Tighter banner for schedule / pricing views. */
+  compact?: boolean;
+  /**
+   * side-by-side — desktop-style pair
+   * video-only / image-only — for mobile schedule layout (video top, image bottom)
+   */
+  layout?: TableTennisTrainingMediaLayout;
+  className?: string;
+};
+
 export function TableTennisTrainingMedia({
   compact = false,
+  layout = "side-by-side",
   className,
 }: TableTennisTrainingMediaProps) {
+  if (layout === "video-only") {
+    return (
+      <div className={className} aria-label="סרטון אימוני טניס שולחן לבוגרים ונוער">
+        <MediaFrame compact={compact}>
+          <TrainingVideo />
+        </MediaFrame>
+      </div>
+    );
+  }
+
+  if (layout === "image-only") {
+    return (
+      <div className={className} aria-label="תמונת אימוני טניס שולחן לבוגרים ונוער">
+        <MediaFrame compact={compact}>
+          <TrainingImage />
+        </MediaFrame>
+      </div>
+    );
+  }
+
   return (
     <div className={cn("space-y-2 md:space-y-0", className)} aria-label="אימוני טניס שולחן לבוגרים ונוער">
-      {/* Mobile: stacked separate areas. Desktop: side by side. */}
       <div className="grid grid-cols-1 gap-2 md:grid-cols-2 md:gap-px md:overflow-hidden md:rounded-xl md:border md:border-border md:bg-border">
-        <figure
-          className={cn(
-            "relative overflow-hidden rounded-xl border border-border bg-secondary md:rounded-none md:border-0",
-            compact ? "aspect-[16/9] max-md:aspect-[2/1]" : "aspect-[4/3] md:aspect-video",
-          )}
-        >
-          <img
-            src={TABLE_TENNIS_TRAINING_IMAGE}
-            alt={TABLE_TENNIS_TRAINING_IMAGE_ALT}
-            className={cn("absolute inset-0 h-full w-full object-cover object-center", MEDIA_GRADE)}
-            loading="lazy"
-            decoding="async"
-          />
-        </figure>
-
-        <figure
-          className={cn(
-            "relative overflow-hidden rounded-xl border border-border bg-secondary md:rounded-none md:border-0",
-            compact ? "aspect-[16/9] max-md:aspect-[2/1]" : "aspect-[4/3] md:aspect-video",
-          )}
-        >
+        <MediaFrame compact={compact} framed={false} className="max-md:rounded-xl max-md:border max-md:border-border">
+          <TrainingImage />
+        </MediaFrame>
+        <MediaFrame compact={compact} framed={false} className="max-md:rounded-xl max-md:border max-md:border-border">
           <TrainingVideo />
-        </figure>
+        </MediaFrame>
       </div>
     </div>
   );

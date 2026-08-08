@@ -54,8 +54,8 @@ export function Header({ variant = "full" }: HeaderProps) {
             <HeaderSearchBar id="header-search" />
             <Link
               to="/account"
-              className="hidden sm:flex text-foreground hover:text-sky-600 transition"
-              aria-label="החשבון שלי"
+              className="flex text-foreground transition hover:text-sky-600"
+              aria-label="החשבון שלי — רכישות ומנויים"
             >
               <User size={20} />
             </Link>

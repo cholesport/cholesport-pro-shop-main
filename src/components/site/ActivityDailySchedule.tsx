@@ -9,6 +9,7 @@ import {
   UserPlus,
   Users,
 } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import {
   ACTIVITIES_CATEGORIES,
@@ -168,95 +169,136 @@ function DailySessionCard({
   onAdminRegisterSlot?: (slot: ActivityScheduleSlot, sessionDate: string) => void;
   pricingHref?: string;
 }) {
+  const [expanded, setExpanded] = useState(false);
   const whatsappUrl = buildActivityReservationWhatsAppUrl(slot, date, categoryTitle);
   const registerHref = pricingHref ?? getActivityPricingHref(slot.categoryId);
+  const actionsId = `session-actions-${slot.id}-${formatScheduleDateIso(date)}`;
 
   return (
-    <article className="rounded-xl border-2 border-border bg-card overflow-hidden hover:border-accent/40 transition">
+    <article
+      className={cn(
+        "overflow-hidden rounded-xl border-2 bg-card transition",
+        expanded ? "border-accent/50" : "border-border hover:border-accent/40",
+      )}
+    >
       <div className="flex flex-col sm:flex-row">
-        <div className="bg-accent/10 border-b sm:border-b-0 sm:border-s border-border px-5 py-4 sm:py-5 sm:min-w-[140px] flex sm:flex-col items-center justify-center gap-1 text-center shrink-0">
-          <Clock size={20} className="text-accent mb-1 hidden sm:block" aria-hidden />
-          <p className="text-xl sm:text-2xl font-black text-foreground tabular-nums" dir="ltr">
+        <div className="flex shrink-0 items-center justify-center gap-1 border-b border-border bg-accent/10 px-4 py-3 text-center sm:min-w-[120px] sm:flex-col sm:border-b-0 sm:border-s sm:px-5 sm:py-4">
+          <Clock size={18} className="mb-1 hidden text-accent sm:block" aria-hidden />
+          <p className="text-lg font-black tabular-nums text-foreground sm:text-2xl" dir="ltr">
             {slot.timeStart}
           </p>
-          <p className="text-xs font-semibold text-muted-foreground">עד {slot.timeEnd}</p>
+          <p className="text-[11px] font-semibold text-muted-foreground sm:text-xs">עד {slot.timeEnd}</p>
         </div>
-        <div className="flex-1 p-5">
-          <p className="text-xs font-bold text-accent mb-1">{formatScheduleDateLong(date)}</p>
-          <h3 className="text-lg font-bold text-foreground">{slot.title}</h3>
-          {isClubEntry && (
-            <p className="mt-1 text-xs font-semibold text-accent">
-              כניסה למועדון · לא השכרת שולחן פרטי
-            </p>
-          )}
-          <div className="mt-3 flex flex-wrap gap-2">
-            {slot.ageRange && (
-              <span className="inline-flex items-center rounded-md bg-secondary px-2.5 py-1 text-xs font-semibold text-foreground">
-                גילאים {slot.ageRange}
-              </span>
-            )}
-            {slot.level && (
-              <span className="inline-flex items-center rounded-md bg-secondary px-2.5 py-1 text-xs font-semibold text-foreground">
-                {slot.level}
-              </span>
-            )}
-            {slot.groupSize && (
-              <span className="inline-flex items-center gap-1 rounded-md bg-secondary px-2.5 py-1 text-xs font-semibold text-foreground">
-                <Users size={12} aria-hidden />
-                {slot.groupSize}
-              </span>
-            )}
-          </div>
-          {slot.notes && (
-            <p className="mt-3 text-sm text-muted-foreground leading-relaxed">{slot.notes}</p>
-          )}
-          {adminMode ? (
-            onAdminRegisterSlot ? (
-              <div className="mt-4">
-                <Button
-                  type="button"
-                  className="font-bold w-full sm:w-auto"
-                  onClick={() =>
-                    onAdminRegisterSlot(slot, formatScheduleDateIso(date))
-                  }
-                >
-                  <UserPlus size={16} />
-                  רישום לקוח לשיעור
-                </Button>
-              </div>
-            ) : null
-          ) : (
-            <>
-              <div className="mt-4 flex flex-col sm:flex-row gap-2">
-                <Button asChild className="font-bold flex-1 sm:self-start">
-                  <a href={registerHref}>
-                    <UserPlus size={16} />
-                    {ACTIVITIES_REGISTER_LESSON_LABEL}
-                  </a>
-                </Button>
-                <div className="flex-1">
-                  <Button asChild variant="outline" className="font-semibold w-full">
-                    <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
-                      <MessageCircle size={16} />
-                      {ACTIVITIES_WHATSAPP_RESERVE_LABEL}
-                    </a>
-                  </Button>
-                  <p className="mt-1.5 text-xs text-muted-foreground text-center sm:text-start">
-                    {ACTIVITIES_WHATSAPP_RESERVE_HINT}
+
+        <div className="min-w-0 flex-1">
+          <button
+            type="button"
+            className="w-full p-3 text-start sm:p-5"
+            aria-expanded={expanded}
+            aria-controls={actionsId}
+            onClick={() => setExpanded((open) => !open)}
+          >
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <p className="mb-0.5 text-[11px] font-bold text-accent sm:mb-1 sm:text-xs">
+                  {formatScheduleDateLong(date)}
+                </p>
+                <h3 className="text-base font-bold text-foreground sm:text-lg">{slot.title}</h3>
+                {isClubEntry && (
+                  <p className="mt-1 text-[11px] font-semibold text-accent sm:text-xs">
+                    כניסה למועדון · לא השכרת שולחן פרטי
                   </p>
+                )}
+                <div className="mt-2 flex flex-wrap gap-1.5 sm:mt-3 sm:gap-2">
+                  {slot.ageRange && (
+                    <span className="inline-flex items-center rounded-md bg-secondary px-2 py-0.5 text-[11px] font-semibold text-foreground sm:px-2.5 sm:py-1 sm:text-xs">
+                      גילאים {slot.ageRange}
+                    </span>
+                  )}
+                  {slot.level && (
+                    <span className="inline-flex items-center rounded-md bg-secondary px-2 py-0.5 text-[11px] font-semibold text-foreground sm:px-2.5 sm:py-1 sm:text-xs">
+                      {slot.level}
+                    </span>
+                  )}
+                  {slot.groupSize && (
+                    <span className="inline-flex items-center gap-1 rounded-md bg-secondary px-2 py-0.5 text-[11px] font-semibold text-foreground sm:px-2.5 sm:py-1 sm:text-xs">
+                      <Users size={12} aria-hidden />
+                      {slot.groupSize}
+                    </span>
+                  )}
                 </div>
+                {slot.notes && !expanded && (
+                  <p className="mt-2 line-clamp-1 text-xs text-muted-foreground sm:mt-3 sm:text-sm">
+                    {slot.notes}
+                  </p>
+                )}
               </div>
-              <CustomerPassQuickRegister
-                passes={passes}
-                customerToken={customerToken}
-                categoryId={slot.categoryId}
-                slotId={slot.id}
-                sessionDate={formatScheduleDateIso(date)}
-                onRedeemed={(pass) => {
-                  onPassRedeemed?.(pass);
-                }}
-              />
-            </>
+              <span
+                className={cn(
+                  "mt-0.5 flex shrink-0 items-center gap-1 rounded-md border border-border px-2 py-1 text-[10px] font-bold text-muted-foreground sm:text-xs",
+                  expanded && "border-accent/40 text-accent",
+                )}
+              >
+                {expanded ? "סגור" : "הרשמה"}
+                <ChevronDown
+                  size={14}
+                  className={cn("transition", expanded && "rotate-180")}
+                  aria-hidden
+                />
+              </span>
+            </div>
+          </button>
+
+          {expanded && (
+            <div id={actionsId} className="border-t border-border px-3 pb-3 pt-3 sm:px-5 sm:pb-5">
+              {slot.notes && (
+                <p className="mb-3 text-sm leading-relaxed text-muted-foreground">{slot.notes}</p>
+              )}
+              {adminMode ? (
+                onAdminRegisterSlot ? (
+                  <Button
+                    type="button"
+                    className="w-full font-bold sm:w-auto"
+                    onClick={() => onAdminRegisterSlot(slot, formatScheduleDateIso(date))}
+                  >
+                    <UserPlus size={16} />
+                    רישום לקוח לשיעור
+                  </Button>
+                ) : null
+              ) : (
+                <>
+                  <div className="flex flex-col gap-2 sm:flex-row">
+                    <Button asChild className="flex-1 font-bold sm:self-start">
+                      <a href={registerHref}>
+                        <UserPlus size={16} />
+                        {ACTIVITIES_REGISTER_LESSON_LABEL}
+                      </a>
+                    </Button>
+                    <div className="flex-1">
+                      <Button asChild variant="outline" className="w-full font-semibold">
+                        <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
+                          <MessageCircle size={16} />
+                          {ACTIVITIES_WHATSAPP_RESERVE_LABEL}
+                        </a>
+                      </Button>
+                      <p className="mt-1.5 text-center text-xs text-muted-foreground sm:text-start">
+                        {ACTIVITIES_WHATSAPP_RESERVE_HINT}
+                      </p>
+                    </div>
+                  </div>
+                  <CustomerPassQuickRegister
+                    passes={passes}
+                    customerToken={customerToken}
+                    categoryId={slot.categoryId}
+                    slotId={slot.id}
+                    sessionDate={formatScheduleDateIso(date)}
+                    onRedeemed={(pass) => {
+                      onPassRedeemed?.(pass);
+                    }}
+                  />
+                </>
+              )}
+            </div>
           )}
         </div>
       </div>
@@ -273,27 +315,78 @@ function SeasonalCard({
   adminMode?: boolean;
   pricingHref?: string;
 }) {
+  const [expanded, setExpanded] = useState(false);
   const registerHref = pricingHref ?? getActivityPricingHref(slot.categoryId);
+  const actionsId = `seasonal-actions-${slot.id}`;
+
   return (
-    <article className="rounded-xl border border-border bg-card p-5">
-      <p className="text-xs font-bold text-accent">{slot.day}</p>
-      <h3 className="mt-1 text-lg font-bold text-foreground">{slot.title}</h3>
-      <p className="mt-1 text-sm text-muted-foreground">
-        {slot.timeStart}–{slot.timeEnd}
-        {slot.ageRange ? ` · גילאים ${slot.ageRange}` : ""}
-      </p>
-      {slot.notes && (
-        <p className="mt-3 text-sm text-muted-foreground leading-relaxed">{slot.notes}</p>
+    <article
+      className={cn(
+        "rounded-xl border bg-card transition",
+        expanded ? "border-accent/50" : "border-border hover:border-accent/40",
       )}
-      {!adminMode && (
-        <Button asChild className="mt-4 font-bold">
-          <a href={registerHref}>
-            <UserPlus size={16} />
-            {ACTIVITIES_REGISTER_LESSON_LABEL}
-          </a>
-        </Button>
+    >
+      <button
+        type="button"
+        className="w-full p-4 text-start sm:p-5"
+        aria-expanded={expanded}
+        aria-controls={actionsId}
+        onClick={() => setExpanded((open) => !open)}
+      >
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <p className="text-xs font-bold text-accent">{slot.day}</p>
+            <h3 className="mt-1 text-base font-bold text-foreground sm:text-lg">{slot.title}</h3>
+            <p className="mt-1 text-sm text-muted-foreground">
+              {slot.timeStart}–{slot.timeEnd}
+              {slot.ageRange ? ` · גילאים ${slot.ageRange}` : ""}
+            </p>
+          </div>
+          <span
+            className={cn(
+              "mt-0.5 flex shrink-0 items-center gap-1 rounded-md border border-border px-2 py-1 text-[10px] font-bold text-muted-foreground sm:text-xs",
+              expanded && "border-accent/40 text-accent",
+            )}
+          >
+            {expanded ? "סגור" : "הרשמה"}
+            <ChevronDown
+              size={14}
+              className={cn("transition", expanded && "rotate-180")}
+              aria-hidden
+            />
+          </span>
+        </div>
+      </button>
+      {expanded && (
+        <div id={actionsId} className="border-t border-border px-4 pb-4 pt-3 sm:px-5 sm:pb-5">
+          {slot.notes && (
+            <p className="mb-3 text-sm leading-relaxed text-muted-foreground">{slot.notes}</p>
+          )}
+          {!adminMode && (
+            <Button asChild className="font-bold">
+              <a href={registerHref}>
+                <UserPlus size={16} />
+                {ACTIVITIES_REGISTER_LESSON_LABEL}
+              </a>
+            </Button>
+          )}
+        </div>
       )}
     </article>
+  );
+}
+
+function ScheduleAccountPrompt() {
+  return (
+    <div className="mt-4 rounded-lg border border-border bg-card px-3 py-2.5 text-center md:mt-6 md:px-4 md:py-3">
+      <p className="text-xs text-muted-foreground md:text-sm">
+        יש לכם מנוי או כרטיסייה?{" "}
+        <Link to="/account" className="font-bold text-accent hover:underline">
+          היכנסו לחשבון
+        </Link>{" "}
+        לצפייה ברכישות האחרונות ובמנויים הפעילים.
+      </p>
+    </div>
   );
 }
 
@@ -375,13 +468,21 @@ export function ActivityDailySchedule({
         </div>
       )}
 
+      {/* Mobile: video as hero above the schedule. Desktop: side-by-side above. */}
       {isTableTennisTraining && (
-        <div className="mt-2 md:mt-4">
-          <TableTennisTrainingMedia compact />
-        </div>
+        <>
+          <div className="mt-2 md:hidden">
+            <TableTennisTrainingMedia compact layout="video-only" />
+          </div>
+          <div className="mt-4 hidden md:block">
+            <TableTennisTrainingMedia compact layout="side-by-side" />
+          </div>
+        </>
       )}
 
       {isTableTennis && !adminMode && <TableTennisClubNotice />}
+
+      {!adminMode && <ScheduleAccountPrompt />}
 
       {isSeasonalOnly ? (
         <div className="mt-4 space-y-4 md:mt-6">
@@ -524,7 +625,7 @@ export function ActivityDailySchedule({
           </div>
 
           {/* Sessions for selected day */}
-          <div className="mt-6 space-y-4" role="tabpanel">
+          <div className="mt-4 space-y-2 md:mt-6 md:space-y-4" role="tabpanel">
             {daySessions.length === 0 ? (
               <div className="rounded-xl border border-dashed border-border bg-card/50 py-12 px-6 text-center">
                 <p className="font-semibold text-foreground">
@@ -567,8 +668,8 @@ export function ActivityDailySchedule({
           </div>
 
           {seasonalSlots.length > 0 && (
-            <div className="mt-10 pt-8 border-t border-border">
-              <h4 className="font-bold text-foreground mb-4">קייטנות ואירועים עונתיים</h4>
+            <div className="mt-10 border-t border-border pt-8">
+              <h4 className="mb-4 font-bold text-foreground">קייטנות ואירועים עונתיים</h4>
               <div className="space-y-4">
                 {seasonalSlots.map((slot) => (
                   <SeasonalCard key={slot.id} slot={slot} adminMode={adminMode} pricingHref={pricingHref} />
@@ -576,7 +677,20 @@ export function ActivityDailySchedule({
               </div>
             </div>
           )}
+
+          {/* Mobile: training photo at the bottom so the schedule stays central */}
+          {isTableTennisTraining && (
+            <div className="mt-6 md:hidden">
+              <TableTennisTrainingMedia compact layout="image-only" />
+            </div>
+          )}
         </>
+      )}
+
+      {isSeasonalOnly && isTableTennisTraining && (
+        <div className="mt-6 md:hidden">
+          <TableTennisTrainingMedia compact layout="image-only" />
+        </div>
       )}
     </div>
   );

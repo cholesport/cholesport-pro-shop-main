@@ -69,38 +69,13 @@ export function ShopCategoriesNav({
   return (
     <nav
       className={cn(
-        "sticky top-[7.25rem] z-40 border-b border-border bg-background/95 backdrop-blur-md md:static md:top-auto md:z-auto md:border-0 md:bg-transparent md:backdrop-blur-none",
+        "sticky top-[7.25rem] z-40 border-b border-border bg-background/95 backdrop-blur-md md:hidden",
         className,
       )}
       aria-label="מעבר בין קטגוריות"
     >
-      <div className="mx-auto max-w-7xl px-3 py-2 md:hidden">
+      <div className="mx-auto max-w-7xl px-3 py-2">
         <CategoryGrid activeSlug={activeSlug} dense />
-      </div>
-
-      <div className="mx-auto hidden max-w-7xl px-4 py-3 md:block">
-        <ul className="flex flex-wrap gap-2" aria-label="קטגוריות החנות">
-          {CATEGORIES.map((category) => {
-            const isActive = activeSlug === category.slug;
-            return (
-              <li key={category.slug}>
-                <Link
-                  to="/categories/$categorySlug"
-                  params={{ categorySlug: category.slug }}
-                  className={cn(
-                    "inline-flex items-center rounded-lg border px-3 py-1.5 text-xs font-bold transition",
-                    isActive
-                      ? "border-accent bg-accent text-accent-foreground"
-                      : "border-border bg-card text-foreground hover:border-accent/40 hover:text-accent",
-                  )}
-                  aria-current={isActive ? "page" : undefined}
-                >
-                  {category.name}
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
       </div>
     </nav>
   );

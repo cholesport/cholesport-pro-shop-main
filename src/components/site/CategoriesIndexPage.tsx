@@ -1,15 +1,10 @@
 import { useEffect } from "react";
 import { Link } from "@tanstack/react-router";
-import { ArrowRight, ChevronLeft } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Products } from "@/components/site/Products";
 import { ShopCategoriesNav } from "@/components/site/ShopCategoriesNav";
-import { ShopProductImageSlide } from "@/components/site/ShopProductImageSlide";
 import { SiteAreaReminders } from "@/components/site/SiteAreaReminders";
-import {
-  CATEGORIES,
-  CATEGORIES_PAGE_SUBTITLE,
-  type CategoryDefinition,
-} from "@/data/categories";
+import { CATEGORIES_PAGE_SUBTITLE } from "@/data/categories";
 import {
   SHOP_BRAND_SUPPORT,
   SHOP_BRAND_TAGLINE,
@@ -17,33 +12,22 @@ import {
 } from "@/data/shop";
 import { saveSiteGatewayPreference } from "@/lib/siteGatewayPreference";
 
-function categorySummary(category: CategoryDefinition) {
-  if (category.description) return category.description;
-  if (category.subcategories.length > 0) {
-    return category.subcategories.slice(0, 3).join(" · ");
-  }
-  return "לחצו לצפייה במוצרים בקטגוריה זו.";
-}
-
 export function CategoriesIndexPage() {
   useEffect(() => {
     saveSiteGatewayPreference("shop");
   }, []);
 
   return (
-    <div className="max-md:flex max-md:min-h-0 max-md:flex-1 max-md:flex-col">
-      {/* Mobile: 2-col categories + product image slide (matches shop entry design) */}
-      <section className="flex min-h-0 flex-1 flex-col px-3 pb-3 pt-1 md:hidden">
-        <ShopCategoriesNav variant="hub" />
-        <div className="mt-3 shrink-0">
-          <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-            מבחר מהחנות
-          </p>
-          <ShopProductImageSlide />
-        </div>
-      </section>
+    <div>
+      {/* Mobile: categories grid, then large bestsellers slide */}
+      <div className="md:hidden">
+        <section className="px-3 pb-2 pt-1">
+          <ShopCategoriesNav variant="hub" />
+        </section>
+        <Products showCategoriesLink={false} className="border-t border-border bg-secondary/20" />
+      </div>
 
-      {/* Desktop */}
+      {/* Desktop: header has category nav — hero + large bestsellers */}
       <div className="hidden md:block">
         <section className="border-b border-border bg-secondary/20">
           <div className="mx-auto max-w-7xl px-4 py-8 md:py-12">
@@ -70,56 +54,8 @@ export function CategoriesIndexPage() {
 
         <Products showCategoriesLink={false} />
 
-        <section
-          className="mx-auto max-w-7xl px-4 pb-12 md:pb-16"
-          aria-labelledby="shop-categories-heading"
-        >
-          <div className="mb-8 max-w-xl border-b border-border pb-6">
-            <h2
-              id="shop-categories-heading"
-              className="text-2xl font-extrabold text-foreground md:text-3xl"
-            >
-              קטגוריות
-            </h2>
-            <p className="mt-2 text-sm leading-relaxed text-muted-foreground md:text-base">
-              בחרו תחום והמשיכו למוצרים.
-            </p>
-          </div>
-
-          <ul className="grid grid-cols-1 gap-px border border-border bg-border md:grid-cols-2">
-            {CATEGORIES.map((category) => (
-              <li key={category.slug}>
-                <Link
-                  to="/categories/$categorySlug"
-                  params={{ categorySlug: category.slug }}
-                  className="group flex h-full items-start gap-4 bg-background px-5 py-7 transition hover:bg-secondary/50 md:px-6 md:py-8"
-                >
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-start justify-between gap-3">
-                      <h3 className="text-lg font-bold leading-snug text-foreground transition group-hover:text-accent md:text-xl">
-                        {category.name}
-                      </h3>
-                      <ChevronLeft
-                        size={18}
-                        className="mt-1 shrink-0 text-muted-foreground transition group-hover:text-accent"
-                        aria-hidden
-                      />
-                    </div>
-                    <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-muted-foreground">
-                      {categorySummary(category)}
-                    </p>
-                    {category.subcategories.length > 0 && (
-                      <p className="mt-3 text-xs font-medium text-muted-foreground/80">
-                        {category.subcategories.length} אפשרויות
-                      </p>
-                    )}
-                  </div>
-                </Link>
-              </li>
-            ))}
-          </ul>
-
-          <SiteAreaReminders className="mt-10" />
+        <section className="mx-auto max-w-7xl px-4 pb-12 md:pb-16">
+          <SiteAreaReminders />
         </section>
       </div>
     </div>

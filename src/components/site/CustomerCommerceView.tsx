@@ -110,7 +110,7 @@ export function CustomerCommerceView({ history }: { history: CustomerCommerceHis
                             <span>
                               {item.title} × {item.quantity}
                             </span>
-                            <span className="font-semibold shrink-0">
+                            <span className="shrink-0 font-semibold text-foreground">
                               ₪{formatPrice(item.price * item.quantity)}
                             </span>
                           </li>

@@ -122,7 +122,7 @@ function SizeRow({
               </span>
             </p>
             {variant.was != null && variant.was > variant.price && (
-              <p className="text-xs text-muted-foreground line-through">
+              <p className="text-xs text-foreground line-through">
                 <span dir="ltr" className="unicode-bidi-plaintext inline-block">
                   {formatPrice(variant.was)} ₪
                 </span>
@@ -166,7 +166,7 @@ function SizeRow({
           {formatPrice(variant.price)} ₪
         </span>
         {variant.was != null && variant.was > variant.price && (
-          <span className="block text-xs font-normal text-muted-foreground line-through">
+          <span className="block text-xs font-normal text-foreground line-through">
             <span dir="ltr" className="unicode-bidi-plaintext inline-block">
               {formatPrice(variant.was)} ₪
             </span>

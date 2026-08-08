@@ -102,13 +102,13 @@ function SizeRow({
             <SizeLabel variant={variant} />
           </p>
           <div className="text-end shrink-0">
-            <p className="text-lg font-black text-destructive">
+            <p className="text-lg font-black text-foreground">
               <span dir="ltr" className="unicode-bidi-plaintext inline-block">
                 {formatPrice(variant.price)} ₪
               </span>
             </p>
             {variant.was > variant.price && (
-              <p className="text-sm text-muted-foreground line-through">
+              <p className="text-sm text-foreground line-through">
                 <span dir="ltr" className="unicode-bidi-plaintext inline-block">
                   {formatPrice(variant.was)} ₪
                 </span>
@@ -141,11 +141,11 @@ function SizeRow({
         </Link>
       </td>
       <td className="px-4 py-3 whitespace-nowrap">
-        <span className="font-bold text-destructive" dir="ltr">
+        <span className="font-bold text-foreground" dir="ltr">
           {formatPrice(variant.price)} ₪
         </span>
         {variant.was > variant.price && (
-          <span className="ms-2 text-sm text-muted-foreground line-through" dir="ltr">
+          <span className="ms-2 text-sm text-foreground line-through" dir="ltr">
             {formatPrice(variant.was)} ₪
           </span>
         )}

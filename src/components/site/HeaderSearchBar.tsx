@@ -231,7 +231,7 @@ export function HeaderSearchBar({ id = "header-search" }: HeaderSearchBarProps) 
                                 </p>
                                 <p className="mt-0.5 text-xs text-muted-foreground">{product.cat}</p>
                               </div>
-                              <p className="shrink-0 text-sm font-bold whitespace-nowrap md:text-base">
+                              <p className="shrink-0 whitespace-nowrap text-sm font-bold text-foreground md:text-base">
                                 <span dir="ltr" className="unicode-bidi-plaintext inline-block">
                                   {formatPrice(product.price)} ₪
                                 </span>

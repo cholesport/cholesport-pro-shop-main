@@ -586,23 +586,15 @@ export function getRelatedProducts(product: Product): Product[] {
 
 export const TABLE_TENNIS_EQUIPMENT_CATEGORY_SLUG = "table-tennis-equipment";
 
-/** Curated mix across categories for the homepage "נבחרת CHOLE" carousel. */
+/** Bestsellers carousel — one hero product from each major shop area. */
 export const HOMEPAGE_FEATURED_PRODUCT_IDS = [
-  "chole-pro-25",
-  "gymboree-climb-slide-3pc",
-  "training-plyo-boxes-4pc",
-  "airfloor-6x2x0.2",
-  "landing-mat-250x150x30",
-  "chole-navy6",
-  "training-bosu-ball",
-  "gymboree-soft-triangles-4pc",
-  PONG_BOT_NOVA_S_PRO_ID,
-  "training-hurdle-23",
-  "gymboree-incline-mat",
   "chole-outdoor-18",
-  "training-puzzle-mat-blue-red",
+  "chole-pro-25",
+  "training-plyo-boxes-4pc",
   "airfloor-4x2x0.2",
-  "landing-mat-250x200x30",
+  "training-puzzle-mat-blue-red",
+  "landing-mat-250x150x30",
+  "gymboree-incline-mat",
 ] as const;
 
 /** Products shown on the homepage featured carousel. */

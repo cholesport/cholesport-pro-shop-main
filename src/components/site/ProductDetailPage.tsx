@@ -120,7 +120,7 @@ function RelatedCard({ product }: { product: Product }) {
       ) : (
         <p className="text-xs text-muted-foreground mt-1">{product.brand}</p>
       )}
-      <p className="text-sm font-bold mt-2">₪{formatPrice(product.price)}</p>
+      <p className="mt-2 text-sm font-bold text-foreground">₪{formatPrice(product.price)}</p>
       {product.reviews > 0 && (
         <div className="flex justify-center mt-1">
           <Stars rating={product.rating} reviews={product.reviews} />
@@ -322,30 +322,20 @@ export function ProductDetailPage({ product }: { product: Product }) {
           <p className="text-sm text-muted-foreground mt-2">מק״ט {product.sku}</p>
 
           <div className="mt-6 flex items-baseline gap-3 flex-wrap">
-            <span
-              className={`text-3xl font-bold ${
-                hasPuzzleQtyDeal
-                  ? "text-emerald-700"
-                  : hasFlexiQtyDeal
-                    ? "text-destructive"
-                    : hasDiscount
-                      ? "text-destructive"
-                      : "text-foreground"
-              }`}
-            >
+            <span className="text-3xl font-bold text-foreground">
               ₪ {formatPrice(unitPrice)}
             </span>
             {hasPuzzleQtyDeal ? (
-              <span className="text-lg text-muted-foreground line-through">
+              <span className="text-lg text-foreground line-through">
                 ₪ {formatPrice(PUZZLE_MAT_UNIT_PRICE)}
               </span>
             ) : hasFlexiQtyDeal ? (
-              <span className="text-lg text-muted-foreground line-through">
+              <span className="text-lg text-foreground line-through">
                 ₪ {formatPrice(flexiCatalogPrice)}
               </span>
             ) : (
               hasDiscount && (
-                <span className="text-lg text-muted-foreground line-through">
+                <span className="text-lg text-foreground line-through">
                   ₪ {formatPrice(product.was)}
                 </span>
               )

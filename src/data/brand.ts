@@ -11,9 +11,9 @@ export const BRAND_HERO_CTA = "לצפייה בקולקציית המוצרים";
 export const BRAND_HERO_SHOP_CTA = "רכישת ציוד ומוצרים";
 export const BRAND_HERO_REGISTER_CTA = "רישום לחוגים, פעילויות ומתחם הפינגפונג";
 
-export const HOMEPAGE_FEATURED_TITLE = "נבחרת מוצרי CHOLE";
+export const HOMEPAGE_FEATURED_TITLE = "הנמכרים ביותר";
 export const HOMEPAGE_FEATURED_SUBTITLE =
-  "מבחר מוצרים מתחומים שונים - שולחנות משחק, אביזרי אימון, ג׳ימבורי, איירפלור ומזרני נחיתה. גללו או גררו בין המוצרים.";
+  "7 מוצרים מובילים מכל תחום — שולחנות, אימון, איירפלור, מזרני נחיתה וג׳ימבורי. גללו או גררו בין המוצרים.";
 
 export const BRAND_CORPORATE_TAGLINE = "Design for Excellence";
 

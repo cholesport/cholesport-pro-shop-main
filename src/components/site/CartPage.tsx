@@ -102,23 +102,19 @@ export function CartPage() {
                 </Link>
                 <p className="text-xs text-muted-foreground mt-1">{item.brand}</p>
                 <div className="mt-auto flex flex-wrap items-baseline gap-2">
-                  <p
-                    className={`text-lg font-bold ${
-                      hasPuzzleQtyDeal ? "text-emerald-700" : "text-foreground"
-                    }`}
-                  >
+                  <p className="text-lg font-bold text-foreground">
                     ₪{formatPrice(item.price)}
                   </p>
                   <span className="text-xs text-muted-foreground">ליחידה</span>
                   {hasPuzzleQtyDeal && (
-                    <span className="text-xs text-muted-foreground line-through">
+                    <span className="text-xs text-foreground line-through">
                       ₪{formatPrice(PUZZLE_MAT_UNIT_PRICE)}
                     </span>
                   )}
                   {isFlexiRoll &&
                     flexiCatalog != null &&
                     item.price < flexiCatalog && (
-                      <span className="text-xs text-muted-foreground line-through">
+                      <span className="text-xs text-foreground line-through">
                         ₪{formatPrice(flexiCatalog)}
                       </span>
                     )}
@@ -150,11 +146,7 @@ export function CartPage() {
                   size="sm"
                 />
 
-                <p
-                  className={`text-sm font-bold ${
-                    hasPuzzleQtyDeal ? "text-emerald-700" : "text-foreground"
-                  }`}
-                >
+                <p className="text-sm font-bold text-foreground">
                   ₪{formatPrice(item.price * item.quantity)}
                 </p>
               </div>

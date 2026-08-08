@@ -18,25 +18,38 @@ import {
 import { useEmblaWheelScroll } from "@/hooks/useEmblaWheelScroll";
 import { CAROUSEL_SETTLE_DURATION } from "@/lib/carouselMotion";
 import { FadeIn } from "@/components/site/FadeIn";
+import { cn } from "@/lib/utils";
 
 type ProductsProps = {
   /** Hide "לכל הקטגוריות" when already on the categories hub. */
   showCategoriesLink?: boolean;
+  className?: string;
 };
 
-export function Products({ showCategoriesLink = true }: ProductsProps) {
+export function Products({ showCategoriesLink = true, className }: ProductsProps) {
   const products = HOMEPAGE_PRODUCTS;
   const [api, setApi] = useState<CarouselApi>();
   useEmblaWheelScroll(api);
 
   return (
-    <section id="products" className="max-w-7xl mx-auto px-4 py-16 md:py-20">
-      <FadeIn preset="section" className="flex flex-wrap items-end justify-between gap-4 mb-10">
-        <div className="max-w-lg">
-          <h2 className="text-3xl md:text-4xl font-extrabold text-foreground">
+    <section
+      id="products"
+      className={cn(
+        "mx-auto max-w-7xl px-3 py-8 md:px-4 md:py-16 lg:py-20",
+        className,
+      )}
+    >
+      <FadeIn
+        preset="section"
+        className="mb-5 flex flex-wrap items-end justify-between gap-3 md:mb-10 md:gap-4"
+      >
+        <div className="max-w-xl">
+          <h2 className="text-2xl font-extrabold text-foreground md:text-4xl">
             {HOMEPAGE_FEATURED_TITLE}
           </h2>
-          <p className="text-muted-foreground mt-3 leading-relaxed">{HOMEPAGE_FEATURED_SUBTITLE}</p>
+          <p className="mt-2 text-sm leading-relaxed text-muted-foreground md:mt-3 md:text-base">
+            {HOMEPAGE_FEATURED_SUBTITLE}
+          </p>
         </div>
         {showCategoriesLink && (
           <Link
@@ -62,20 +75,20 @@ export function Products({ showCategoriesLink = true }: ProductsProps) {
           }}
           className="w-full touch-pan-y"
         >
-          <CarouselContent className="-mr-4 ml-0 cursor-grab active:cursor-grabbing">
+          <CarouselContent className="-mr-3 ml-0 cursor-grab active:cursor-grabbing md:-mr-5">
             {products.map((product) => (
               <CarouselItem
                 key={product.id}
-                className="pl-0 pr-4 basis-[78%] sm:basis-[48%] md:basis-[32%] lg:basis-[24%] select-none"
+                className="basis-[88%] select-none pl-0 pr-3 sm:basis-[58%] md:basis-[46%] md:pr-5 lg:basis-[38%]"
               >
-                <ProductCard product={product} />
+                <ProductCard product={product} size="featured" />
               </CarouselItem>
             ))}
           </CarouselContent>
-          {products.length > 2 && (
+          {products.length > 1 && (
             <>
-              <CarouselPrevious className="hidden sm:flex -right-3 md:-right-4 left-auto top-[38%] -translate-y-1/2 z-10 bg-background/95 shadow-sm" />
-              <CarouselNext className="hidden sm:flex -left-3 md:-left-4 right-auto top-[38%] -translate-y-1/2 z-10 bg-background/95 shadow-sm" />
+              <CarouselPrevious className="absolute top-[42%] z-10 hidden -translate-y-1/2 bg-background/95 shadow-sm sm:flex -right-2 left-auto md:-right-3" />
+              <CarouselNext className="absolute top-[42%] z-10 hidden -translate-y-1/2 bg-background/95 shadow-sm sm:flex -left-2 right-auto md:-left-3" />
             </>
           )}
         </Carousel>

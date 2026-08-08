@@ -15,7 +15,7 @@ type FooterLink = {
 
 const COLS: Record<string, FooterLink[]> = {
   חנות: [
-    { label: "נבחרת מוצרי CHOLE", href: "/#products" },
+    { label: "הנמכרים ביותר", href: "/categories#products" },
     { label: "המותגים שלנו", href: "/#brands" },
     { label: "קטגוריות", to: "/categories" },
     { label: "SHOW ROOM", href: "/categories/show-room" },
